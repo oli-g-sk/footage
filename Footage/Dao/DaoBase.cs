@@ -8,9 +8,9 @@
 
     public abstract class DaoBase<T> : IEntityDao<T> where T : Entity
     {
-        protected VideoContext DbContext;
-        
-        public DaoBase(VideoContext dbContext)
+        protected readonly VideoContext DbContext;
+
+        protected DaoBase(VideoContext dbContext)
         {
             DbContext = dbContext;
         }
@@ -25,11 +25,11 @@
             DbContext.Add(item);
         }
 
-        protected abstract IEnumerable<T> Entities { get; }
+        protected abstract IEnumerable<T>? Entities { get; }
 
         public IQueryable<T> Query()
         {
-            return Entities.AsQueryable();
+            return (Entities ?? Array.Empty<T>()).AsQueryable();
         }
     }
 }

@@ -11,6 +11,6 @@
         {
         }
 
-        protected override IEnumerable<MediaSource> Entities => DbContext.MediaSources;
+        protected override IEnumerable<MediaSource>? Entities => DbContext.MediaSources;
     }
 }

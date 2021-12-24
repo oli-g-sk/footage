@@ -11,6 +11,6 @@
         {
         }
 
-        protected override IEnumerable<Video> Entities => DbContext.Videos;
+        protected override IEnumerable<Video>? Entities => DbContext.Videos;
     }
 }
