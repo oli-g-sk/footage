@@ -4,8 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using Footage.Context;
+    using Footage.Model;
 
-    public abstract class DaoBase<T>
+    public abstract class DaoBase<T> : IEntityDao<T> where T : Entity
     {
         protected VideoContext DbContext;
         
