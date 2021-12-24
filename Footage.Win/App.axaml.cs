@@ -4,6 +4,8 @@ using Avalonia.Markup.Xaml;
 
 namespace Footage.Win
 {
+    using Footage.ViewModel;
+
     public class App : Application
     {
         public override void Initialize()
@@ -15,7 +17,10 @@ namespace Footage.Win
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                desktop.MainWindow = new MainWindow();
+                var mainWindow = new MainWindow();
+                var viewModel = Locator.GetInstance<MainWindowViewModel>();
+                mainWindow.SetViewModel(viewModel);
+                desktop.MainWindow = mainWindow;
             }
 
             base.OnFrameworkInitializationCompleted();

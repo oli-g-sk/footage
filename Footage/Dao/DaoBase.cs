@@ -8,40 +8,41 @@
 
     public abstract class DaoBase<T> : IEntityDao<T> where T : Entity
     {
-        protected readonly VideoContext DbContext;
-
-        protected DaoBase(VideoContext dbContext)
-        {
-            DbContext = dbContext;
-        }
-
         public void Insert(T item)
         {
+            using var dbContext = new VideoContext();
+            
             if (item == null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
-            
-            DbContext.Add(item);
-            DbContext.SaveChanges();
+
+            dbContext.Add(item);
+            dbContext.SaveChanges();
         }
 
         public void Remove(T item)
         {
+            using var dbContext = new VideoContext();
+            
             if (item == null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
             
-            DbContext.Remove(item);
-            DbContext.SaveChanges();
+            dbContext.Remove(item);
+            dbContext.SaveChanges();
         }
 
-        protected abstract IEnumerable<T>? Entities { get; }
-
-        public IQueryable<T> Query()
+        public IEnumerable<T> Query()
         {
-            return (Entities ?? Array.Empty<T>()).AsQueryable();
+            using var dbContext = new VideoContext();
+            
+            var entities = GetEntities(dbContext);
+            
+            return entities.AsEnumerable().ToList();
         }
+
+        protected abstract IQueryable<T> GetEntities(VideoContext context);
     }
 }

@@ -2,9 +2,11 @@
 {
     public class MainWindowViewModel
     {
-        public MainWindowViewModel()
+        public MediaSourcesViewModel MediaSources { get; }
+        
+        public MainWindowViewModel(MediaSourcesViewModel mediaSourcesViewModel)
         {
-            
+            MediaSources = mediaSourcesViewModel;
         }
     }
 }

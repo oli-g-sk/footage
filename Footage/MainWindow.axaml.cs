@@ -4,8 +4,11 @@ using Avalonia.Markup.Xaml;
 
 namespace Footage
 {
+    using Footage.ViewModel;
+
     public partial class MainWindow : Window
     {
+        // TODO REMOVE
         public static MainWindow Instance { get; private set; }
         
         public MainWindow()
@@ -15,6 +18,11 @@ namespace Footage
             this.AttachDevTools();
 #endif
             Instance = this;
+        }
+
+        public void SetViewModel(MainWindowViewModel viewModel)
+        {
+            DataContext = viewModel;
         }
 
         private void InitializeComponent()

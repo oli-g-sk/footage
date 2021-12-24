@@ -1,6 +1,6 @@
 ﻿namespace Footage.Dao
 {
-    using System.Linq;
+    using System.Collections.Generic;
     using Footage.Model;
 
     public interface IEntityDao<T> where T : Entity
@@ -9,6 +9,8 @@
 
         void Remove(T item);
 
-        IQueryable<T> Query();
+        IEnumerable<T> Query();
+        
+        // TODO add a Query overload with parameters
     }
 }

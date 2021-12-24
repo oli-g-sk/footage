@@ -3,9 +3,7 @@
     using System.Collections.ObjectModel;
     using System.IO;
     using System.Linq;
-    using Avalonia;
     using Avalonia.Controls;
-    using Footage.Context;
     using Footage.Dao;
     using Footage.Model;
     using GalaSoft.MvvmLight;
@@ -13,7 +11,7 @@
 
     public class MediaSourcesViewModel : ViewModelBase
     {
-        private IEntityDao<MediaSource> Dao { get; }
+        private IMediaSourceDao Dao { get; }
 
         public ObservableCollection<MediaSourceViewModel> Sources { get; }
 
@@ -35,11 +33,9 @@
         
         public RelayCommand RemoveSelectedSourceCommand { get; }
 
-        public MediaSourcesViewModel()
+        public MediaSourcesViewModel(IMediaSourceDao dao)
         {
-            // TODO inject
-            var dbContext = new VideoContext();
-            Dao = new MediaSourceDao(dbContext);
+            Dao = dao;
 
             Sources = new ObservableCollection<MediaSourceViewModel>();
             AddLocalSourceCommand = new RelayCommand(AddLocalSource);

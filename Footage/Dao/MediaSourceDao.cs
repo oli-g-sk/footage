@@ -1,16 +1,15 @@
 ﻿namespace Footage.Dao
 {
     using System.Collections.Generic;
+    using System.Linq;
     using Footage.Context;
     using Footage.Model;
-    using JetBrains.Annotations;
 
-    public class MediaSourceDao : DaoBase<MediaSource>
+    public class MediaSourceDao : DaoBase<MediaSource>, IMediaSourceDao
     {
-        public MediaSourceDao([NotNull] VideoContext dbContext) : base(dbContext)
+        protected override IQueryable<MediaSource> GetEntities(VideoContext context)
         {
+            return context.MediaSources;
         }
-
-        protected override IEnumerable<MediaSource>? Entities => DbContext.MediaSources;
     }
 }
