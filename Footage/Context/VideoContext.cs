@@ -8,6 +8,7 @@
     {
         public DbSet<Video> Videos { get; }
         public DbSet<Bookmark> Bookmarks { get; }
+        public DbSet<MediaSource> MediaSources { get; }
         
         public string DbPath { get; }
 
@@ -27,6 +28,7 @@
         {
             modelBuilder.Entity<TimeBookmark>();
             modelBuilder.Entity<RangeBookmark>();
+            modelBuilder.Entity<LocalMediaSource>();
             
             base.OnModelCreating(modelBuilder);
         }
