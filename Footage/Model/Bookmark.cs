@@ -1,8 +1,7 @@
 ﻿namespace Footage.Model
 {
-    public abstract class Bookmark
+    public abstract class Bookmark : Entity
     {
-        public int Id { get; set; }
         public int VideoId { get; set; }
     }
 }

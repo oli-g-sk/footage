@@ -2,10 +2,8 @@
 {
     using System.Collections.Generic;
 
-    public class Video
+    public class Video : Entity
     {
-        public int Id { get; set; }
-        
         public string Uri { get; set; }
         
         public long Duration { get; set; }
