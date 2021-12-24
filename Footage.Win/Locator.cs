@@ -3,6 +3,8 @@
     using Footage.Context;
     using Footage.Dao;
     using Footage.Model;
+    using Footage.Repository;
+    using Footage.Service;
     using Footage.ViewModel;
     using SimpleInjector;
 
@@ -19,6 +21,9 @@
             // DAO implementations
             Container.Register<IMediaSourceDao, MediaSourceDao>();
             Container.Register<IVideoDao, VideoDao>();
+            
+            // services
+            Container.Register<SourcesRepository>();
 
             // ViewModels
             Container.Register<MainWindowViewModel>();

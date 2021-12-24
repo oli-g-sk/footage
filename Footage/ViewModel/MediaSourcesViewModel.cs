@@ -1,18 +1,17 @@
 ﻿namespace Footage.ViewModel
 {
     using System.Collections.ObjectModel;
-    using System.IO;
     using System.Linq;
     using Avalonia.Controls;
-    using Footage.Dao;
-    using Footage.Model;
+    using Footage.Repository;
+    using Footage.Service;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
 
     public class MediaSourcesViewModel : ViewModelBase
     {
-        private IMediaSourceDao Dao { get; }
-
+        private readonly SourcesRepository sourcesRepository;
+        
         public ObservableCollection<MediaSourceViewModel> Sources { get; }
 
         private MediaSourceViewModel? selectedSource;
@@ -33,9 +32,9 @@
         
         public RelayCommand RemoveSelectedSourceCommand { get; }
 
-        public MediaSourcesViewModel(IMediaSourceDao dao)
+        public MediaSourcesViewModel(SourcesRepository sourcesRepository)
         {
-            Dao = dao;
+            this.sourcesRepository = sourcesRepository;
 
             Sources = new ObservableCollection<MediaSourceViewModel>();
             AddLocalSourceCommand = new RelayCommand(AddLocalSource);
@@ -59,29 +58,23 @@
                 return;
             }
             
-            // TODO move to Repository layer
-            var source = new LocalMediaSource
-            {
-                Name = Path.GetFileName(directory),
-                RootPath = directory,
-                IncludeSubfolders = true
-            };
-                
-            Dao.Insert(source);
-            
+            var newSource = sourcesRepository.AddLocalSource(directory, true);
             ReloadAllSources();
+
+            // TODO await
+            sourcesRepository.RefreshLocalSource(newSource);
         }
 
         private void RemoveSelectedSource()
         {
-            Dao.Remove(SelectedSource.Item);
+            sourcesRepository.RemoveSource(SelectedSource.Item);
             ReloadAllSources();
         }
         
         private void ReloadAllSources()
         {
             Sources.Clear();
-            var sources = Dao.Query().Select(s => new MediaSourceViewModel(s));
+            var sources = sourcesRepository.Sources.Select(s => new MediaSourceViewModel(s));
             
             // TODO create an extension method for this
             foreach (var source in sources)
