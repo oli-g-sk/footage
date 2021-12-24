@@ -23,6 +23,18 @@
             }
             
             DbContext.Add(item);
+            DbContext.SaveChanges();
+        }
+
+        public void Remove(T item)
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+            
+            DbContext.Remove(item);
+            DbContext.SaveChanges();
         }
 
         protected abstract IEnumerable<T>? Entities { get; }

@@ -7,6 +7,8 @@
     {
         void Insert(T item);
 
+        void Remove(T item);
+
         IQueryable<T> Query();
     }
 }

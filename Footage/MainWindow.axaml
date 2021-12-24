@@ -2,8 +2,35 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:Footage.ViewModel"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="Footage.MainWindow"
         Title="Footage">
-    Welcome to Avalonia!
+    <Grid ColumnDefinitions="Auto, *">
+        <DockPanel Grid.Column="0">
+            <!-- TODO remove new VM instance, bind -->
+            <DockPanel.DataContext>
+                <viewModel:MediaSourcesViewModel />
+            </DockPanel.DataContext>
+            <DockPanel DockPanel.Dock="Top">
+                <Button DockPanel.Dock="Right" Content="Add"
+                        Command="{Binding AddLocalSourceCommand}"/>
+                <Button DockPanel.Dock="Right" Content="Remove"
+                        Command="{Binding RemoveSelectedSourceCommand}"/>
+                <TextBlock Text="Media sources"/>
+            </DockPanel>
+            <ListBox Items="{Binding Sources}"
+                     SelectedItem="{Binding SelectedSource}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="viewModel:MediaSourceViewModel">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Text="{Binding Name}"
+                                       FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Description}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </DockPanel>
+    </Grid>
 </Window>

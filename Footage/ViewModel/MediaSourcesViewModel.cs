@@ -15,9 +15,25 @@
     {
         private IEntityDao<MediaSource> Dao { get; }
 
-        public ObservableCollection<EntityViewModel<MediaSource>> Sources { get; }
+        public ObservableCollection<MediaSourceViewModel> Sources { get; }
+
+        private MediaSourceViewModel? selectedSource;
+        public MediaSourceViewModel? SelectedSource
+        {
+            get => selectedSource;
+            set
+            {
+                Set(ref selectedSource, value);
+                RaisePropertyChanged(nameof(SourceSelected));
+                RemoveSelectedSourceCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        public bool SourceSelected => SelectedSource != null;
         
         public RelayCommand AddLocalSourceCommand { get; }
+        
+        public RelayCommand RemoveSelectedSourceCommand { get; }
 
         public MediaSourcesViewModel()
         {
@@ -25,8 +41,9 @@
             var dbContext = new VideoContext();
             Dao = new MediaSourceDao(dbContext);
 
-            Sources = new ObservableCollection<EntityViewModel<MediaSource>>();
+            Sources = new ObservableCollection<MediaSourceViewModel>();
             AddLocalSourceCommand = new RelayCommand(AddLocalSource);
+            RemoveSelectedSourceCommand = new RelayCommand(RemoveSelectedSource, () => SourceSelected);
             
             ReloadAllSources();
         }
@@ -39,25 +56,36 @@
             // TODO make async
             var task = dialog.ShowAsync(MainWindow.Instance);
             task.Wait();
-            
-            if (dialog.Directory != null)
+            string? directory = task.Result;
+
+            if (directory == null)
             {
-                var source = new LocalMediaSource
-                {
-                    Name = Path.GetDirectoryName(dialog.Directory),
-                    IncludeSubfolders = true,
-                };
-                
-                Dao.Insert(source);
-                
-                ReloadAllSources();
+                return;
             }
+            
+            // TODO move to Repository layer
+            var source = new LocalMediaSource
+            {
+                Name = Path.GetFileName(directory),
+                RootPath = directory,
+                IncludeSubfolders = true
+            };
+                
+            Dao.Insert(source);
+            
+            ReloadAllSources();
         }
 
+        private void RemoveSelectedSource()
+        {
+            Dao.Remove(SelectedSource.Item);
+            ReloadAllSources();
+        }
+        
         private void ReloadAllSources()
         {
             Sources.Clear();
-            var sources = Dao.Query().Select(s => new EntityViewModel<MediaSource>(s));
+            var sources = Dao.Query().Select(s => new MediaSourceViewModel(s));
             
             // TODO create an extension method for this
             foreach (var source in sources)
