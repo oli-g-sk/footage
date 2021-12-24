@@ -6,9 +6,14 @@
 
     public class VideoContext : DbContext
     {
-        public DbSet<Video> Videos { get; }
-        public DbSet<Bookmark> Bookmarks { get; }
-        public DbSet<MediaSource> MediaSources { get; }
+        // ReSharper disable UnusedAutoPropertyAccessor.Global
+        // NOTE: EFCore needs the setter, otherwise the properties remain null 
+        
+        public DbSet<Video> Videos { get; set; }
+        public DbSet<Bookmark> Bookmarks { get; set; }
+        public DbSet<MediaSource> MediaSources { get; set; }
+        
+        // ReSharper restore UnusedAutoPropertyAccessor.Global
         
         public string DbPath { get; }
 
