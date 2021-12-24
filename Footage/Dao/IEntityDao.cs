@@ -1,7 +1,9 @@
 ﻿namespace Footage.Dao
 {
-    public interface IEntityDao
+    using Footage.Model;
+
+    public interface IEntityDao<T> where T : Entity
     {
-        
+        void Insert(T item);
     }
 }
