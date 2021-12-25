@@ -6,20 +6,18 @@
     using System.Threading.Tasks;
     using Avalonia.Controls;
     using Avalonia.Threading;
-    using Footage.Dao;
+    using Footage.Messages;
     using Footage.Repository;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
-    using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
 
     public class MediaSourcesViewModel : SectionViewModel
     {
-        public event EventHandler SelectedSourceChanged;
-        
         public ObservableCollection<MediaSourceViewModel> Sources { get; }
 
         private MediaSourceViewModel? selectedSource;
+
         public MediaSourceViewModel? SelectedSource
         {
             get => selectedSource;
@@ -28,7 +26,7 @@
                 Set(ref selectedSource, value);
                 RaisePropertyChanged(nameof(SourceSelected));
                 RemoveSelectedSourceCommand.RaiseCanExecuteChanged();
-                SelectedSourceChanged?.Invoke(this, EventArgs.Empty);
+                MessengerInstance.Send(new SelectionChangedMessage<MediaSourceViewModel>(SelectedSource));
             }
         }
 

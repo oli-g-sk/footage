@@ -3,11 +3,11 @@
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
     using Avalonia.Threading;
+    using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
-    using GalaSoft.MvvmLight;
 
     public class VideoBrowserViewModel : SectionViewModel
     {
@@ -18,16 +18,19 @@
         public VideoBrowserViewModel()
         {
             Videos = new ObservableCollection<VideoViewModel>();
+            
+            MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, m => SwitchSource(m.SelectedItem));
         }
 
-        public async Task SwitchSource(MediaSourceViewModel source)
+        public void SwitchSource(MediaSourceViewModel source)
         {
             selectedSource = source.Item;
             
             // TODO clear async
             Videos.Clear();
             
-            await FetchVideos();
+            // TODO cancel existing, if any
+            Task.Run(() => FetchVideos());
         }
 
         private async Task FetchVideos(int? batchSize = null)
