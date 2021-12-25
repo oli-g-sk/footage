@@ -42,7 +42,7 @@
             AddLocalSourceCommand = new RelayCommand(AddLocalSource);
             RemoveSelectedSourceCommand = new RelayCommand(RemoveSelectedSource, () => SourceSelected);
             
-            ReloadAllSources();
+            LoadAllSources();
         }
 
         private void AddLocalSource()
@@ -60,7 +60,7 @@
                 return;
             }
 
-            Task.Run(new Action(async () =>
+            Task.Run(async () =>
             {
                 using var repo = Locator.Get<SourcesRepository>();
                 
@@ -75,23 +75,28 @@
                 });
 
                 await repo.RefreshLocalSource(newSource).ContinueWith(t => viewModel.IsBusy = false);
-            }));
+            });
         }
 
         private void RemoveSelectedSource()
         {
+            if (SelectedSource == null)
+            {
+                return;
+            }
+            
+            var sourceModel = SelectedSource.Item;
+            Sources.Remove(SelectedSource);
+            
             Task.Run(async () =>
             {
                 using var repo = Locator.Get<SourcesRepository>();
-                await repo.RemoveSource(SelectedSource.Item);
-                await ReloadAllSources();
+                await repo.RemoveSource(sourceModel);
             });
         }
         
-        private async Task ReloadAllSources()
+        private async Task LoadAllSources()
         {
-            Sources.Clear();
-
             using var repo = Locator.Get<SourcesRepository>();
             var sources = (await repo.GetAllSources()).Select(s => new MediaSourceViewModel(s));
             
