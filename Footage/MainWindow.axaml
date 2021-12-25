@@ -15,7 +15,7 @@
         <viewModel:MainWindowViewModel/>
     </Window.DataContext>
     
-    <Grid ColumnDefinitions="Auto, *, *">
+    <Grid ColumnDefinitions="Auto, *, Auto">
         <DockPanel Grid.Column="0"
                    DataContext="{Binding MediaSources}">
             <!-- TODO remove new VM instance, bind -->
@@ -74,17 +74,28 @@
             </ListBox>
         </DockPanel>
         
-        <DockPanel Grid.Column="2"
-                   DataContext="{Binding VideoDetail}">
-            <Panel Background="#226600">
-                <vlc:VideoView Margin="10"
-                               MediaPlayer="{Binding Player}"
-                               HorizontalAlignment="Stretch"
-                               VerticalAlignment="Stretch"/>
-                
-                               
-                               
-            </Panel>
-        </DockPanel>
+        <Grid Grid.Column="2"
+              RowDefinitions="Auto, *"
+              DataContext="{Binding VideoDetail}">
+            <StackPanel Grid.Row="0"
+                        Orientation="Vertical"
+                        DataContext="{Binding Playback}">
+                <Panel Background="#000000">
+                    <vlc:VideoView MediaPlayer="{Binding Player}"
+                                   Margin="5"
+                                   Width="640"
+                                   Height="360"/>
+                </Panel>
+                <Slider HorizontalAlignment="Stretch"/>
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Play"
+                                Command="{Binding PlayPauseCommand}"/>
+                    </StackPanel>
+                </DockPanel>
+            </StackPanel>
+            
+            <ListBox Grid.Row="1" />
+        </Grid>
     </Grid>
 </Window>

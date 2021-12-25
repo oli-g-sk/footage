@@ -4,6 +4,7 @@
     using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Section;
+    using GalaSoft.MvvmLight.Command;
 
     public class MainWindowViewModel : SectionViewModel
     {
@@ -12,7 +13,7 @@
         public VideoBrowserViewModel VideoBrowser { get; }
         
         public VideoDetailViewModel VideoDetail { get; }
-        
+
         public MainWindowViewModel()
         {
             MediaSources = Locator.Get<MediaSourcesViewModel>();
