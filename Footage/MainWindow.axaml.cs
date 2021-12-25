@@ -5,6 +5,7 @@ using Avalonia.Markup.Xaml;
 namespace Footage
 {
     using Footage.ViewModel;
+    using LibVLCSharp.Shared;
 
     public partial class MainWindow : Window
     {
@@ -13,6 +14,8 @@ namespace Footage
         
         public MainWindow()
         {
+            Core.Initialize();
+            
             InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
