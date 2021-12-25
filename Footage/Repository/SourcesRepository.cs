@@ -25,7 +25,7 @@
             Sources = mediaSourceDao.Query().ToList();
         }
         
-        public LocalMediaSource AddLocalSource(string path, bool includeSubfolders)
+        public async Task<LocalMediaSource> AddLocalSource(string path, bool includeSubfolders)
         {
             var source = new LocalMediaSource
             {
@@ -35,14 +35,14 @@
             };
             
             Sources.Add(source);
-            mediaSourceDao.Insert(source);
+            await mediaSourceDao.Insert(source);
             return source;
         }
 
         public async Task RemoveSource(MediaSource source)
         {
             Sources.Remove(source);
-            mediaSourceDao.Remove(source);
+            await mediaSourceDao.Remove(source);
         }
 
         public async Task RefreshLocalSource(LocalMediaSource source)
@@ -62,13 +62,10 @@
                 videos.Add(new Video
                 {
                     MediaSourceId = source.Id,
+                    MediaSourceUri = sourceVideo.Identifier
                 });
             }
 
-#if DEBUG
-            await Task.Delay(4000);
-#endif
-            
             await videoDao.InsertRange(videos);
         }
 

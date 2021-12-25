@@ -1,6 +1,7 @@
-﻿namespace Footage.ViewModel
+﻿namespace Footage.ViewModel.Entity
 {
     using Footage.Model;
+    using Footage.ViewModel.Base;
     using JetBrains.Annotations;
 
     public class MediaSourceViewModel : EntityViewModel<MediaSource>

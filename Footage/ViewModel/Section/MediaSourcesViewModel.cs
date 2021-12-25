@@ -1,17 +1,21 @@
-﻿namespace Footage.ViewModel
+﻿namespace Footage.ViewModel.Section
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
     using Avalonia.Controls;
+    using Avalonia.Threading;
     using Footage.Repository;
-    using Footage.Service;
+    using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
 
     public class MediaSourcesViewModel : ViewModelBase
     {
         private readonly SourcesRepository sourcesRepository;
+
+        public event EventHandler SelectedSourceChanged;
         
         public ObservableCollection<MediaSourceViewModel> Sources { get; }
 
@@ -24,6 +28,7 @@
                 Set(ref selectedSource, value);
                 RaisePropertyChanged(nameof(SourceSelected));
                 RemoveSelectedSourceCommand.RaiseCanExecuteChanged();
+                SelectedSourceChanged?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -58,14 +63,21 @@
             {
                 return;
             }
-            
-            var newSource = sourcesRepository.AddLocalSource(directory, true);
-            var viewModel = new MediaSourceViewModel(newSource);
-            Sources.Add(viewModel);
 
-            viewModel.IsBusy = true;
-            // TODO await
-            sourcesRepository.RefreshLocalSource(newSource).ContinueWith(t => viewModel.IsBusy = false);
+            Task.Run(new Action(async () =>
+            {
+                await Task.Delay(1);
+                var newSource = await sourcesRepository.AddLocalSource(directory, true);
+
+                var viewModel = new MediaSourceViewModel(newSource) { IsBusy = true };
+
+                await Dispatcher.UIThread.InvokeAsync(() =>
+                {
+                    Sources.Add(viewModel);
+                });
+
+                await sourcesRepository.RefreshLocalSource(newSource).ContinueWith(t => viewModel.IsBusy = false);
+            }));
         }
 
         private void RemoveSelectedSource()

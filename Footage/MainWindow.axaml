@@ -3,6 +3,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel="clr-namespace:Footage.ViewModel"
+        xmlns:entity="clr-namespace:Footage.ViewModel.Entity"
+        xmlns:vm="clr-namespace:Footage.ViewModel.Base"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}"
         x:Class="Footage.MainWindow"
@@ -20,11 +22,14 @@
             </DockPanel>
             <ListBox Items="{Binding Sources}"
                      SelectedItem="{Binding SelectedSource}">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListBox.Styles>
                 <ListBox.ItemTemplate>
-                    <DataTemplate DataType="viewModel:MediaSourceViewModel">
-                        <DockPanel HorizontalAlignment="Stretch">
-                            <ToggleSwitch DockPanel.Dock="Right"
-                                          IsChecked="{Binding IsActive}"/>
+                    <DataTemplate DataType="entity:MediaSourceViewModel">
+                        <DockPanel>
                             <TextBlock DockPanel.Dock="Right"
                                        VerticalAlignment="Center"
                                        IsVisible="{Binding IsBusy}"
@@ -39,6 +44,29 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+        </DockPanel>
+        
+        <DockPanel Grid.Column="1"
+                   DataContext="{Binding VideoBrowser}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
+                <ItemsRepeater Items="{Binding Videos}">
+                    <ItemsRepeater.Layout>
+                        <UniformGridLayout Orientation="Horizontal"
+                                           MinItemWidth="192"
+                                           MinItemHeight="108"
+                                           MinColumnSpacing="10"
+                                           MinRowSpacing="10"/>
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate DataType="entity:VideoViewModel">
+                            <DockPanel HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch"
+                                       Background="#CCCCDD" />
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </ScrollViewer>
         </DockPanel>
     </Grid>
 </Window>

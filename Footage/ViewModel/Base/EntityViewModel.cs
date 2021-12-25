@@ -1,4 +1,4 @@
-﻿namespace Footage.ViewModel
+﻿namespace Footage.ViewModel.Base
 {
     using Footage.Model;
     using GalaSoft.MvvmLight;

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
@@ -18,17 +19,24 @@
             return await entities.AnyAsync(predicate);
         }
 
-        public void Insert(T item)
+        public async Task Insert(T item)
         {
-            using var dbContext = new VideoContext();
-            
             if (item == null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
 
-            dbContext.Add(item);
-            dbContext.SaveChanges();
+            await using var dbContext = new VideoContext();
+
+            try
+            {
+                dbContext.Add(item);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ProcessException(ex);
+            }
         }
 
         public async Task InsertRange(IEnumerable<T> items)
@@ -37,38 +45,62 @@
             {
                 throw new ArgumentNullException(nameof(items));
             }
-            
-#if DEBUG
-            await Task.Delay(1000);
-#endif
-            
+
             await using var dbContext = new VideoContext();
-            await dbContext.AddRangeAsync(items);
-            await dbContext.SaveChangesAsync();
+
+            try
+            {
+                dbContext.AddRange(items);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ProcessException(ex);
+            }
         }
 
-        public void Remove(T item)
+        public async Task Remove(T item)
         {
-            using var dbContext = new VideoContext();
-            
             if (item == null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
-            
-            dbContext.Remove(item);
-            dbContext.SaveChanges();
+
+            await using var dbContext = new VideoContext();
+
+            try
+            {
+                dbContext.Remove(item);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ProcessException(ex);
+            }
         }
 
-        public IEnumerable<T> Query()
+        public IEnumerable<T> Query(Expression<Func<T, bool>>? predicate = null)
         {
             using var dbContext = new VideoContext();
             
             var entities = GetEntities(dbContext);
+
+            if (predicate != null)
+            {
+                entities = entities.Where(predicate);
+            }
             
             return entities.AsEnumerable().ToList();
         }
 
         protected abstract IQueryable<T> GetEntities(VideoContext context);
+
+        private void ProcessException(Exception ex)
+        {
+            Debugger.Break();
+            
+            // TODO KURVA this thrown exception is swallowed, nothing happens :(
+            throw new DbException(ex);
+        }
     }
 }

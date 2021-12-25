@@ -10,13 +10,13 @@
     {
         Task<bool> Contains(Expression<Func<T, bool>> predicate);
         
-        void Insert(T item);
+        Task Insert(T item);
 
         Task InsertRange(IEnumerable<T> items);
 
-        void Remove(T item);
+        Task Remove(T item);
 
-        IEnumerable<T> Query();
+        IEnumerable<T> Query(Expression<Func<T, bool>>? predicate = null);
         
         // TODO add a Query overload with parameters
     }

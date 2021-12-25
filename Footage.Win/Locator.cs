@@ -6,6 +6,7 @@
     using Footage.Repository;
     using Footage.Service;
     using Footage.ViewModel;
+    using Footage.ViewModel.Section;
     using SimpleInjector;
 
     public static class Locator
@@ -24,10 +25,12 @@
             
             // services
             Container.Register<SourcesRepository>();
+            Container.Register<VideoBrowserRepository>();
 
             // ViewModels
             Container.Register<MainWindowViewModel>();
             Container.Register<MediaSourcesViewModel>();
+            Container.Register<VideoBrowserViewModel>();
             
             Container.Verify();
         }
