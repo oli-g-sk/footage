@@ -1,5 +1,6 @@
 ﻿namespace Footage.ViewModel.Section
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
     using Avalonia.Threading;
@@ -13,7 +14,20 @@
     {
         private MediaSource? selectedSource;
         
+
         public ObservableCollection<VideoViewModel> Videos { get; }
+
+        private VideoViewModel? selectedVideo;
+
+        public VideoViewModel? SelectedVideo
+        {
+            get => selectedVideo;
+            set
+            {
+                Set(ref selectedVideo, value);
+                MessengerInstance.Send(new SelectionChangedMessage<VideoViewModel>(SelectedVideo));
+            }
+        }
 
         public VideoBrowserViewModel()
         {

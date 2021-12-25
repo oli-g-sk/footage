@@ -14,8 +14,6 @@ namespace Footage
         
         public MainWindow()
         {
-            Core.Initialize();
-            
             InitializeComponent();
 #if DEBUG
             this.AttachDevTools();

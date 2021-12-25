@@ -3,10 +3,7 @@
     using System;
     using GalaSoft.MvvmLight;
 
-    public class SectionViewModel : ViewModelBase, IDisposable
+    public class SectionViewModel : ViewModelBase
     {
-        public void Dispose()
-        {
-        }
     }
 }

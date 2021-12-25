@@ -55,7 +55,8 @@
         <DockPanel Grid.Column="1"
                    DataContext="{Binding VideoBrowser}">
     
-            <ListBox Items="{Binding Videos}">
+            <ListBox Items="{Binding Videos}"
+                     SelectedItem="{Binding SelectedVideo}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>
@@ -73,5 +74,17 @@
             </ListBox>
         </DockPanel>
         
+        <DockPanel Grid.Column="2"
+                   DataContext="{Binding VideoDetail}">
+            <Panel Background="#226600">
+                <vlc:VideoView Margin="10"
+                               MediaPlayer="{Binding Player}"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"/>
+                
+                               
+                               
+            </Panel>
+        </DockPanel>
     </Grid>
 </Window>
