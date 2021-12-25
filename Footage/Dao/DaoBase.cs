@@ -15,7 +15,7 @@
         public async Task<bool> Contains(Expression<Func<T, bool>> predicate)
         {
             await using var dbContext = new VideoContext();
-            var entities = GetEntities(dbContext);
+            var entities = dbContext.Set<T>();
             return await entities.AnyAsync(predicate);
         }
 
@@ -83,7 +83,7 @@
         {
             using var dbContext = new VideoContext();
             
-            var entities = GetEntities(dbContext);
+            var entities = dbContext.Set<T>().AsQueryable();
 
             if (predicate != null)
             {
@@ -92,8 +92,6 @@
             
             return entities.AsEnumerable().ToList();
         }
-
-        protected abstract IQueryable<T> GetEntities(VideoContext context);
 
         private void ProcessException(Exception ex)
         {

@@ -7,9 +7,5 @@
 
     public class MediaSourceDao : DaoBase<MediaSource>, IMediaSourceDao
     {
-        protected override IQueryable<MediaSource> GetEntities(VideoContext context)
-        {
-            return context.MediaSources;
-        }
     }
 }
