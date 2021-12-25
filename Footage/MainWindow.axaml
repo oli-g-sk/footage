@@ -22,11 +22,20 @@
                      SelectedItem="{Binding SelectedSource}">
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="viewModel:MediaSourceViewModel">
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Name}"
-                                       FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Description}"/>
-                        </StackPanel>
+                        <DockPanel HorizontalAlignment="Stretch">
+                            <ToggleSwitch DockPanel.Dock="Right"
+                                          IsChecked="{Binding IsActive}"/>
+                            <TextBlock DockPanel.Dock="Right"
+                                       VerticalAlignment="Center"
+                                       IsVisible="{Binding IsBusy}"
+                                       Text="..." />
+                            <StackPanel Orientation="Vertical"
+                                        IsEnabled="{Binding !IsBusy}">
+                                <TextBlock Text="{Binding Name}"
+                                           FontWeight="Bold"/>
+                                <TextBlock Text="{Binding Description}"/>
+                            </StackPanel>
+                        </DockPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>

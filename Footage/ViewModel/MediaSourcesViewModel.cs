@@ -2,6 +2,7 @@
 {
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Threading.Tasks;
     using Avalonia.Controls;
     using Footage.Repository;
     using Footage.Service;
@@ -59,10 +60,12 @@
             }
             
             var newSource = sourcesRepository.AddLocalSource(directory, true);
-            ReloadAllSources();
+            var viewModel = new MediaSourceViewModel(newSource);
+            Sources.Add(viewModel);
 
+            viewModel.IsBusy = true;
             // TODO await
-            sourcesRepository.RefreshLocalSource(newSource);
+            sourcesRepository.RefreshLocalSource(newSource).ContinueWith(t => viewModel.IsBusy = false);
         }
 
         private void RemoveSelectedSource()

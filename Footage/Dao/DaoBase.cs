@@ -38,6 +38,10 @@
                 throw new ArgumentNullException(nameof(items));
             }
             
+#if DEBUG
+            await Task.Delay(1000);
+#endif
+            
             await using var dbContext = new VideoContext();
             await dbContext.AddRangeAsync(items);
             await dbContext.SaveChangesAsync();

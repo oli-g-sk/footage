@@ -65,6 +65,10 @@
                 });
             }
 
+#if DEBUG
+            await Task.Delay(4000);
+#endif
+            
             await videoDao.InsertRange(videos);
         }
 
