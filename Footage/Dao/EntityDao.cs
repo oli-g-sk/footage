@@ -10,24 +10,28 @@
     using Footage.Model;
     using Microsoft.EntityFrameworkCore;
 
-    public abstract class DaoBase<T> : IEntityDao<T> where T : Entity
+    public class EntityDao : IEntityDao
     {
-        public async Task<bool> Contains(Expression<Func<T, bool>> predicate)
+        private readonly VideoContext dbContext;
+        
+        public EntityDao()
         {
-            await using var dbContext = new VideoContext();
+            dbContext = new VideoContext();
+        }
+        
+        public async Task<bool> Contains<T>(Expression<Func<T, bool>> predicate) where T : Entity 
+        {
             var entities = dbContext.Set<T>();
             return await entities.AnyAsync(predicate);
         }
 
-        public async Task Insert(T item)
+        public async Task Insert<T>(T item) where T : Entity
         {
             if (item == null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
-
-            await using var dbContext = new VideoContext();
-
+            
             try
             {
                 dbContext.Add(item);
@@ -39,14 +43,12 @@
             }
         }
 
-        public async Task InsertRange(IEnumerable<T> items)
+        public async Task InsertRange<T>(IEnumerable<T> items) where T : Entity
         {
             if (items == null)
             {
                 throw new ArgumentNullException(nameof(items));
             }
-
-            await using var dbContext = new VideoContext();
 
             try
             {
@@ -59,14 +61,12 @@
             }
         }
 
-        public async Task Remove(T item)
+        public async Task Remove<T>(T item) where T : Entity
         {
             if (item == null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
-
-            await using var dbContext = new VideoContext();
 
             try
             {
@@ -79,10 +79,8 @@
             }
         }
 
-        public IEnumerable<T> Query(Expression<Func<T, bool>>? predicate = null)
+        public IEnumerable<T> Query<T>(Expression<Func<T, bool>>? predicate = null) where T : Entity
         {
-            using var dbContext = new VideoContext();
-            
             var entities = dbContext.Set<T>().AsQueryable();
 
             if (predicate != null)
@@ -91,6 +89,11 @@
             }
             
             return entities.AsEnumerable().ToList();
+        }
+        
+        public void Dispose()
+        {
+            dbContext.Dispose();
         }
 
         private void ProcessException(Exception ex)

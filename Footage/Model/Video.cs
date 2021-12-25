@@ -6,8 +6,11 @@
     {
         /// <summary>
         /// Id of the MediaSource it belongs to
+        /// TODO remove?
         /// </summary>
         public int MediaSourceId { get; set; }
+        
+        public MediaSource MediaSource { get; set; }
         
         /// <summary>
         /// An unique (in the context of the source) identifier for locating the video.

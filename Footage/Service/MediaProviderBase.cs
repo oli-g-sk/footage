@@ -17,7 +17,7 @@
 
         public string GetFullPath(Video video)
         {
-            if (video.MediaSourceId != Source.Id)
+            if (video.MediaSource != Source)
             {
                 throw new ArgumentException($"Video {video.Id} does not belong to source {Source.Id} '{Source.Name}'");
             }

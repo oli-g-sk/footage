@@ -10,6 +10,11 @@
         d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}"
         x:Class="Footage.MainWindow"
         Title="Footage">
+    
+    <Window.DataContext>
+        <viewModel:MainWindowViewModel/>
+    </Window.DataContext>
+    
     <Grid ColumnDefinitions="Auto, *, *">
         <DockPanel Grid.Column="0"
                    DataContext="{Binding MediaSources}">

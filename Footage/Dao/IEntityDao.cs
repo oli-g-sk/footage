@@ -6,17 +6,17 @@
     using System.Threading.Tasks;
     using Footage.Model;
 
-    public interface IEntityDao<T> where T : Entity
+    public interface IEntityDao : IDisposable
     {
-        Task<bool> Contains(Expression<Func<T, bool>> predicate);
+        Task<bool> Contains<T>(Expression<Func<T, bool>> predicate) where T : Entity;
         
-        Task Insert(T item);
+        Task Insert<T>(T item) where T : Entity;
 
-        Task InsertRange(IEnumerable<T> items);
+        Task InsertRange<T>(IEnumerable<T> items) where T : Entity;
 
-        Task Remove(T item);
+        Task Remove<T>(T item) where T : Entity;
 
-        IEnumerable<T> Query(Expression<Func<T, bool>>? predicate = null);
+        IEnumerable<T> Query<T>(Expression<Func<T, bool>>? predicate = null) where T : Entity;
         
         // TODO add a Query overload with parameters
     }

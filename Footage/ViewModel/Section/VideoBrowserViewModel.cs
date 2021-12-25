@@ -3,38 +3,41 @@
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
     using Avalonia.Threading;
+    using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
+    using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
-    using GalaSoft.MvvmLight;
 
-    public class VideoBrowserViewModel : ViewModelBase
+    public class VideoBrowserViewModel : SectionViewModel
     {
         private MediaSource? selectedSource;
         
-        private readonly VideoBrowserRepository videoRepository;
-        
         public ObservableCollection<VideoViewModel> Videos { get; }
 
-        public VideoBrowserViewModel(VideoBrowserRepository videoRepository)
+        public VideoBrowserViewModel()
         {
-            this.videoRepository = videoRepository;
             Videos = new ObservableCollection<VideoViewModel>();
+            
+            MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, m => SwitchSource(m.SelectedItem));
         }
 
-        public async Task SwitchSource(MediaSourceViewModel source)
+        public void SwitchSource(MediaSourceViewModel source)
         {
             selectedSource = source.Item;
             
             // TODO clear async
             Videos.Clear();
             
-            await FetchVideos();
+            // TODO cancel existing, if any
+            Task.Run(() => FetchVideos());
         }
 
         private async Task FetchVideos(int? batchSize = null)
         {
-            var videos = videoRepository.FetchVideos(selectedSource, batchSize);
+            using var repo = new VideoBrowserRepository();
+            
+            var videos = repo.FetchVideos(selectedSource, batchSize);
 
             foreach (var video in videos)
             {
