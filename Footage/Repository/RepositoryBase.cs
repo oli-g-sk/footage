@@ -1,22 +1,20 @@
 ﻿namespace Footage.Repository
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Footage.Dao;
 
     public abstract class RepositoryBase : IDisposable
     {
-        protected EntityDao dao { get; private set; }
+        protected IEntityDao Dao { get; }
 
         protected RepositoryBase()
         {
-            dao = new EntityDao();
+            Dao = new EntityDao();
         }
         
-        public void Dispose()
+        public virtual void Dispose()
         {
-            dao.Dispose();
+            Dao.Dispose();
         }
     }
 }

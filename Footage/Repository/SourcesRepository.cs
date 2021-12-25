@@ -15,7 +15,7 @@
         public SourcesRepository()
         {
             // TODO load async
-            Sources = dao.Query<MediaSource>().ToList();
+            Sources = Dao.Query<MediaSource>().ToList();
         }
         
         public async Task<LocalMediaSource> AddLocalSource(string path, bool includeSubfolders)
@@ -28,14 +28,14 @@
             };
             
             Sources.Add(source);
-            await dao.Insert(source);
+            await Dao.Insert(source);
             return source;
         }
 
         public async Task RemoveSource(MediaSource source)
         {
             Sources.Remove(source);
-            await dao.Remove(source);
+            await Dao.Remove(source);
         }
 
         public async Task RefreshLocalSource(LocalMediaSource source)
@@ -59,7 +59,7 @@
                 });
             }
 
-            await dao.InsertRange(videos);
+            await Dao.InsertRange(videos);
         }
 
         private async Task RemoveOrphanVideos(MediaSource removedSource)
@@ -69,7 +69,7 @@
         
         private async Task<bool> VideoAlreadyImported(SourceVideoInfo sourceVideoInfo)
         {
-            return await dao.Contains<Video>(v => v.MediaSource == sourceVideoInfo.Source
+            return await Dao.Contains<Video>(v => v.MediaSource == sourceVideoInfo.Source
                                                 && v.MediaSourceUri == sourceVideoInfo.Identifier);
         }
     }
