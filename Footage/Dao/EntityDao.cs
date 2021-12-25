@@ -10,7 +10,7 @@
     using Footage.Model;
     using Microsoft.EntityFrameworkCore;
 
-    public class EntityDao<T> : IEntityDao<T> where T : Entity
+    public class EntityDao : IEntityDao
     {
         private readonly VideoContext dbContext;
         
@@ -19,13 +19,13 @@
             dbContext = new VideoContext();
         }
         
-        public async Task<bool> Contains(Expression<Func<T, bool>> predicate)
+        public async Task<bool> Contains<T>(Expression<Func<T, bool>> predicate) where T : Entity 
         {
             var entities = dbContext.Set<T>();
             return await entities.AnyAsync(predicate);
         }
 
-        public async Task Insert(T item)
+        public async Task Insert<T>(T item) where T : Entity
         {
             if (item == null)
             {
@@ -43,7 +43,7 @@
             }
         }
 
-        public async Task InsertRange(IEnumerable<T> items)
+        public async Task InsertRange<T>(IEnumerable<T> items) where T : Entity
         {
             if (items == null)
             {
@@ -61,7 +61,7 @@
             }
         }
 
-        public async Task Remove(T item)
+        public async Task Remove<T>(T item) where T : Entity
         {
             if (item == null)
             {
@@ -79,7 +79,7 @@
             }
         }
 
-        public IEnumerable<T> Query(Expression<Func<T, bool>>? predicate = null)
+        public IEnumerable<T> Query<T>(Expression<Func<T, bool>>? predicate = null) where T : Entity
         {
             var entities = dbContext.Set<T>().AsQueryable();
 

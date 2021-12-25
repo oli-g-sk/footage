@@ -5,24 +5,17 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Footage.Dao;
     using Footage.Model;
     using Footage.Service;
 
     public class SourcesRepository : RepositoryBase
     {
-        private readonly IEntityDao<MediaSource> mediaSourceDao;
-        private readonly IEntityDao<Video> videoDao;
-
         public List<MediaSource> Sources { get; }
         
         public SourcesRepository()
         {
-            mediaSourceDao = Locator.Dao<MediaSource>();
-            videoDao = Locator.Dao<Video>();
-
             // TODO load async
-            Sources = mediaSourceDao.Query().ToList();
+            Sources = dao.Query<MediaSource>().ToList();
         }
         
         public async Task<LocalMediaSource> AddLocalSource(string path, bool includeSubfolders)
@@ -35,14 +28,14 @@
             };
             
             Sources.Add(source);
-            await mediaSourceDao.Insert(source);
+            await dao.Insert(source);
             return source;
         }
 
         public async Task RemoveSource(MediaSource source)
         {
             Sources.Remove(source);
-            await mediaSourceDao.Remove(source);
+            await dao.Remove(source);
         }
 
         public async Task RefreshLocalSource(LocalMediaSource source)
@@ -61,21 +54,12 @@
                 
                 videos.Add(new Video
                 {
-                    MediaSourceId = source.Id,
+                    MediaSource = source,
                     MediaSourceUri = sourceVideo.Identifier
                 });
             }
 
-            await videoDao.InsertRange(videos);
-        }
-
-        protected override IEnumerable<IDisposable> GetDisposables()
-        {
-            return new IDisposable[]
-            {
-                videoDao,
-                mediaSourceDao
-            };
+            await dao.InsertRange(videos);
         }
 
         private async Task RemoveOrphanVideos(MediaSource removedSource)
@@ -85,7 +69,7 @@
         
         private async Task<bool> VideoAlreadyImported(SourceVideoInfo sourceVideoInfo)
         {
-            return await videoDao.Contains(v => v.MediaSourceId == sourceVideoInfo.Source.Id
+            return await dao.Contains<Video>(v => v.MediaSource == sourceVideoInfo.Source
                                                 && v.MediaSourceUri == sourceVideoInfo.Identifier);
         }
     }

@@ -32,7 +32,7 @@
 
         private async Task FetchVideos(int? batchSize = null)
         {
-            var repo = Locator.Get<VideoBrowserRepository>();
+            using var repo = new VideoBrowserRepository();
             
             var videos = repo.FetchVideos(selectedSource, batchSize);
 

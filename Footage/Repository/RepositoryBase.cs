@@ -7,14 +7,16 @@
 
     public abstract class RepositoryBase : IDisposable
     {
-        protected abstract IEnumerable<IDisposable> GetDisposables();
+        protected EntityDao dao { get; private set; }
+
+        protected RepositoryBase()
+        {
+            dao = new EntityDao();
+        }
         
         public void Dispose()
         {
-            foreach (var disposable in GetDisposables())
-            {
-                disposable.Dispose();
-            }
+            dao.Dispose();
         }
     }
 }
