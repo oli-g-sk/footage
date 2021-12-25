@@ -3,21 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Threading.Tasks;
     using Footage.Model;
     using Footage.Service;
+    using Microsoft.EntityFrameworkCore;
 
     public class SourcesRepository : RepositoryBase
     {
-        public List<MediaSource> Sources { get; }
-        
-        public SourcesRepository()
-        {
-            // TODO load async
-            Sources = Dao.Query<MediaSource>().ToList();
-        }
-        
         public async Task<LocalMediaSource> AddLocalSource(string path, bool includeSubfolders)
         {
             var source = new LocalMediaSource
@@ -27,14 +19,12 @@
                 Name = Path.GetFileName(path)
             };
             
-            Sources.Add(source);
             await Dao.Insert(source);
             return source;
         }
 
         public async Task RemoveSource(MediaSource source)
         {
-            Sources.Remove(source);
             await Dao.Remove(source);
         }
 
@@ -62,11 +52,11 @@
             await Dao.InsertRange(videos);
         }
 
-        private async Task RemoveOrphanVideos(MediaSource removedSource)
+        public async Task<IEnumerable<MediaSource>> GetAllSources()
         {
-            throw new NotImplementedException();
+            return await Dao.Query<MediaSource>().ToListAsync();
         }
-        
+
         private async Task<bool> VideoAlreadyImported(SourceVideoInfo sourceVideoInfo)
         {
             return await Dao.Contains<Video>(v => v.MediaSource == sourceVideoInfo.Source

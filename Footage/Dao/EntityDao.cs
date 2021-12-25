@@ -79,7 +79,7 @@
             }
         }
 
-        public IEnumerable<T> Query<T>(Expression<Func<T, bool>>? predicate = null) where T : Entity
+        public IQueryable<T> Query<T>(Expression<Func<T, bool>>? predicate = null) where T : Entity
         {
             var entities = dbContext.Set<T>().AsQueryable();
 
@@ -88,7 +88,7 @@
                 entities = entities.Where(predicate);
             }
             
-            return entities.AsEnumerable().ToList();
+            return entities;
         }
         
         public void Dispose()

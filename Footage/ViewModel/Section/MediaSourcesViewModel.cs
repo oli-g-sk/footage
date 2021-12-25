@@ -80,17 +80,20 @@
 
         private void RemoveSelectedSource()
         {
-            using var repo = Locator.Get<SourcesRepository>();
-            repo.RemoveSource(SelectedSource.Item);
-            ReloadAllSources();
+            Task.Run(async () =>
+            {
+                using var repo = Locator.Get<SourcesRepository>();
+                await repo.RemoveSource(SelectedSource.Item);
+                await ReloadAllSources();
+            });
         }
         
-        private void ReloadAllSources()
+        private async Task ReloadAllSources()
         {
             Sources.Clear();
 
             using var repo = Locator.Get<SourcesRepository>();
-            var sources = repo.Sources.Select(s => new MediaSourceViewModel(s));
+            var sources = (await repo.GetAllSources()).Select(s => new MediaSourceViewModel(s));
             
             // TODO create an extension method for this
             foreach (var source in sources)
