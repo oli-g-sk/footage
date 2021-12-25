@@ -9,7 +9,7 @@
         d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}"
         x:Class="Footage.MainWindow"
         Title="Footage">
-    <Grid ColumnDefinitions="Auto, *">
+    <Grid ColumnDefinitions="Auto, *, *">
         <DockPanel Grid.Column="0"
                    DataContext="{Binding MediaSources}">
             <!-- TODO remove new VM instance, bind -->
@@ -48,25 +48,24 @@
         
         <DockPanel Grid.Column="1"
                    DataContext="{Binding VideoBrowser}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto"
-                          HorizontalScrollBarVisibility="Disabled">
-                <ItemsRepeater Items="{Binding Videos}">
-                    <ItemsRepeater.Layout>
-                        <UniformGridLayout Orientation="Horizontal"
-                                           MinItemWidth="192"
-                                           MinItemHeight="108"
-                                           MinColumnSpacing="10"
-                                           MinRowSpacing="10"/>
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate DataType="entity:VideoViewModel">
-                            <DockPanel HorizontalAlignment="Stretch"
-                                       VerticalAlignment="Stretch"
-                                       Background="#CCCCDD" />
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
-            </ScrollViewer>
+    
+            <ListBox Items="{Binding Videos}">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel/>
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="entity:VideoViewModel">
+                        <DockPanel HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch"
+                                   Width="192" Height="108"
+                                   Margin="5"
+                                   Background="#CCCCDD" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ListBox>
         </DockPanel>
+        
     </Grid>
 </Window>
