@@ -18,7 +18,7 @@ namespace Footage.Win
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 var mainWindow = new MainWindow();
-                var viewModel = Locator.GetInstance<MainWindowViewModel>();
+                var viewModel = Locator.Get<MainWindowViewModel>();
                 mainWindow.SetViewModel(viewModel);
                 desktop.MainWindow = mainWindow;
             }

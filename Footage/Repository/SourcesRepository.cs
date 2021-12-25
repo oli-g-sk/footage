@@ -9,17 +9,17 @@
     using Footage.Model;
     using Footage.Service;
 
-    public class SourcesRepository
+    public class SourcesRepository : RepositoryBase
     {
-        private readonly IMediaSourceDao mediaSourceDao;
-        private readonly IVideoDao videoDao;
+        private readonly IEntityDao<MediaSource> mediaSourceDao;
+        private readonly IEntityDao<Video> videoDao;
 
         public List<MediaSource> Sources { get; }
         
-        public SourcesRepository(IMediaSourceDao mediaSourceDao, IVideoDao videoDao)
+        public SourcesRepository()
         {
-            this.mediaSourceDao = mediaSourceDao;
-            this.videoDao = videoDao;
+            mediaSourceDao = Locator.Dao<MediaSource>();
+            videoDao = Locator.Dao<Video>();
 
             // TODO load async
             Sources = mediaSourceDao.Query().ToList();
@@ -67,6 +67,15 @@
             }
 
             await videoDao.InsertRange(videos);
+        }
+
+        protected override IEnumerable<IDisposable> GetDisposables()
+        {
+            return new IDisposable[]
+            {
+                videoDao,
+                mediaSourceDao
+            };
         }
 
         private async Task RemoveOrphanVideos(MediaSource removedSource)

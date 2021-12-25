@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Footage.Model;
 
-    public interface IEntityDao<T> where T : Entity
+    public interface IEntityDao<T> : IDisposable where T : Entity
     {
         Task<bool> Contains(Expression<Func<T, bool>> predicate);
         

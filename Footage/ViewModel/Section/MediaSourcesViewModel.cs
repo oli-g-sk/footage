@@ -6,15 +6,15 @@
     using System.Threading.Tasks;
     using Avalonia.Controls;
     using Avalonia.Threading;
+    using Footage.Dao;
     using Footage.Repository;
+    using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight;
     using GalaSoft.MvvmLight.Command;
 
-    public class MediaSourcesViewModel : ViewModelBase
+    public class MediaSourcesViewModel : SectionViewModel
     {
-        private readonly SourcesRepository sourcesRepository;
-
         public event EventHandler SelectedSourceChanged;
         
         public ObservableCollection<MediaSourceViewModel> Sources { get; }
@@ -38,10 +38,8 @@
         
         public RelayCommand RemoveSelectedSourceCommand { get; }
 
-        public MediaSourcesViewModel(SourcesRepository sourcesRepository)
+        public MediaSourcesViewModel()
         {
-            this.sourcesRepository = sourcesRepository;
-
             Sources = new ObservableCollection<MediaSourceViewModel>();
             AddLocalSourceCommand = new RelayCommand(AddLocalSource);
             RemoveSelectedSourceCommand = new RelayCommand(RemoveSelectedSource, () => SourceSelected);
@@ -66,8 +64,10 @@
 
             Task.Run(new Action(async () =>
             {
+                using var repo = Locator.Get<SourcesRepository>();
+                
                 await Task.Delay(1);
-                var newSource = await sourcesRepository.AddLocalSource(directory, true);
+                var newSource = await repo.AddLocalSource(directory, true);
 
                 var viewModel = new MediaSourceViewModel(newSource) { IsBusy = true };
 
@@ -76,20 +76,23 @@
                     Sources.Add(viewModel);
                 });
 
-                await sourcesRepository.RefreshLocalSource(newSource).ContinueWith(t => viewModel.IsBusy = false);
+                await repo.RefreshLocalSource(newSource).ContinueWith(t => viewModel.IsBusy = false);
             }));
         }
 
         private void RemoveSelectedSource()
         {
-            sourcesRepository.RemoveSource(SelectedSource.Item);
+            using var repo = Locator.Get<SourcesRepository>();
+            repo.RemoveSource(SelectedSource.Item);
             ReloadAllSources();
         }
         
         private void ReloadAllSources()
         {
             Sources.Clear();
-            var sources = sourcesRepository.Sources.Select(s => new MediaSourceViewModel(s));
+
+            using var repo = Locator.Get<SourcesRepository>();
+            var sources = repo.Sources.Select(s => new MediaSourceViewModel(s));
             
             // TODO create an extension method for this
             foreach (var source in sources)

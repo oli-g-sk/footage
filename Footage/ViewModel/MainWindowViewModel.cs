@@ -1,18 +1,19 @@
 ﻿namespace Footage.ViewModel
 {
     using System;
+    using Footage.ViewModel.Base;
     using Footage.ViewModel.Section;
 
-    public class MainWindowViewModel
+    public class MainWindowViewModel : SectionViewModel
     {
         public MediaSourcesViewModel MediaSources { get; }
         
         public VideoBrowserViewModel VideoBrowser { get; }
         
-        public MainWindowViewModel(MediaSourcesViewModel mediaSourcesViewModel, VideoBrowserViewModel videoBrowserViewModel)
+        public MainWindowViewModel()
         {
-            MediaSources = mediaSourcesViewModel;
-            VideoBrowser = videoBrowserViewModel;
+            MediaSources = Locator.Get<MediaSourcesViewModel>();
+            VideoBrowser = Locator.Get<VideoBrowserViewModel>();
             MediaSources.SelectedSourceChanged += MediaSources_SelectedSourceChanged;
         }
 

@@ -5,20 +5,18 @@
     using Avalonia.Threading;
     using Footage.Model;
     using Footage.Repository;
+    using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight;
 
-    public class VideoBrowserViewModel : ViewModelBase
+    public class VideoBrowserViewModel : SectionViewModel
     {
         private MediaSource? selectedSource;
         
-        private readonly VideoBrowserRepository videoRepository;
-        
         public ObservableCollection<VideoViewModel> Videos { get; }
 
-        public VideoBrowserViewModel(VideoBrowserRepository videoRepository)
+        public VideoBrowserViewModel()
         {
-            this.videoRepository = videoRepository;
             Videos = new ObservableCollection<VideoViewModel>();
         }
 
@@ -34,7 +32,9 @@
 
         private async Task FetchVideos(int? batchSize = null)
         {
-            var videos = videoRepository.FetchVideos(selectedSource, batchSize);
+            var repo = Locator.Get<VideoBrowserRepository>();
+            
+            var videos = repo.FetchVideos(selectedSource, batchSize);
 
             foreach (var video in videos)
             {

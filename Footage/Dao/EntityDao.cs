@@ -10,12 +10,18 @@
     using Footage.Model;
     using Microsoft.EntityFrameworkCore;
 
-    public abstract class DaoBase<T> : IEntityDao<T> where T : Entity
+    public class EntityDao<T> : IEntityDao<T> where T : Entity
     {
+        private readonly VideoContext dbContext;
+        
+        public EntityDao()
+        {
+            dbContext = new VideoContext();
+        }
+        
         public async Task<bool> Contains(Expression<Func<T, bool>> predicate)
         {
-            await using var dbContext = new VideoContext();
-            var entities = GetEntities(dbContext);
+            var entities = dbContext.Set<T>();
             return await entities.AnyAsync(predicate);
         }
 
@@ -25,9 +31,7 @@
             {
                 throw new ArgumentNullException(nameof(item));
             }
-
-            await using var dbContext = new VideoContext();
-
+            
             try
             {
                 dbContext.Add(item);
@@ -45,8 +49,6 @@
             {
                 throw new ArgumentNullException(nameof(items));
             }
-
-            await using var dbContext = new VideoContext();
 
             try
             {
@@ -66,8 +68,6 @@
                 throw new ArgumentNullException(nameof(item));
             }
 
-            await using var dbContext = new VideoContext();
-
             try
             {
                 dbContext.Remove(item);
@@ -81,9 +81,7 @@
 
         public IEnumerable<T> Query(Expression<Func<T, bool>>? predicate = null)
         {
-            using var dbContext = new VideoContext();
-            
-            var entities = GetEntities(dbContext);
+            var entities = dbContext.Set<T>().AsQueryable();
 
             if (predicate != null)
             {
@@ -92,8 +90,11 @@
             
             return entities.AsEnumerable().ToList();
         }
-
-        protected abstract IQueryable<T> GetEntities(VideoContext context);
+        
+        public void Dispose()
+        {
+            dbContext.Dispose();
+        }
 
         private void ProcessException(Exception ex)
         {

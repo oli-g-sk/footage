@@ -4,12 +4,9 @@
     using System.Linq;
     using Footage.Context;
     using Footage.Model;
+    using JetBrains.Annotations;
 
-    public class MediaSourceDao : DaoBase<MediaSource>, IMediaSourceDao
+    public class MediaSourceDao : EntityDao<MediaSource>, IMediaSourceDao
     {
-        protected override IQueryable<MediaSource> GetEntities(VideoContext context)
-        {
-            return context.MediaSources;
-        }
     }
 }
