@@ -80,17 +80,23 @@
             <StackPanel Grid.Row="0"
                         Orientation="Vertical"
                         DataContext="{Binding Playback}">
-                <Panel Background="#000000">
+                <Panel Width="640"
+                       Height="360"
+                       Background="#000000">
                     <vlc:VideoView MediaPlayer="{Binding Player}"
-                                   Margin="5"
-                                   Width="640"
-                                   Height="360"/>
+                                   IsVisible="{Binding SelectedVideo, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                   Margin="1"/>
                 </Panel>
-                <Slider HorizontalAlignment="Stretch"/>
+                <Slider HorizontalAlignment="Stretch"
+                        Minimum="0"
+                        Maximum="1"
+                        Value="{Binding PlaybackPosition}"/>
                 <DockPanel>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="Play"
                                 Command="{Binding PlayPauseCommand}"/>
+                        <Button Content="Close"
+                                Command="{Binding StopCommand}"/>
                     </StackPanel>
                 </DockPanel>
             </StackPanel>

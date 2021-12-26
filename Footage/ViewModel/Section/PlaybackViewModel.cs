@@ -29,15 +29,36 @@
                 LoadSelectedVideo();
             } 
         }
-        
+
+        private long currentVideoDuration;
+
+        public long CurrentVideoDuration
+        {
+            get => currentVideoDuration;
+            set => Set(ref currentVideoDuration, value);
+        }
+
+        public float PlaybackPosition
+        {
+            get => Player.Position;
+            set
+            {
+                Player.Position = value;
+                RaisePropertyChanged(nameof(PlaybackPosition));
+            }
+        }
+
         public RelayCommand PlayPauseCommand { get; }
+        
+        public RelayCommand StopCommand { get; }
         
         public PlaybackViewModel()
         {
             player = new MediaPlayer(Locator.LibVlc);
             MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, m => SelectedVideo = m.SelectedItem);
             
-            PlayPauseCommand = new RelayCommand(PlayPause, CanPlayPause);
+            PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
+            StopCommand = new RelayCommand(Stop, IsMediaLoaded);
         }
 
         private void LoadSelectedVideo()
@@ -46,6 +67,10 @@
 
             Player.Media = SelectedVideo != null ? new Media(Locator.LibVlc, uri) : null;
             PlayPauseCommand.RaiseCanExecuteChanged();
+            StopCommand.RaiseCanExecuteChanged();
+            
+            Player.MediaChanged += Player_MediaChanged;
+            Player.PositionChanged += Player_PositionChanged;
         }
 
         private void PlayPause()
@@ -60,9 +85,41 @@
             }
         }
 
-        private bool CanPlayPause()
+        private void Stop()
+        {
+            Player.Stop();
+            SelectedVideo = null;
+        }
+
+        private bool IsMediaLoaded()
         {
             return Player.Media != null;
+        }
+
+        private void Player_MediaChanged(object? sender, MediaPlayerMediaChangedEventArgs e)
+        {
+            PlaybackPosition = 0;
+            CurrentVideoDuration = 0;
+            
+            if (Player.Media != null)
+            {
+                Player.Media.ParsedChanged += Media_ParsedChanged;
+            }
+
+            void Media_ParsedChanged(object? sender, MediaParsedChangedEventArgs e)
+            {
+                if (e.ParsedStatus == MediaParsedStatus.Done)
+                {
+                    CurrentVideoDuration = Player.Media.Duration;
+                }
+
+                Player.Media.ParsedChanged -= Media_ParsedChanged;
+            }
+        }
+
+        private void Player_PositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)
+        {
+            RaisePropertyChanged(nameof(PlaybackPosition));
         }
     }
 }
