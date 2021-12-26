@@ -59,6 +59,9 @@
             
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
+            
+            Player.MediaChanged += Player_MediaChanged;
+            Player.PositionChanged += Player_PositionChanged;
         }
 
         private void LoadSelectedVideo()
@@ -68,9 +71,6 @@
             Player.Media = SelectedVideo != null ? new Media(Locator.LibVlc, uri) : null;
             PlayPauseCommand.RaiseCanExecuteChanged();
             StopCommand.RaiseCanExecuteChanged();
-            
-            Player.MediaChanged += Player_MediaChanged;
-            Player.PositionChanged += Player_PositionChanged;
         }
 
         private void PlayPause()
