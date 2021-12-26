@@ -90,7 +90,7 @@
         private void Stop()
         {
             Player.Stop();
-            SelectedVideo = null;
+            PlaybackProgress = 0;
         }
 
         private bool IsMediaLoaded()
