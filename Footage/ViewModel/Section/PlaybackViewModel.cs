@@ -25,8 +25,9 @@
             get => selectedVideo;
             set
             {
+                BeforeVideoChanged();
                 Set(ref selectedVideo, value);
-                LoadSelectedVideo();
+                AfterVideoChanged();
             } 
         }
 
@@ -60,17 +61,7 @@
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
             
-            Player.MediaChanged += Player_MediaChanged;
             Player.PositionChanged += Player_PositionChanged;
-        }
-
-        private void LoadSelectedVideo()
-        {
-            var uri = new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
-
-            Player.Media = SelectedVideo != null ? new Media(Locator.LibVlc, uri) : null;
-            PlayPauseCommand.RaiseCanExecuteChanged();
-            StopCommand.RaiseCanExecuteChanged();
         }
 
         private void PlayPause()
@@ -95,28 +86,46 @@
         {
             return Player.Media != null;
         }
+        
+        private void BeforeVideoChanged()
+        {
+            if (Player.Media != null)
+            {
+                Player.Media.ParsedChanged -= PlayerMedia_ParsedChanged;
+            }
 
-        private void Player_MediaChanged(object? sender, MediaPlayerMediaChangedEventArgs e)
+            // unload the media from the player - otherwise, if a new file would be loaded,
+            // the player would display frame from the previous file until the new file is actually played
+            Player.Stop();
+        }
+        
+        private void AfterVideoChanged()
         {
             PlaybackPosition = 0;
             CurrentVideoDuration = 0;
             
+            var uri = new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
+            Player.Media = SelectedVideo != null ? new Media(Locator.LibVlc, uri) : null;
+            
+            PlayPauseCommand.RaiseCanExecuteChanged();
+            StopCommand.RaiseCanExecuteChanged();
+            
             if (Player.Media != null)
             {
-                Player.Media.ParsedChanged += Media_ParsedChanged;
-            }
-
-            void Media_ParsedChanged(object? sender, MediaParsedChangedEventArgs e)
-            {
-                if (e.ParsedStatus == MediaParsedStatus.Done)
-                {
-                    CurrentVideoDuration = Player.Media.Duration;
-                }
-
-                Player.Media.ParsedChanged -= Media_ParsedChanged;
+                Player.Media.ParsedChanged += PlayerMedia_ParsedChanged;
             }
         }
 
+        void PlayerMedia_ParsedChanged(object? sender, MediaParsedChangedEventArgs e)
+        {
+            if (e.ParsedStatus == MediaParsedStatus.Done)
+            {
+                CurrentVideoDuration = Player.Media.Duration;
+            }
+
+            Player.Media.ParsedChanged -= PlayerMedia_ParsedChanged;
+        }
+        
         private void Player_PositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)
         {
             RaisePropertyChanged(nameof(PlaybackPosition));
