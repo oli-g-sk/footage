@@ -7,7 +7,9 @@
     using Avalonia.Controls;
     using Avalonia.Threading;
     using Footage.Messages;
+    using Footage.Model;
     using Footage.Repository;
+    using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
@@ -26,7 +28,9 @@
                 Set(ref selectedSource, value);
                 RaisePropertyChanged(nameof(SourceSelected));
                 RemoveSelectedSourceCommand.RaiseCanExecuteChanged();
-                MessengerInstance.Send(new SelectionChangedMessage<MediaSourceViewModel>(SelectedSource));
+
+                var message = new SelectedMesiaSourceChangedMessage(SelectedSource, GetMediaProvider(SelectedSource));
+                MessengerInstance.Send(message);
             }
         }
 
@@ -116,6 +120,22 @@
             {
                 Sources.Add(source);
             }
+        }
+
+        private static MediaProviderBase? GetMediaProvider(MediaSourceViewModel? source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+            
+            if (source.Item is LocalMediaSource localSource)
+            {
+                return new LocalMediaProvider(localSource);
+            }
+
+            // TODO create different provider for different source type
+            throw new NotImplementedException();
         }
     }
 }

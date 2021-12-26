@@ -7,6 +7,7 @@
     using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
+    using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
 
@@ -32,12 +33,12 @@
         {
             Videos = new ObservableCollection<VideoViewModel>();
             
-            MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, m => SwitchSource(m.SelectedItem));
+            MessengerInstance.Register<SelectedMesiaSourceChangedMessage>(this, m => SwitchSource(m.SelectedItem));
         }
 
-        public async Task SwitchSource(MediaSourceViewModel source)
+        public async Task SwitchSource(MediaSourceViewModel? source)
         {
-            selectedSource = source.Item;
+            selectedSource = source?.Item;
             
             // TODO clear async
             Videos.Clear();
@@ -47,6 +48,11 @@
 
         private async Task FetchVideos(int? batchSize = null)
         {
+            if (selectedSource == null)
+            {
+                return;
+            }
+            
             MessengerInstance.Send(new IsBusyChangedMessage(true));
             
             using var repo = new VideoBrowserRepository();

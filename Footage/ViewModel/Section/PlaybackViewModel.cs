@@ -2,6 +2,7 @@
 {
     using System;
     using Footage.Messages;
+    using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
@@ -10,6 +11,8 @@
 
     public class PlaybackViewModel : SectionViewModel
     {
+        private MediaProviderBase? mediaProvider;
+        
         private MediaPlayer player;
         public MediaPlayer Player
         {
@@ -68,6 +71,7 @@
         {
             player = new MediaPlayer(Locator.LibVlc);
             MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, m => SelectedVideo = m.SelectedItem);
+            MessengerInstance.Register<SelectedMesiaSourceChangedMessage>(this, m => mediaProvider = m.MediaProvider);
             
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
@@ -114,9 +118,9 @@
         {
             PlaybackProgress = 0;
             CurrentVideoDuration = 0;
-            
-            var uri = new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
-            Player.Media = SelectedVideo != null ? new Media(Locator.LibVlc, uri) : null;
+
+            string? path = SelectedVideo == null ? null : mediaProvider?.GetFullPath(SelectedVideo.Item);
+            Player.Media = path != null ? new Media(Locator.LibVlc, new Uri(path)) : null;
             
             PlayPauseCommand.RaiseCanExecuteChanged();
             StopCommand.RaiseCanExecuteChanged();
