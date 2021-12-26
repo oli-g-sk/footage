@@ -27,7 +27,8 @@
                 <TextBlock Text="Media sources"/>
             </DockPanel>
             <ListBox Items="{Binding Sources}"
-                     SelectedItem="{Binding SelectedSource}">
+                     SelectedItem="{Binding SelectedSource}"
+                     IsEnabled="{Binding SelectionEnabled}">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

@@ -14,8 +14,6 @@
     {
         private MediaSource? selectedSource;
 
-        private TaskCompletionSource<bool>? currentFetchTcs;
-
         public ObservableCollection<VideoViewModel> Videos { get; }
 
         private VideoViewModel? selectedVideo;
@@ -37,30 +35,19 @@
             MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, m => SwitchSource(m.SelectedItem));
         }
 
-        public void SwitchSource(MediaSourceViewModel source)
+        public async Task SwitchSource(MediaSourceViewModel source)
         {
             selectedSource = source.Item;
             
             // TODO clear async
             Videos.Clear();
-
-            // TODO cancel existing, if any
-            Task.Run(async () =>
-            {
-                if (currentFetchTcs != null)
-                {
-                    await currentFetchTcs.Task;
-                }
-                
-                return FetchVideos();
-            });
+            
+            await FetchVideos();
         }
 
         private async Task FetchVideos(int? batchSize = null)
         {
-            var initialSource = selectedSource;
-            
-            currentFetchTcs = new TaskCompletionSource<bool>();
+            MessengerInstance.Send(new IsBusyChangedMessage(true));
             
             using var repo = new VideoBrowserRepository();
             
@@ -72,20 +59,13 @@
                 {
                     Videos.Add(new VideoViewModel(video));
                 });
-                
-                if (selectedSource != initialSource)
-                {
-                    Videos.Clear(); // TODO clear async
-                    break;
-                }
-                
+
 #if DEBUG
-                await Task.Delay(250);
+                await Task.Delay(25);
 #endif
             }
-
-            currentFetchTcs.TrySetResult(true);
-            currentFetchTcs = null;
+            
+            MessengerInstance.Send(new IsBusyChangedMessage(false));
         }
     }
 }

@@ -31,7 +31,15 @@
         }
 
         public bool SourceSelected => SelectedSource != null;
-        
+
+        private bool selectionEnabled;
+
+        public bool SelectionEnabled
+        {
+            get => selectionEnabled;
+            set => Set(ref selectionEnabled, value);
+        }
+
         public RelayCommand AddLocalSourceCommand { get; }
         
         public RelayCommand RemoveSelectedSourceCommand { get; }
@@ -43,6 +51,9 @@
             RemoveSelectedSourceCommand = new RelayCommand(RemoveSelectedSource, () => SourceSelected);
             
             LoadAllSources();
+            SelectionEnabled = true;
+            
+            MessengerInstance.Register<IsBusyChangedMessage>(this, m => SelectionEnabled = !m.IsBusy);
         }
 
         private void AddLocalSource()
