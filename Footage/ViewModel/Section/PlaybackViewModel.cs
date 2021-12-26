@@ -32,22 +32,33 @@
         }
 
         private long currentVideoDuration;
-
+        // TODO save video duration to DB
         public long CurrentVideoDuration
         {
             get => currentVideoDuration;
-            set => Set(ref currentVideoDuration, value);
+            set
+            {
+                Set(ref currentVideoDuration, value);
+                RaisePropertyChanged(nameof(CurrentVideoDurationTimeCode));
+            }
         }
 
-        public float PlaybackPosition
+        public float PlaybackProgress
         {
-            get => Player.Position;
+            get => Math.Max(Player.Position, 0);
             set
             {
                 Player.Position = value;
-                RaisePropertyChanged(nameof(PlaybackPosition));
+                RaisePropertyChanged(nameof(PlaybackProgress));
+                RaisePropertyChanged(nameof(PlaybackPositionTimeCode));
             }
         }
+
+        public long PlaybackPosition => (long) (PlaybackProgress * CurrentVideoDuration);
+
+        public string PlaybackPositionTimeCode => LongMillisToTimecode(PlaybackPosition);
+
+        public string CurrentVideoDurationTimeCode => LongMillisToTimecode(CurrentVideoDuration);
 
         public RelayCommand PlayPauseCommand { get; }
         
@@ -101,7 +112,7 @@
         
         private void AfterVideoChanged()
         {
-            PlaybackPosition = 0;
+            PlaybackProgress = 0;
             CurrentVideoDuration = 0;
             
             var uri = new Uri("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
@@ -128,7 +139,13 @@
         
         private void Player_PositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)
         {
-            RaisePropertyChanged(nameof(PlaybackPosition));
+            RaisePropertyChanged(nameof(PlaybackProgress));
+            RaisePropertyChanged(nameof(PlaybackPositionTimeCode));
+        }
+
+        private static string LongMillisToTimecode(long millis)
+        {
+            return TimeSpan.FromMilliseconds(millis).ToString(@"hh\:mm\:ss\.fff");
         }
     }
 }

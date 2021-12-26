@@ -90,13 +90,19 @@
                 <Slider HorizontalAlignment="Stretch"
                         Minimum="0"
                         Maximum="1"
-                        Value="{Binding PlaybackPosition}"/>
-                <DockPanel>
+                        Value="{Binding PlaybackProgress}"/>
+                <DockPanel HorizontalAlignment="Stretch">
                     <StackPanel Orientation="Horizontal">
                         <Button Content="Play"
                                 Command="{Binding PlayPauseCommand}"/>
-                        <Button Content="Close"
+                        <Button Content="Stop"
                                 Command="{Binding StopCommand}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Right"
+                                DockPanel.Dock="Right">
+                        <TextBlock Text="{Binding PlaybackPositionTimeCode}" />
+                        <TextBlock Text="{Binding CurrentVideoDurationTimeCode}" />
                     </StackPanel>
                 </DockPanel>
             </StackPanel>
