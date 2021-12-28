@@ -2,6 +2,6 @@
 {
     public class TimeBookmark : Bookmark
     {
-        public long Time { get; }
+        public long Time { get; set; }
     }
 }
