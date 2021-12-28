@@ -6,19 +6,28 @@
     using Footage.ViewModel.Section;
     using GalaSoft.MvvmLight.Command;
 
-    public class MainWindowViewModel : SectionViewModel
+    public sealed class MainWindowViewModel : SectionViewModel, IDisposable
     {
         public MediaSourcesViewModel MediaSources { get; }
         
         public VideoBrowserViewModel VideoBrowser { get; }
         
         public VideoDetailViewModel VideoDetail { get; }
+        
+        public SelectedVideoViewModel SelectedVideo { get; }
 
         public MainWindowViewModel()
         {
-            MediaSources = Locator.Get<MediaSourcesViewModel>();
-            VideoBrowser = Locator.Get<VideoBrowserViewModel>();
-            VideoDetail = Locator.Get<VideoDetailViewModel>();
+            SelectedVideo = new SelectedVideoViewModel();
+            
+            MediaSources = new MediaSourcesViewModel();
+            VideoBrowser = new VideoBrowserViewModel();
+            VideoDetail = new VideoDetailViewModel(SelectedVideo);
+        }
+
+        public void Dispose()
+        {
+            SelectedVideo.Dispose();
         }
     }
 }

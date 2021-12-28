@@ -67,9 +67,13 @@
                     <DataTemplate DataType="entity:VideoViewModel">
                         <DockPanel HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"
-                                   Width="192" Height="108"
-                                   Margin="5"
+                                   Margin="5">
+                            <Panel Width="192" Height="108"
                                    Background="#CCCCDD" />
+                            <DockPanel DockPanel.Dock="Bottom">
+                                <TextBlock Text="{Binding BookmarksCount}" />
+                            </DockPanel>
+                        </DockPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ListBox>
@@ -108,7 +112,23 @@
                 </DockPanel>
             </StackPanel>
             
-            <ListBox Grid.Row="1" />
+            <DockPanel Grid.Row="1">
+                <DockPanel DockPanel.Dock="Top">
+                    <Button DockPanel.Dock="Right" Content="Add"
+                            Command="{Binding Bookmarks.AddTimeBookmarkCommand}"
+                            CommandParameter="{Binding Playback.PlaybackPosition}"/>
+                    <TextBlock Text="Bookmarks"/>
+                </DockPanel>
+                <ListBox Items="{Binding Bookmarks}"
+                         DataContext="{Binding Bookmarks}">
+                    <ListBox.ItemTemplate>
+                        <!-- TODO different template for range bookmarks -->
+                        <DataTemplate DataType="entity:TimeBookmarkViewModel">
+                            <Slider IsEnabled="False" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
         </Grid>
     </Grid>
 </Window>

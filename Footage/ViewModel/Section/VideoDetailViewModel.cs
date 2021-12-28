@@ -5,10 +5,13 @@
     public class VideoDetailViewModel : SectionViewModel
     {
         public PlaybackViewModel Playback { get; }
+        
+        public BookmarksViewModel Bookmarks { get; }
 
-        public VideoDetailViewModel()
+        public VideoDetailViewModel(SelectedVideoViewModel selectedVideoViewModel)
         {
-            Playback = new PlaybackViewModel();
+            Playback = new PlaybackViewModel(selectedVideoViewModel);
+            Bookmarks = new BookmarksViewModel(selectedVideoViewModel);
         }
     }
 }

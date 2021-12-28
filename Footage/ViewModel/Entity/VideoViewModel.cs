@@ -9,5 +9,7 @@
         public VideoViewModel([NotNull] Video item) : base(item)
         {
         }
+
+        public int BookmarksCount => Item.Bookmarks.Count;
     }
 }

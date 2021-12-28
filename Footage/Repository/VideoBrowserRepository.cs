@@ -12,7 +12,8 @@
             // TODO use batch size limit
             
             var videos = Dao.Query<Video>(v => v.MediaSource == selectedSource)
-                .Include(v => v.MediaSource);
+                .Include(v => v.MediaSource)
+                .Include(v => v.Bookmarks);
             
             return videos;
         }

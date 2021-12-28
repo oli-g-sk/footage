@@ -6,36 +6,20 @@
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
-    using JetBrains.Annotations;
     using LibVLCSharp.Shared;
 
     public class PlaybackViewModel : SectionViewModel
     {
-        private MediaProviderBase? mediaProvider;
+        private SelectedVideoViewModel selectedVideoViewModel;
+
+        private MediaPlayer Player => selectedVideoViewModel.Player;
+
+        private VideoViewModel? SelectedVideo => selectedVideoViewModel.SelectedVideo;
         
-        private MediaPlayer player;
-        public MediaPlayer Player
-        {
-            get => player;
-            set => Set(ref player, value);
-        }
-
-        private VideoViewModel? selectedVideo;
-
-        [CanBeNull]
-        public VideoViewModel? SelectedVideo
-        {
-            get => selectedVideo;
-            set
-            {
-                BeforeVideoChanged();
-                Set(ref selectedVideo, value);
-                AfterVideoChanged();
-            } 
-        }
+        private MediaProviderBase? mediaProvider;
 
         private long currentVideoDuration;
-        // TODO save video duration to DB
+        // TODO save video duration to DB?
         public long CurrentVideoDuration
         {
             get => currentVideoDuration;
@@ -67,16 +51,18 @@
         
         public RelayCommand StopCommand { get; }
         
-        public PlaybackViewModel()
+        public PlaybackViewModel(SelectedVideoViewModel selectedVideoViewModel)
         {
-            player = new MediaPlayer(Locator.LibVlc);
-            MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, m => SelectedVideo = m.SelectedItem);
+            this.selectedVideoViewModel = selectedVideoViewModel;
+            
             MessengerInstance.Register<SelectedMesiaSourceChangedMessage>(this, m => mediaProvider = m.MediaProvider);
             
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
             
             Player.PositionChanged += Player_PositionChanged;
+            selectedVideoViewModel.BeforeVideoChanged += SelectedVideoViewModel_BeforeVideoChanged;
+            selectedVideoViewModel.AfterVideoChanged += SelectedVideoViewModel_AfterVideoChanged;
         }
 
         private void PlayPause()
@@ -102,7 +88,7 @@
             return Player.Media != null;
         }
         
-        private void BeforeVideoChanged()
+        private void SelectedVideoViewModel_BeforeVideoChanged(object sender, EventArgs args)
         {
             if (Player.Media != null)
             {
@@ -114,7 +100,7 @@
             Player.Stop();
         }
         
-        private void AfterVideoChanged()
+        private void SelectedVideoViewModel_AfterVideoChanged(object sender, EventArgs args)
         {
             PlaybackProgress = 0;
             CurrentVideoDuration = 0;
