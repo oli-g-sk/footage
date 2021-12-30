@@ -30,7 +30,7 @@
             await Dao.Commit();
         }
 
-        public async Task RefreshLocalSource(LocalMediaSource source)
+        public async Task ImportNewFiles(LocalMediaSource source)
         {
             var provider = new LocalMediaProvider(source);
             var sourceVideos = provider.FetchVideos();

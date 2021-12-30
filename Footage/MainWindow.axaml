@@ -18,16 +18,16 @@
     <Grid ColumnDefinitions="Auto, *, Auto">
         <DockPanel Grid.Column="0"
                    DataContext="{Binding MediaSources}">
-            <!-- TODO remove new VM instance, bind -->
             <DockPanel DockPanel.Dock="Top">
                 <Button DockPanel.Dock="Right" Content="Add"
-                        Command="{Binding AddLocalSourceCommand}"/>
+                        Name="BtnAddMediaSource"
+                        Click="BtnAddMediaSource_OnClick"/>
                 <Button DockPanel.Dock="Right" Content="Remove"
-                        Command="{Binding RemoveSelectedSourceCommand}"/>
+                        Command="{Binding RemoveSelectedItemCommand}"/>
                 <TextBlock Text="Media sources"/>
             </DockPanel>
-            <ListBox Items="{Binding Sources}"
-                     SelectedItem="{Binding SelectedSource}"
+            <ListBox Items="{Binding Items}"
+                     SelectedItem="{Binding SelectedItem}"
                      IsEnabled="{Binding SelectionEnabled}">
                 <ListBox.Styles>
                     <Style Selector="ListBoxItem">
