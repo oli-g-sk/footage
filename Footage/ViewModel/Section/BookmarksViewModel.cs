@@ -35,7 +35,7 @@
             var bookmark = new TimeBookmark();
             
             bookmark.Time = timestamp;
-            bookmark.VideoId = SelectedVideo.Item.Id;
+            bookmark.Video = SelectedVideo.Item;
             using var repo = new BookmarksRepository();
             repo.AddBookmark(bookmark).Wait();
         }

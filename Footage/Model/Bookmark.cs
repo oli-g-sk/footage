@@ -2,6 +2,6 @@
 {
     public abstract class Bookmark : Entity
     {
-        public int VideoId { get; set; }
+        public Video Video { get; set; }
     }
 }
