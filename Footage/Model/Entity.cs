@@ -1,9 +1,18 @@
 ﻿namespace Footage.Model
 {
-    public abstract class Entity
+    using System;
+
+    public class Entity
     {
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public int Id { get; set; }
+
+        public void NotifyEntryUpdated()
+        {
+            EntryUpdated?.Invoke(this, EventArgs.Empty);   
+        }
+
+        public event EventHandler EntryUpdated;
 
         public override bool Equals(object? obj)
         {

@@ -17,6 +17,10 @@
 
         Task Remove<T>(T item) where T : Entity;
 
+        Task Update<T>(T item) where T : Entity;
+        
+        Task UpdateRange<T>(IEnumerable<T> items) where T : Entity;
+        
         IQueryable<T> Query<T>(Expression<Func<T, bool>>? predicate = null) where T : Entity;
         
         // TODO add a Query overload with parameters

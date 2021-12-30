@@ -79,6 +79,48 @@
             }
         }
 
+        public async Task Update<T>(T item) where T : Entity
+        {
+            if (item == null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+            
+            try
+            {
+                dbContext.Update(item);
+                await dbContext.SaveChangesAsync();
+                item.NotifyEntryUpdated();
+            }
+            catch (Exception ex)
+            {
+                ProcessException(ex);
+            }
+        }
+
+        public async Task UpdateRange<T>(IEnumerable<T> items) where T : Entity
+        {
+            if (items == null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+            
+            try
+            {
+                dbContext.UpdateRange(items);
+                await dbContext.SaveChangesAsync();
+                
+                foreach (var item in items)
+                {
+                    item.NotifyEntryUpdated();
+                }
+            }
+            catch (Exception ex)
+            {
+                ProcessException(ex);
+            }
+        }
+
         public IQueryable<T> Query<T>(Expression<Func<T, bool>>? predicate = null) where T : Entity
         {
             var entities = dbContext.Set<T>().AsQueryable();
