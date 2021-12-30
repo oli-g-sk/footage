@@ -1,13 +1,23 @@
 ﻿namespace Footage.Repository
 {
+    using System;
     using System.Threading.Tasks;
     using Footage.Model;
 
     public class BookmarksRepository : RepositoryBase
     {
-        public async Task AddBookmark(Bookmark bookmark)
+        public async Task<TimeBookmark> AddTimeBookmarkToVideo(Video video, long position)
         {
-            await Dao.Insert(bookmark);
+            var bookmark = new TimeBookmark
+            {
+                Time = position,
+                Video = video
+            };
+            
+            video.Bookmarks.Add(bookmark);
+            
+            await Dao.Update(video);
+            return bookmark;
         }
     }
 }

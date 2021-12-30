@@ -32,12 +32,12 @@
         // TODO make async
         public void AddTimeBookmark(long timestamp)
         {
-            var bookmark = new TimeBookmark();
-            
-            bookmark.Time = timestamp;
-            bookmark.Video = SelectedVideo.Item;
             using var repo = new BookmarksRepository();
-            repo.AddBookmark(bookmark).Wait();
+            // TODO await
+            var task = repo.AddTimeBookmarkToVideo(SelectedVideo.Item, timestamp);
+            task.Wait();
+            var bookmark = task.Result;
+            Bookmarks.Add(new TimeBookmarkViewModel(bookmark));
         }
 
         private void SelectedVideoViewModel_BeforeVideoChanged(object? sender, EventArgs e)

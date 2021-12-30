@@ -16,7 +16,7 @@
 
         private void Item_EntryUpdated(object? sender, EventArgs e)
         {
-            RaisePropertyChanged();
+            RaisePropertyChanged(string.Empty);
         }
     }
 }
