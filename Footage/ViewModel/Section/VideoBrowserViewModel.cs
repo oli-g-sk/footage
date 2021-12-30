@@ -11,37 +11,27 @@
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
 
-    public class VideoBrowserViewModel : SectionViewModel
+    public class VideoBrowserViewModel : ItemsViewModel<VideoViewModel, Video>
     {
         private MediaSource? selectedSource;
 
-        public ObservableCollection<VideoViewModel> Videos { get; }
-
-        private VideoViewModel? selectedVideo;
-
-        public VideoViewModel? SelectedVideo
-        {
-            get => selectedVideo;
-            set
-            {
-                Set(ref selectedVideo, value);
-                MessengerInstance.Send(new SelectionChangedMessage<VideoViewModel>(SelectedVideo));
-            }
-        }
-
         public VideoBrowserViewModel()
         {
-            Videos = new ObservableCollection<VideoViewModel>();
-            
             MessengerInstance.Register<SelectedMesiaSourceChangedMessage>(this, m => SwitchSource(m.SelectedItem));
         }
 
-        public async Task SwitchSource(MediaSourceViewModel? source)
+        protected override void AfterSelectionChanged()
+        {
+            base.AfterSelectionChanged();
+            MessengerInstance.Send(new SelectionChangedMessage<VideoViewModel>(SelectedItem));
+        }
+
+        private async Task SwitchSource(MediaSourceViewModel? source)
         {
             selectedSource = source?.Item;
             
             // TODO clear async
-            Videos.Clear();
+            Items.Clear();
             
             await FetchVideos();
         }
@@ -63,7 +53,7 @@
             {
                 await Dispatcher.UIThread.InvokeAsync(() =>
                 {
-                    Videos.Add(new VideoViewModel(video));
+                    Items.Add(new VideoViewModel(video));
                 });
 
 #if DEBUG
@@ -72,6 +62,11 @@
             }
             
             MessengerInstance.Send(new IsBusyChangedMessage(false));
+        }
+
+        protected override Task DeleteModel(Video item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

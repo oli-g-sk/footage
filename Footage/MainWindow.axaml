@@ -56,8 +56,8 @@
         <DockPanel Grid.Column="1"
                    DataContext="{Binding VideoBrowser}">
     
-            <ListBox Items="{Binding Videos}"
-                     SelectedItem="{Binding SelectedVideo}">
+            <ListBox Items="{Binding Items}"
+                     SelectedItem="{Binding SelectedItem}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel/>

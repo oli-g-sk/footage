@@ -6,7 +6,7 @@
     using Footage.Model;
     using GalaSoft.MvvmLight.Command;
 
-    public abstract class ItemsViewModel<TViewModel, TModel, TInput> : SectionViewModel
+    public abstract class ItemsViewModel<TViewModel, TModel> : SectionViewModel
         where TViewModel : EntityViewModel<TModel>
         where TModel : Entity
     {
@@ -25,38 +25,14 @@
             }
         }
 
-        public RelayCommand<TInput> AddItemCommand { get; }
-        
         public RelayCommand RemoveSelectedItemCommand { get; } 
         
         protected ItemsViewModel()
         {
             Items = new ObservableCollection<TViewModel>();
 
-            AddItemCommand = new RelayCommand<TInput>(AddItem, CanAddItem);
             RemoveSelectedItemCommand = new RelayCommand(RemoveSelectedItem, CanRemoveSelectedItem);
         }
-
-        protected abstract TViewModel CreateViewModel(TModel model);
-
-        protected abstract Task<TModel> CreateAndStoreModel(TInput input);
-        
-        protected virtual void AddItem(TInput input)
-        {
-            if (!CanAddItem(input))
-            {
-                throw new InvalidOperationException();
-            }
-            
-            // TODO await
-            var task = CreateAndStoreModel(input);
-            task.Wait();
-            var model = task.Result;
-            
-            Items.Add(CreateViewModel(model));
-        }
-
-        protected abstract bool CanAddItem(TInput item);
 
         private void RemoveSelectedItem()
         {

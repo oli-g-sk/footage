@@ -21,6 +21,9 @@
             
             await Dao.Insert(source);
             await Dao.Commit();
+
+            await ImportNewFiles(source);
+            
             return source;
         }
 
