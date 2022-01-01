@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Threading.Tasks;
     using Avalonia.Threading;
     using Footage.Messages;
@@ -47,7 +48,8 @@
             
             using var repo = new VideoBrowserRepository();
             
-            var videos = repo.FetchVideos(selectedSource, batchSize);
+            var videos = repo.FetchVideos(selectedSource, batchSize).ToList();
+            await repo.UpdateDurationInfo(selectedSource, videos.Where(v => v.Duration == 0));
 
             foreach (var video in videos)
             {

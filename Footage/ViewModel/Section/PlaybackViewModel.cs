@@ -13,12 +13,7 @@
     {
         private MediaProviderBase? mediaProvider;
         
-        private MediaPlayer player;
-        public MediaPlayer Player
-        {
-            get => player;
-            set => Set(ref player, value);
-        }
+        public MediaPlayer Player => MediaPlayerService.Instance.MainPlayer;
 
         private VideoViewModel? selectedVideo;
 
@@ -69,7 +64,6 @@
         
         public PlaybackViewModel()
         {
-            player = new MediaPlayer(Locator.LibVlc);
             MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, m => SelectedVideo = m.SelectedItem);
             MessengerInstance.Register<SelectedMesiaSourceChangedMessage>(this, m => mediaProvider = m.MediaProvider);
             

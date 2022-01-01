@@ -69,7 +69,12 @@
                                    VerticalAlignment="Stretch"
                                    Width="192" Height="108"
                                    Margin="5"
-                                   Background="#CCCCDD" />
+                                   Background="#CCCCDD">
+                            <DockPanel DockPanel.Dock="Bottom">
+                                <TextBlock DockPanel.Dock="Right"
+                                           Text="{Binding Duration}" />
+                            </DockPanel>
+                        </DockPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ListBox>
