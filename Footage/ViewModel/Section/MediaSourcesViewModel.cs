@@ -62,7 +62,7 @@
         protected override void AfterSelectionChanged()
         {
             base.AfterSelectionChanged();
-            MessengerInstance.Send(new SelectedMesiaSourceChangedMessage(SelectedItem, GetMediaProvider(SelectedItem)));
+            MessengerInstance.Send(new SelectionChangedMessage<MediaSource>(SelectedItem?.Item));
         }
         
         private async Task LoadAllSources()
@@ -75,22 +75,6 @@
             {
                 Items.Add(source);
             }
-        }
-        
-        private static MediaProviderBase? GetMediaProvider(MediaSourceViewModel? source)
-        {
-            if (source == null)
-            {
-                return null;
-            }
-            
-            if (source.Item is LocalMediaSource localSource)
-            {
-                return new LocalMediaProvider(localSource);
-            }
-
-            // TODO create different provider for different source type
-            throw new NotImplementedException();
         }
     }
 }

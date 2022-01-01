@@ -18,7 +18,7 @@
 
         public VideoBrowserViewModel()
         {
-            MessengerInstance.Register<SelectedMesiaSourceChangedMessage>(this, m => SwitchSource(m.SelectedItem));
+            MessengerInstance.Register<SelectionChangedMessage<MediaSource>>(this, OnMediaSourceChanged);
         }
 
         protected override void AfterSelectionChanged()
@@ -27,14 +27,15 @@
             MessengerInstance.Send(new SelectionChangedMessage<VideoViewModel>(SelectedItem));
         }
 
-        private async Task SwitchSource(MediaSourceViewModel? source)
+        private void OnMediaSourceChanged(SelectionChangedMessage<MediaSource> message)
         {
-            selectedSource = source?.Item;
+            selectedSource = message.SelectedItem;
             
             // TODO clear async
             Items.Clear();
             
-            await FetchVideos();
+            // TODO await?
+            FetchVideos();
         }
 
         private async Task FetchVideos(int? batchSize = null)

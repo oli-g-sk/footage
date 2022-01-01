@@ -10,7 +10,7 @@
         
         public abstract IEnumerable<SourceVideoInfo> FetchVideos();
 
-        public static MediaProviderBase GetMediaProvider(Video video)
+        public static MediaProviderBase? GetMediaProvider(Video video)
         {
             if (video.MediaSource == null)
             {
@@ -20,8 +20,13 @@
             return GetMediaProvider(video.MediaSource);
         }
 
-        public static MediaProviderBase GetMediaProvider(MediaSource mediaSource)
+        public static MediaProviderBase? GetMediaProvider(MediaSource mediaSource)
         {
+            if (mediaSource == null)
+            {
+                return null;
+            }
+            
             if (mediaSource is LocalMediaSource localMediaSource)
             {
                 return new LocalMediaProvider(localMediaSource);

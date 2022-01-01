@@ -2,6 +2,7 @@
 {
     using System;
     using Footage.Messages;
+    using Footage.Model;
     using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
@@ -65,7 +66,7 @@
         public PlaybackViewModel()
         {
             MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, m => SelectedVideo = m.SelectedItem);
-            MessengerInstance.Register<SelectedMesiaSourceChangedMessage>(this, m => mediaProvider = m.MediaProvider);
+            MessengerInstance.Register<SelectionChangedMessage<MediaSource>>(this, OnMediaSourceChanged);
             
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
@@ -123,6 +124,11 @@
             {
                 Player.Media.ParsedChanged += PlayerMedia_ParsedChanged;
             }
+        }
+
+        private void OnMediaSourceChanged(SelectionChangedMessage<MediaSource> message)
+        {
+            mediaProvider = MediaProviderBase.GetMediaProvider(message.SelectedItem);
         }
 
         void PlayerMedia_ParsedChanged(object? sender, MediaParsedChangedEventArgs e)
