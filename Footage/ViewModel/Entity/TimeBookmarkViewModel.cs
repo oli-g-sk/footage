@@ -5,8 +5,16 @@
     public class TimeBookmarkViewModel : BookmarkViewModel
     {
         protected new TimeBookmark Item => (base.Item as TimeBookmark)!;
-        
-        public long? Time => Item.Time;
+
+        public long Time
+        {
+            get => Item.Time;
+            set
+            {
+                Item.Time = value;
+                RaisePropertyChanged(nameof(Time));
+            }
+        }
         
         // ReSharper disable once SuggestBaseTypeForParameter
         public TimeBookmarkViewModel(TimeBookmark timeBookmark) : base(timeBookmark)

@@ -35,5 +35,11 @@ namespace Footage.Repository
             await Dao.Update(video);
             await Dao.Commit();
         }
+
+        public async Task UpdateBookmarkTimes(IEnumerable<Bookmark> bookmarks)
+        {
+            await Dao.UpdateRange(bookmarks);
+            await Dao.Commit();
+        }
     }
 }

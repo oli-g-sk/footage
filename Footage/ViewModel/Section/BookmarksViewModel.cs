@@ -6,6 +6,7 @@
     using System.Collections.Specialized;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
     using Avalonia.Threading;
     using Footage.Messages;
     using Footage.Model;
@@ -31,6 +32,7 @@
             Bookmarks = new ObservableCollection<BookmarkViewModel>();
             AddTimeBookmarkCommand = new RelayCommand<PlaybackViewModel>(AddTimeBookmark, _ => selectedVideo != null);
             RemoveSelectedBookmarksCommand = new RelayCommand(RemoveSelectedBookmarks, () => SelectedBookmarks.Any());
+            
             MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, OnSelectedVideoChanged);
             
             SelectedBookmarks.CollectionChanged += SelectedBookmarks_CollectionChanged;
@@ -63,20 +65,17 @@
             // TODO await
             SelectedBookmarks.Clear();
         }
-        
-        private void SelectedBookmarks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            RemoveSelectedBookmarksCommand.RaiseCanExecuteChanged();
-        }
-        
-        private void OnSelectedVideoChanged(SelectionChangedMessage<VideoViewModel> message)
-        {
-            // TODO clear async
-            Bookmarks.Clear();
-            
-            selectedVideo = message.SelectedItem;
-            AddTimeBookmarkCommand.RaiseCanExecuteChanged();
 
+        private void SaveBookmarks()
+        {
+            using var repo = new BookmarksRepository();
+            // TODO await
+            var task = repo.UpdateBookmarkTimes(Bookmarks.Select(b => b.Item));
+            task.Wait();
+        }
+
+        private async Task LoadBookmarks()
+        {
             if (selectedVideo == null)
             {
                 return;
@@ -88,11 +87,32 @@
                     ? new RangeBookmarkViewModel(rb)
                     : new TimeBookmarkViewModel((bookmark as TimeBookmark)!);
                 
-                Dispatcher.UIThread.InvokeAsync(() =>
+                await Dispatcher.UIThread.InvokeAsync(() =>
                 {
                     Bookmarks.Add(viewModel);
                 });
             }
+        }
+
+        private void OnSelectedVideoChanged(SelectionChangedMessage<VideoViewModel> message)
+        {
+            SaveBookmarks();
+            
+            // TODO clear async
+            Bookmarks.Clear();
+            
+            selectedVideo = message.SelectedItem;
+            
+            AddTimeBookmarkCommand.RaiseCanExecuteChanged();
+            RemoveSelectedBookmarksCommand.RaiseCanExecuteChanged();
+
+            // TODO await
+            LoadBookmarks();
+        }
+        
+        private void SelectedBookmarks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            RemoveSelectedBookmarksCommand.RaiseCanExecuteChanged();
         }
     }
 }

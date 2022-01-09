@@ -135,8 +135,7 @@
                     <ListBox.ItemTemplate>
                         <!-- TODO different template for range bookmarks -->
                         <DataTemplate DataType="entity:TimeBookmarkViewModel">
-                            <Slider IsEnabled="False"
-                                    HorizontalAlignment="Stretch"
+                            <Slider HorizontalAlignment="Stretch"
                                     Minimum="0"
                                     Maximum="{Binding VideoDuration}"
                                     Value="{Binding Time}"/>
