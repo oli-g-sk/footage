@@ -119,10 +119,14 @@
                     <Button DockPanel.Dock="Right" Content="Add"
                             Command="{Binding Bookmarks.AddTimeBookmarkCommand}"
                             CommandParameter="{Binding Playback.PlaybackPosition}"/>
+                    <Button DockPanel.Dock="Right" Content="Remove"
+                            Command="{Binding Bookmarks.RemoveSelectedBookmarksCommand}"/>
                     <TextBlock Text="Bookmarks"/>
                 </DockPanel>
-                <ListBox Items="{Binding Bookmarks}"
-                         DataContext="{Binding Bookmarks}">
+                <ListBox DataContext="{Binding Bookmarks}"
+                         Items="{Binding Bookmarks}"
+                         SelectedItems="{Binding SelectedBookmarks}"
+                         SelectionMode="Multiple">
                     <ListBox.ItemTemplate>
                         <!-- TODO different template for range bookmarks -->
                         <DataTemplate DataType="entity:TimeBookmarkViewModel">

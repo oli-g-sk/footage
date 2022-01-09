@@ -2,6 +2,7 @@
 namespace Footage.Repository
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Footage.Model;
 
@@ -20,6 +21,19 @@ namespace Footage.Repository
             await Dao.Update(video);
             await Dao.Commit();
             return bookmark;
+        }
+
+        public async Task RemoveBookmarks(Video video, IEnumerable<Bookmark> bookmarks)
+        {
+            foreach (var bookmark in bookmarks)
+            {
+                await Dao.Remove(bookmark);
+                video.Bookmarks.Remove(bookmark);
+                // TODO use RemoveRange
+            }
+
+            await Dao.Update(video);
+            await Dao.Commit();
         }
     }
 }
