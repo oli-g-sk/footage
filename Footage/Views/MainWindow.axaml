@@ -4,11 +4,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel="clr-namespace:Footage.ViewModel"
         xmlns:entity="clr-namespace:Footage.ViewModel.Entity"
-        xmlns:vm="clr-namespace:Footage.ViewModel.Base"
         xmlns:vlc="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}"
-        x:Class="Footage.MainWindow"
+        x:Class="Footage.Views.MainWindow"
         Title="Footage">
     
     <Window.DataContext>

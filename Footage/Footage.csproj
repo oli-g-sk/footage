@@ -26,4 +26,10 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.13" />
         <PackageReference Include="MvvmLightLibsStd10" Version="5.4.1.1" />
     </ItemGroup>
+    <ItemGroup>
+      <Compile Update="View\MainWindow.axaml.cs">
+        <DependentUpon>MainWindow.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

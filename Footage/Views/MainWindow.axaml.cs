@@ -1,12 +1,10 @@
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-
-namespace Footage
+namespace Footage.Views
 {
+    using Avalonia;
+    using Avalonia.Controls;
     using Avalonia.Interactivity;
+    using Avalonia.Markup.Xaml;
     using Footage.ViewModel;
-    using LibVLCSharp.Shared;
 
     public partial class MainWindow : Window
     {
