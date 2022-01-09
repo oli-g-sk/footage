@@ -118,7 +118,7 @@
                 <DockPanel DockPanel.Dock="Top">
                     <Button DockPanel.Dock="Right" Content="Add"
                             Command="{Binding Bookmarks.AddTimeBookmarkCommand}"
-                            CommandParameter="{Binding Playback.PlaybackPosition}"/>
+                            CommandParameter="{Binding Playback}"/>
                     <Button DockPanel.Dock="Right" Content="Remove"
                             Command="{Binding Bookmarks.RemoveSelectedBookmarksCommand}"/>
                     <TextBlock Text="Bookmarks"/>
@@ -127,10 +127,19 @@
                          Items="{Binding Bookmarks}"
                          SelectedItems="{Binding SelectedBookmarks}"
                          SelectionMode="Multiple">
+                    <ListBox.Styles>
+                        <Style Selector="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListBox.Styles>
                     <ListBox.ItemTemplate>
                         <!-- TODO different template for range bookmarks -->
                         <DataTemplate DataType="entity:TimeBookmarkViewModel">
-                            <Slider IsEnabled="False" />
+                            <Slider IsEnabled="False"
+                                    HorizontalAlignment="Stretch"
+                                    Minimum="0"
+                                    Maximum="{Binding VideoDuration}"
+                                    Value="{Binding Time}"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>

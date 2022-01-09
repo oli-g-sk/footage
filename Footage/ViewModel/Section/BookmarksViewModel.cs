@@ -22,14 +22,14 @@
 
         public ObservableCollection<BookmarkViewModel> SelectedBookmarks { get; } = new();
         
-        public RelayCommand<long> AddTimeBookmarkCommand { get; }
+        public RelayCommand<PlaybackViewModel> AddTimeBookmarkCommand { get; }
         
         public RelayCommand RemoveSelectedBookmarksCommand { get; }
         
         public BookmarksViewModel()
         {
             Bookmarks = new ObservableCollection<BookmarkViewModel>();
-            AddTimeBookmarkCommand = new RelayCommand<long>(AddTimeBookmark, _ => selectedVideo != null);
+            AddTimeBookmarkCommand = new RelayCommand<PlaybackViewModel>(AddTimeBookmark, _ => selectedVideo != null);
             RemoveSelectedBookmarksCommand = new RelayCommand(RemoveSelectedBookmarks, () => SelectedBookmarks.Any());
             MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, OnSelectedVideoChanged);
             
@@ -37,11 +37,11 @@
         }
 
         // TODO make async
-        public void AddTimeBookmark(long timestamp)
+        public void AddTimeBookmark(PlaybackViewModel playbackViewModel)
         {
             using var repo = new BookmarksRepository();
             // TODO await
-            var task = repo.AddTimeBookmarkToVideo(selectedVideo.Item, timestamp);
+            var task = repo.AddTimeBookmarkToVideo(selectedVideo.Item, playbackViewModel.PlaybackPosition);
             task.Wait();
             var bookmark = task.Result;
             Bookmarks.Add(new TimeBookmarkViewModel(bookmark));
