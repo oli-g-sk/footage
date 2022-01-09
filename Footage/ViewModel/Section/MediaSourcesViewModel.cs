@@ -59,12 +59,6 @@
             await repo.RemoveSource(item);
         }
 
-        protected override void AfterSelectionChanged()
-        {
-            base.AfterSelectionChanged();
-            MessengerInstance.Send(new SelectionChangedMessage<MediaSource>(SelectedItem?.Item));
-        }
-        
         private async Task LoadAllSources()
         {
             using var repo = Locator.Get<SourcesRepository>();
