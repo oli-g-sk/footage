@@ -18,12 +18,12 @@
 
         public VideoBrowserViewModel()
         {
-            MessengerInstance.Register<SelectionChangedMessage<MediaSource>>(this, OnMediaSourceChanged);
+            MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, OnMediaSourceChanged);
         }
 
-        private void OnMediaSourceChanged(SelectionChangedMessage<MediaSource> message)
+        private void OnMediaSourceChanged(SelectionChangedMessage<MediaSourceViewModel> message)
         {
-            selectedSource = message.SelectedItem;
+            selectedSource = message.SelectedItem?.Item;
             
             // TODO clear async
             Items.Clear();

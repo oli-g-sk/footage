@@ -66,7 +66,7 @@
         public PlaybackViewModel()
         {
             MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, m => SelectedVideo = m.SelectedItem);
-            MessengerInstance.Register<SelectionChangedMessage<MediaSource>>(this, OnMediaSourceChanged);
+            MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, OnMediaSourceChanged);
             
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
@@ -126,9 +126,9 @@
             }
         }
 
-        private void OnMediaSourceChanged(SelectionChangedMessage<MediaSource> message)
+        private void OnMediaSourceChanged(SelectionChangedMessage<MediaSourceViewModel> message)
         {
-            mediaProvider = MediaProviderBase.GetMediaProvider(message.SelectedItem);
+            mediaProvider = MediaProviderBase.GetMediaProvider(message.SelectedItem.Item);
         }
 
         void PlayerMedia_ParsedChanged(object? sender, MediaParsedChangedEventArgs e)
