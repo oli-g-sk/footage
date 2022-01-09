@@ -8,10 +8,10 @@
         
         public BookmarksViewModel Bookmarks { get; }
 
-        public VideoDetailViewModel(SelectedVideoViewModel selectedVideoViewModel)
+        public VideoDetailViewModel()
         {
             Playback = new PlaybackViewModel();
-            Bookmarks = new BookmarksViewModel(selectedVideoViewModel);
+            Bookmarks = new BookmarksViewModel();
         }
     }
 }

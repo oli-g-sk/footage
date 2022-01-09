@@ -13,21 +13,17 @@
         public VideoBrowserViewModel VideoBrowser { get; }
         
         public VideoDetailViewModel VideoDetail { get; }
-        
-        public SelectedVideoViewModel SelectedVideo { get; }
 
         public MainWindowViewModel()
         {
-            SelectedVideo = new SelectedVideoViewModel();
-            
             MediaSources = new MediaSourcesViewModel();
             VideoBrowser = new VideoBrowserViewModel();
-            VideoDetail = new VideoDetailViewModel(SelectedVideo);
+            VideoDetail = new VideoDetailViewModel();
         }
 
         public void Dispose()
         {
-            SelectedVideo.Dispose();
+            // TODO dispose of VideoDetail -> Playback ?
         }
     }
 }

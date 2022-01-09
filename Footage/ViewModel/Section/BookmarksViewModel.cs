@@ -3,6 +3,7 @@
     using System;
     using System.Collections.ObjectModel;
     using Avalonia.Threading;
+    using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
     using Footage.ViewModel.Base;
@@ -11,22 +12,17 @@
 
     public class BookmarksViewModel : SectionViewModel
     {
-        private readonly SelectedVideoViewModel selectedVideoViewModel;
-
-        private VideoViewModel? SelectedVideo => selectedVideoViewModel.SelectedVideo;
+        private VideoViewModel? selectedVideo;
         
         public ObservableCollection<BookmarkViewModel> Bookmarks { get; }
         
         public RelayCommand<long> AddTimeBookmarkCommand { get; }
         
-        public BookmarksViewModel(SelectedVideoViewModel selectedVideoViewModel)
+        public BookmarksViewModel()
         {
-            this.selectedVideoViewModel = selectedVideoViewModel;
             Bookmarks = new ObservableCollection<BookmarkViewModel>();
-
-            AddTimeBookmarkCommand = new RelayCommand<long>(AddTimeBookmark, _ => SelectedVideo != null);
-            this.selectedVideoViewModel.BeforeVideoChanged += SelectedVideoViewModel_BeforeVideoChanged;
-            this.selectedVideoViewModel.AfterVideoChanged += SelectedVideoViewModel_AfterVideoChanged;
+            AddTimeBookmarkCommand = new RelayCommand<long>(AddTimeBookmark, _ => selectedVideo != null);
+            MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, OnSelectedVideoChanged);
         }
 
         // TODO make async
@@ -34,29 +30,26 @@
         {
             using var repo = new BookmarksRepository();
             // TODO await
-            var task = repo.AddTimeBookmarkToVideo(SelectedVideo.Item, timestamp);
+            var task = repo.AddTimeBookmarkToVideo(selectedVideo.Item, timestamp);
             task.Wait();
             var bookmark = task.Result;
             Bookmarks.Add(new TimeBookmarkViewModel(bookmark));
         }
 
-        private void SelectedVideoViewModel_BeforeVideoChanged(object? sender, EventArgs e)
+        private void OnSelectedVideoChanged(SelectionChangedMessage<VideoViewModel> message)
         {
             // TODO clear async
             Bookmarks.Clear();
-        }
-        
-        private void SelectedVideoViewModel_AfterVideoChanged(object? sender, EventArgs e)
-        {
-            RaisePropertyChanged(nameof(SelectedVideo));
+            
+            selectedVideo = message.SelectedItem;
             AddTimeBookmarkCommand.RaiseCanExecuteChanged();
 
-            if (SelectedVideo == null)
+            if (selectedVideo == null)
             {
                 return;
             }
             
-            foreach (var bookmark in SelectedVideo.Item.Bookmarks)
+            foreach (var bookmark in selectedVideo.Item.Bookmarks)
             {
                 BookmarkViewModel viewModel = bookmark is RangeBookmark rb
                     ? new RangeBookmarkViewModel(rb)
