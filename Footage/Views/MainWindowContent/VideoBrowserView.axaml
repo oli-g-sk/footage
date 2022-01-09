@@ -1,0 +1,35 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:section="clr-namespace:Footage.ViewModel.Section"
+             xmlns:entity="clr-namespace:Footage.ViewModel.Entity"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Footage.Views.MainWindowContent.VideoBrowserView"
+             d:DataContext="{d:DesignInstance section:VideoBrowserViewModel}">
+    <DockPanel>
+        <ListBox Items="{Binding Items}"
+                 SelectedItem="{Binding SelectedItem}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="entity:VideoViewModel">
+                    <DockPanel HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               Width="192" Height="108"
+                               Margin="5"
+                               Background="#CCCCDD">
+                        <DockPanel DockPanel.Dock="Bottom">
+                            <TextBlock DockPanel.Dock="Right"
+                                       Text="{Binding Duration}" />
+                            <TextBlock Text="{Binding BookmarksCount}" />
+                        </DockPanel>
+                    </DockPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</UserControl>

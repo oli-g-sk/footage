@@ -3,8 +3,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel="clr-namespace:Footage.ViewModel"
-        xmlns:entity="clr-namespace:Footage.ViewModel.Entity"
-        xmlns:vlc="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia"
+        xmlns:mainWindowContent="clr-namespace:Footage.Views.MainWindowContent"
+        xmlns:avalonia="clr-namespace:LibVLCSharp.Avalonia;assembly=LibVLCSharp.Avalonia"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}"
         x:Class="Footage.Views.MainWindow"
@@ -15,133 +15,31 @@
     </Window.DataContext>
     
     <Grid ColumnDefinitions="Auto, *, Auto">
-        <DockPanel Grid.Column="0"
-                   DataContext="{Binding MediaSources}">
-            <DockPanel DockPanel.Dock="Top">
-                <Button DockPanel.Dock="Right" Content="Add"
-                        Name="BtnAddMediaSource"
-                        Click="BtnAddMediaSource_OnClick"/>
-                <Button DockPanel.Dock="Right" Content="Remove"
-                        Command="{Binding RemoveSelectedItemCommand}"/>
-                <TextBlock Text="Media sources"/>
-            </DockPanel>
-            <ListBox Items="{Binding Items}"
-                     SelectedItem="{Binding SelectedItem}"
-                     IsEnabled="{Binding SelectionEnabled}">
-                <ListBox.Styles>
-                    <Style Selector="ListBoxItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    </Style>
-                </ListBox.Styles>
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="entity:MediaSourceViewModel">
-                        <DockPanel>
-                            <TextBlock DockPanel.Dock="Right"
-                                       VerticalAlignment="Center"
-                                       IsVisible="{Binding IsBusy}"
-                                       Text="..." />
-                            <StackPanel Orientation="Vertical"
-                                        IsEnabled="{Binding !IsBusy}">
-                                <TextBlock Text="{Binding Name}"
-                                           FontWeight="Bold"/>
-                                <TextBlock Text="{Binding Description}"/>
-                            </StackPanel>
-                        </DockPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </DockPanel>
         
-        <DockPanel Grid.Column="1"
-                   DataContext="{Binding VideoBrowser}">
-    
-            <ListBox Items="{Binding Items}"
-                     SelectedItem="{Binding SelectedItem}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate DataType="entity:VideoViewModel">
-                        <DockPanel HorizontalAlignment="Stretch"
-                                   VerticalAlignment="Stretch"
-                                   Width="192" Height="108"
-                                   Margin="5"
-                                   Background="#CCCCDD">
-                            <DockPanel DockPanel.Dock="Bottom">
-                                <TextBlock DockPanel.Dock="Right"
-                                           Text="{Binding Duration}" />
-                                <TextBlock Text="{Binding BookmarksCount}" />
-                            </DockPanel>
-                        </DockPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ListBox>
-        </DockPanel>
+        <mainWindowContent:SourcesView Grid.Column="0"
+                                       DataContext="{Binding MediaSources}" />
         
+        <mainWindowContent:VideoBrowserView Grid.Column="1"
+                                            DataContext="{Binding VideoBrowser}" />
         <Grid Grid.Column="2"
               RowDefinitions="Auto, *"
-              DataContext="{Binding VideoDetail}">
-            <StackPanel Grid.Row="0"
-                        Orientation="Vertical"
-                        DataContext="{Binding Playback}">
-                <Panel Width="640"
-                       Height="360"
-                       Background="#000000">
-                    <vlc:VideoView MediaPlayer="{Binding Player}"
-                                   IsVisible="{Binding SelectedVideo, Converter={x:Static ObjectConverters.IsNotNull}}"
-                                   Margin="1"/>
-                </Panel>
-                <Slider HorizontalAlignment="Stretch"
-                        Minimum="0"
-                        Maximum="1"
-                        Value="{Binding PlaybackProgress}"/>
-                <DockPanel HorizontalAlignment="Stretch">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="Play"
-                                Command="{Binding PlayPauseCommand}"/>
-                        <Button Content="Stop"
-                                Command="{Binding StopCommand}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical"
-                                HorizontalAlignment="Right"
-                                DockPanel.Dock="Right">
-                        <TextBlock Text="{Binding PlaybackPositionTimeCode}" />
-                        <TextBlock Text="{Binding CurrentVideoDurationTimeCode}" />
-                    </StackPanel>
-                </DockPanel>
-            </StackPanel>
+              DataContext="{Binding VideoDetail}" >
             
-            <DockPanel Grid.Row="1">
-                <DockPanel DockPanel.Dock="Top">
-                    <Button DockPanel.Dock="Right" Content="Add"
-                            Command="{Binding Bookmarks.AddTimeBookmarkCommand}"
-                            CommandParameter="{Binding Playback}"/>
-                    <Button DockPanel.Dock="Right" Content="Remove"
-                            Command="{Binding Bookmarks.RemoveSelectedBookmarksCommand}"/>
-                    <TextBlock Text="Bookmarks"/>
-                </DockPanel>
-                <ListBox DataContext="{Binding Bookmarks}"
-                         Items="{Binding Bookmarks}"
-                         SelectedItems="{Binding SelectedBookmarks}"
-                         SelectionMode="Multiple">
-                    <ListBox.Styles>
-                        <Style Selector="ListBoxItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                        </Style>
-                    </ListBox.Styles>
-                    <ListBox.ItemTemplate>
-                        <!-- TODO different template for range bookmarks -->
-                        <DataTemplate DataType="entity:TimeBookmarkViewModel">
-                            <Slider HorizontalAlignment="Stretch"
-                                    Minimum="0"
-                                    Maximum="{Binding VideoDuration}"
-                                    Value="{Binding Time}"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </DockPanel>
+            <!-- player window -->
+            <Panel Grid.Row="0"
+                   Width="640"
+                   Height="360"
+                   Background="#000000"
+                   DataContext="{Binding Playback}">
+                <avalonia:VideoView MediaPlayer="{Binding Player}"
+                                    IsVisible="{Binding SelectedVideo, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    Margin="1" />
+            </Panel>
+            
+            <!-- rest of column -->
+            <mainWindowContent:VideoDetailView Grid.Row="1"/>
+            <!-- TODO split playback control and bookmarks into separate subviews -->
+            
         </Grid>
     </Grid>
 </Window>

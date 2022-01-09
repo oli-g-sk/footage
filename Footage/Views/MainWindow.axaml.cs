@@ -1,5 +1,6 @@
 namespace Footage.Views
 {
+    using System;
     using Avalonia;
     using Avalonia.Controls;
     using Avalonia.Interactivity;
@@ -8,7 +9,8 @@ namespace Footage.Views
 
     public partial class MainWindow : Window
     {
-        private MainWindowViewModel ViewModel => DataContext as MainWindowViewModel;
+        // TODO remove singleton mainwindow
+        public static MainWindow Instance { get; private set; }
         
         public MainWindow()
         {
@@ -16,27 +18,12 @@ namespace Footage.Views
 #if DEBUG
             this.AttachDevTools();
 #endif
+            Instance = this;
         }
 
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-        }
-
-        private void BtnAddMediaSource_OnClick(object? sender, RoutedEventArgs e)
-        {
-            // TODO move to VM layer utilizing a middleware DIALOG SERVICE
-            var dialog = new OpenFolderDialog();
-            
-            // TODO make async
-            var task = dialog.ShowAsync(this);
-            task.Wait();
-            string? directory = task.Result;
-
-            if (ViewModel.MediaSources.AddItemCommand.CanExecute(directory))
-            {
-                ViewModel.MediaSources.AddItemCommand.Execute(directory);
-            }
         }
     }
 }
