@@ -10,7 +10,7 @@
 
         public VideoDetailViewModel(SelectedVideoViewModel selectedVideoViewModel)
         {
-            Playback = new PlaybackViewModel(selectedVideoViewModel);
+            Playback = new PlaybackViewModel();
             Bookmarks = new BookmarksViewModel(selectedVideoViewModel);
         }
     }

@@ -7,10 +7,13 @@
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
+    using JetBrains.Annotations;
     using LibVLCSharp.Shared;
 
     public class PlaybackViewModel : SectionViewModel
     {
+        private VideoViewModel? selectedVideo;
+        
         private MediaProviderBase? mediaProvider;
         
         public MediaPlayer Player => MediaPlayerService.Instance.MainPlayer;
@@ -69,8 +72,6 @@
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
             
             Player.PositionChanged += Player_PositionChanged;
-            selectedVideoViewModel.BeforeVideoChanged += SelectedVideoViewModel_BeforeVideoChanged;
-            selectedVideoViewModel.AfterVideoChanged += SelectedVideoViewModel_AfterVideoChanged;
         }
 
         private void PlayPause()
@@ -96,7 +97,7 @@
             return Player.Media != null;
         }
         
-        private void SelectedVideoViewModel_BeforeVideoChanged(object sender, EventArgs args)
+        private void BeforeVideoChanged()
         {
             if (Player.Media != null)
             {
@@ -108,7 +109,7 @@
             Player.Stop();
         }
         
-        private void SelectedVideoViewModel_AfterVideoChanged(object sender, EventArgs args)
+        private void AfterVideoChanged()
         {
             PlaybackProgress = 0;
             CurrentVideoDuration = 0;
