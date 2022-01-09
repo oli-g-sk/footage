@@ -34,6 +34,7 @@
 #endif
             
             await Dao.Update(video);
+            await Dao.Commit();
         }
     }
     

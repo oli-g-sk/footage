@@ -18,6 +18,7 @@ namespace Footage.Repository
             video.Bookmarks.Add(bookmark);
             
             await Dao.Update(video);
+            await Dao.Commit();
             return bookmark;
         }
     }
