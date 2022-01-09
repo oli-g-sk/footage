@@ -3,8 +3,10 @@
     using System;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
+    using Footage.Messages;
     using Footage.Model;
     using GalaSoft.MvvmLight.Command;
+    using GalaSoft.MvvmLight.Messaging;
 
     public abstract class ItemsViewModel<TViewModel, TModel> : SectionViewModel
         where TViewModel : EntityViewModel<TModel>
@@ -18,10 +20,12 @@
             get => selectedItem;
             set
             {
+                var oldItem = selectedItem;
                 BeforeSelectionChanged();
                 Set(ref selectedItem, value);
                 RemoveSelectedItemCommand.RaiseCanExecuteChanged();
                 AfterSelectionChanged();
+                MessengerInstance.Send(new SelectionChangedMessage<TViewModel>(oldItem, selectedItem));
             }
         }
 

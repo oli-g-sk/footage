@@ -21,12 +21,6 @@
             MessengerInstance.Register<SelectionChangedMessage<MediaSource>>(this, OnMediaSourceChanged);
         }
 
-        protected override void AfterSelectionChanged()
-        {
-            base.AfterSelectionChanged();
-            MessengerInstance.Send(new SelectionChangedMessage<VideoViewModel>(SelectedItem));
-        }
-
         private void OnMediaSourceChanged(SelectionChangedMessage<MediaSource> message)
         {
             selectedSource = message.SelectedItem;
