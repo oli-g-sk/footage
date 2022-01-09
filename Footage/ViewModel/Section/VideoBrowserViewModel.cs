@@ -50,17 +50,17 @@
             using var repo = new VideoBrowserRepository();
             
             var videos = repo.FetchVideos(selectedSource, batchSize).ToList();
-            await repo.UpdateDurationInfo(selectedSource, videos.Where(v => v.Duration == 0));
 
             foreach (var video in videos)
             {
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
+                    await repo.UpdateVideoDuration(selectedSource, video);
                     Items.Add(new VideoViewModel(video));
                 });
 
 #if DEBUG
-                await Task.Delay(25);
+                // await Task.Delay(25);
 #endif
             }
             

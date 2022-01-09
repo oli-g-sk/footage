@@ -22,17 +22,17 @@
             return videos;
         }
 
-        public async Task UpdateDurationInfo(MediaSource mediaSource, IEnumerable<Video> videos)
+        public async Task UpdateVideoDuration(MediaSource mediaSource, Video video)
         {
             var mediaProvider = MediaProviderBase.GetMediaProvider(mediaSource);
-            
-            foreach (var video in videos)
-            {
-                string path = mediaProvider.GetFullPath(video);
-                video.Duration = await mediaPlayerService.GetVideoDuration(path);
-            }
 
-            await Dao.UpdateRange(videos);
+            string path = mediaProvider.GetFullPath(video);
+            video.Duration = await mediaPlayerService.GetVideoDuration(path);
+#if DEBUG
+            // await Task.Delay(300);
+#endif
+            
+            await Dao.Update(video);
         }
     }
     
