@@ -20,15 +20,20 @@
             };
             
             await Dao.Insert(source);
+            await Dao.Commit();
+
+            await ImportNewFiles(source);
+            
             return source;
         }
 
         public async Task RemoveSource(MediaSource source)
         {
             await Dao.Remove(source);
+            await Dao.Commit();
         }
 
-        public async Task RefreshLocalSource(LocalMediaSource source)
+        public async Task ImportNewFiles(LocalMediaSource source)
         {
             var provider = new LocalMediaProvider(source);
             var sourceVideos = provider.FetchVideos();
@@ -50,6 +55,7 @@
             }
 
             await Dao.InsertRange(videos);
+            await Dao.Commit();
         }
 
         public async Task<IEnumerable<MediaSource>> GetAllSources()

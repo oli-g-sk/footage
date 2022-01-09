@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using Avalonia.Controls;
@@ -14,28 +15,10 @@
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
 
-    public class MediaSourcesViewModel : SectionViewModel
+    // TODO support different source types
+    // maybe by TInput type being tuple (MediaSourceType, string)
+    public class MediaSourcesViewModel : ItemsAddViewModel<MediaSourceViewModel, MediaSource, string?>
     {
-        public ObservableCollection<MediaSourceViewModel> Sources { get; }
-
-        private MediaSourceViewModel? selectedSource;
-
-        public MediaSourceViewModel? SelectedSource
-        {
-            get => selectedSource;
-            set
-            {
-                Set(ref selectedSource, value);
-                RaisePropertyChanged(nameof(SourceSelected));
-                RemoveSelectedSourceCommand.RaiseCanExecuteChanged();
-
-                var message = new SelectedMesiaSourceChangedMessage(SelectedSource, GetMediaProvider(SelectedSource));
-                MessengerInstance.Send(message);
-            }
-        }
-
-        public bool SourceSelected => SelectedSource != null;
-
         private bool selectionEnabled;
 
         public bool SelectionEnabled
@@ -44,70 +27,42 @@
             set => Set(ref selectionEnabled, value);
         }
 
-        public RelayCommand AddLocalSourceCommand { get; }
-        
-        public RelayCommand RemoveSelectedSourceCommand { get; }
-
         public MediaSourcesViewModel()
         {
-            Sources = new ObservableCollection<MediaSourceViewModel>();
-            AddLocalSourceCommand = new RelayCommand(AddLocalSource);
-            RemoveSelectedSourceCommand = new RelayCommand(RemoveSelectedSource, () => SourceSelected);
-            
-            LoadAllSources();
-            SelectionEnabled = true;
+            Task.Run(LoadAllSources)
+                .ContinueWith(_ => SelectionEnabled = true);
             
             MessengerInstance.Register<IsBusyChangedMessage>(this, m => SelectionEnabled = !m.IsBusy);
         }
-
-        private void AddLocalSource()
+        
+        protected override bool CanAddItem(string? item)
         {
-            // TODO move to View layer
-            var dialog = new OpenFolderDialog();
+            return !string.IsNullOrEmpty(item);
+        }
+        
+        protected override async Task<MediaSource> CreateAndStoreModel(string? input)
+        {
+            using var repo = new SourcesRepository();
+            var model = await repo.AddLocalSource(input, true);
+
+            // TODO move source files refresh to selection changed handler?
+            await repo.ImportNewFiles(model);
             
-            // TODO make async
-            var task = dialog.ShowAsync(MainWindow.Instance);
-            task.Wait();
-            string? directory = task.Result;
+            return model;
+        }
+        
+        protected override MediaSourceViewModel CreateViewModel(MediaSource model) => new(model);
 
-            if (directory == null)
-            {
-                return;
-            }
-
-            Task.Run(async () =>
-            {
-                using var repo = Locator.Get<SourcesRepository>();
-                
-                await Task.Delay(1);
-                var newSource = await repo.AddLocalSource(directory, true);
-
-                var viewModel = new MediaSourceViewModel(newSource) { IsBusy = true };
-
-                await Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    Sources.Add(viewModel);
-                });
-
-                await repo.RefreshLocalSource(newSource).ContinueWith(t => viewModel.IsBusy = false);
-            });
+        protected override async Task DeleteModel(MediaSource item)
+        {
+            using var repo = new SourcesRepository();
+            await repo.RemoveSource(item);
         }
 
-        private void RemoveSelectedSource()
+        protected override void AfterSelectionChanged()
         {
-            if (SelectedSource == null)
-            {
-                return;
-            }
-            
-            var sourceModel = SelectedSource.Item;
-            Sources.Remove(SelectedSource);
-            
-            Task.Run(async () =>
-            {
-                using var repo = Locator.Get<SourcesRepository>();
-                await repo.RemoveSource(sourceModel);
-            });
+            base.AfterSelectionChanged();
+            MessengerInstance.Send(new SelectionChangedMessage<MediaSource>(SelectedItem?.Item));
         }
         
         private async Task LoadAllSources()
@@ -118,24 +73,8 @@
             // TODO create an extension method for this
             foreach (var source in sources)
             {
-                Sources.Add(source);
+                Items.Add(source);
             }
-        }
-
-        private static MediaProviderBase? GetMediaProvider(MediaSourceViewModel? source)
-        {
-            if (source == null)
-            {
-                return null;
-            }
-            
-            if (source.Item is LocalMediaSource localSource)
-            {
-                return new LocalMediaProvider(localSource);
-            }
-
-            // TODO create different provider for different source type
-            throw new NotImplementedException();
         }
     }
 }

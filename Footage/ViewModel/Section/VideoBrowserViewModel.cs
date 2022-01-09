@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Linq;
     using System.Threading.Tasks;
     using Avalonia.Threading;
     using Footage.Messages;
@@ -11,39 +12,30 @@
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
 
-    public class VideoBrowserViewModel : SectionViewModel
+    public class VideoBrowserViewModel : ItemsViewModel<VideoViewModel, Video>
     {
         private MediaSource? selectedSource;
 
-        public ObservableCollection<VideoViewModel> Videos { get; }
-
-        private VideoViewModel? selectedVideo;
-
-        public VideoViewModel? SelectedVideo
-        {
-            get => selectedVideo;
-            set
-            {
-                Set(ref selectedVideo, value);
-                MessengerInstance.Send(new SelectionChangedMessage<VideoViewModel>(SelectedVideo));
-            }
-        }
-
         public VideoBrowserViewModel()
         {
-            Videos = new ObservableCollection<VideoViewModel>();
-            
-            MessengerInstance.Register<SelectedMesiaSourceChangedMessage>(this, m => SwitchSource(m.SelectedItem));
+            MessengerInstance.Register<SelectionChangedMessage<MediaSource>>(this, OnMediaSourceChanged);
         }
 
-        public async Task SwitchSource(MediaSourceViewModel? source)
+        protected override void AfterSelectionChanged()
         {
-            selectedSource = source?.Item;
+            base.AfterSelectionChanged();
+            MessengerInstance.Send(new SelectionChangedMessage<VideoViewModel>(SelectedItem));
+        }
+
+        private void OnMediaSourceChanged(SelectionChangedMessage<MediaSource> message)
+        {
+            selectedSource = message.SelectedItem;
             
             // TODO clear async
-            Videos.Clear();
+            Items.Clear();
             
-            await FetchVideos();
+            // TODO await?
+            FetchVideos();
         }
 
         private async Task FetchVideos(int? batchSize = null)
@@ -57,21 +49,27 @@
             
             using var repo = new VideoBrowserRepository();
             
-            var videos = repo.FetchVideos(selectedSource, batchSize);
+            var videos = repo.FetchVideos(selectedSource, batchSize).ToList();
 
             foreach (var video in videos)
             {
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                await Dispatcher.UIThread.InvokeAsync(async () =>
                 {
-                    Videos.Add(new VideoViewModel(video));
+                    await repo.UpdateVideoDuration(selectedSource, video);
+                    Items.Add(new VideoViewModel(video));
                 });
 
 #if DEBUG
-                await Task.Delay(25);
+                // await Task.Delay(25);
 #endif
             }
             
             MessengerInstance.Send(new IsBusyChangedMessage(false));
+        }
+
+        protected override Task DeleteModel(Video item)
+        {
+            throw new NotImplementedException();
         }
     }
 }

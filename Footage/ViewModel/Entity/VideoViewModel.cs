@@ -6,6 +6,8 @@
 
     public class VideoViewModel : EntityViewModel<Video>
     {
+        public long Duration => Item.Duration;
+        
         public VideoViewModel([NotNull] Video item) : base(item)
         {
         }

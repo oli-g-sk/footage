@@ -2,6 +2,7 @@
 {
     using System;
     using Footage.Messages;
+    using Footage.Model;
     using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
@@ -10,13 +11,21 @@
 
     public class PlaybackViewModel : SectionViewModel
     {
-        private SelectedVideoViewModel selectedVideoViewModel;
-
-        private MediaPlayer Player => selectedVideoViewModel.Player;
-
-        private VideoViewModel? SelectedVideo => selectedVideoViewModel.SelectedVideo;
-        
         private MediaProviderBase? mediaProvider;
+        
+        public MediaPlayer Player => MediaPlayerService.Instance.MainPlayer;
+
+        [CanBeNull]
+        public VideoViewModel? SelectedVideo
+        {
+            get => selectedVideo;
+            set
+            {
+                BeforeVideoChanged();
+                Set(ref selectedVideo, value);
+                AfterVideoChanged();
+            } 
+        }
 
         private long currentVideoDuration;
         // TODO save video duration to DB?
@@ -51,11 +60,10 @@
         
         public RelayCommand StopCommand { get; }
         
-        public PlaybackViewModel(SelectedVideoViewModel selectedVideoViewModel)
+        public PlaybackViewModel()
         {
-            this.selectedVideoViewModel = selectedVideoViewModel;
-            
-            MessengerInstance.Register<SelectedMesiaSourceChangedMessage>(this, m => mediaProvider = m.MediaProvider);
+            MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, m => SelectedVideo = m.SelectedItem);
+            MessengerInstance.Register<SelectionChangedMessage<MediaSource>>(this, OnMediaSourceChanged);
             
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
@@ -115,6 +123,11 @@
             {
                 Player.Media.ParsedChanged += PlayerMedia_ParsedChanged;
             }
+        }
+
+        private void OnMediaSourceChanged(SelectionChangedMessage<MediaSource> message)
+        {
+            mediaProvider = MediaProviderBase.GetMediaProvider(message.SelectedItem);
         }
 
         void PlayerMedia_ParsedChanged(object? sender, MediaParsedChangedEventArgs e)

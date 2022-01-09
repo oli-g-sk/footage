@@ -18,14 +18,19 @@
         {
             dbContext = new VideoContext();
         }
-        
+
+        public async Task Commit()
+        {
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task<bool> Contains<T>(Expression<Func<T, bool>> predicate) where T : Entity 
         {
             var entities = dbContext.Set<T>();
             return await entities.AnyAsync(predicate);
         }
 
-        public async Task Insert<T>(T item) where T : Entity
+        public Task Insert<T>(T item) where T : Entity
         {
             if (item == null)
             {
@@ -35,15 +40,16 @@
             try
             {
                 dbContext.Add(item);
-                await dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 ProcessException(ex);
             }
+            
+            return Task.CompletedTask;
         }
 
-        public async Task InsertRange<T>(IEnumerable<T> items) where T : Entity
+        public Task InsertRange<T>(IEnumerable<T> items) where T : Entity
         {
             if (items == null)
             {
@@ -53,15 +59,16 @@
             try
             {
                 dbContext.AddRange(items);
-                await dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 ProcessException(ex);
             }
+
+            return Task.CompletedTask;
         }
 
-        public async Task Remove<T>(T item) where T : Entity
+        public Task Remove<T>(T item) where T : Entity
         {
             if (item == null)
             {
@@ -71,15 +78,16 @@
             try
             {
                 dbContext.Remove(item);
-                await dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 ProcessException(ex);
             }
+            
+            return Task.CompletedTask;
         }
 
-        public async Task Update<T>(T item) where T : Entity
+        public Task Update<T>(T item) where T : Entity
         {
             if (item == null)
             {
@@ -89,16 +97,17 @@
             try
             {
                 dbContext.Update(item);
-                await dbContext.SaveChangesAsync();
                 item.NotifyEntryUpdated();
             }
             catch (Exception ex)
             {
                 ProcessException(ex);
             }
+            
+            return Task.CompletedTask;
         }
 
-        public async Task UpdateRange<T>(IEnumerable<T> items) where T : Entity
+        public Task UpdateRange<T>(IEnumerable<T> items) where T : Entity
         {
             if (items == null)
             {
@@ -108,8 +117,6 @@
             try
             {
                 dbContext.UpdateRange(items);
-                await dbContext.SaveChangesAsync();
-                
                 foreach (var item in items)
                 {
                     item.NotifyEntryUpdated();
@@ -119,6 +126,8 @@
             {
                 ProcessException(ex);
             }
+            
+            return Task.CompletedTask;
         }
 
         public IQueryable<T> Query<T>(Expression<Func<T, bool>>? predicate = null) where T : Entity

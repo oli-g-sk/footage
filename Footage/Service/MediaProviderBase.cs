@@ -10,6 +10,31 @@
         
         public abstract IEnumerable<SourceVideoInfo> FetchVideos();
 
+        public static MediaProviderBase? GetMediaProvider(Video video)
+        {
+            if (video.MediaSource == null)
+            {
+                throw new ArgumentException($"GetMediaProvider called with video with NULL MediaSource: {video}");
+            }
+
+            return GetMediaProvider(video.MediaSource);
+        }
+
+        public static MediaProviderBase? GetMediaProvider(MediaSource mediaSource)
+        {
+            if (mediaSource == null)
+            {
+                return null;
+            }
+            
+            if (mediaSource is LocalMediaSource localMediaSource)
+            {
+                return new LocalMediaProvider(localMediaSource);
+            }
+
+            throw new NotImplementedException($"Unsupported media source: {mediaSource}");
+        }
+
         protected MediaProviderBase(MediaSource source)
         {
             Source = source;
