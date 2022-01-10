@@ -1,10 +1,8 @@
 ﻿namespace Footage.ViewModel
 {
     using System;
-    using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Section;
-    using GalaSoft.MvvmLight.Command;
 
     public sealed class MainWindowViewModel : SectionViewModel, IDisposable
     {

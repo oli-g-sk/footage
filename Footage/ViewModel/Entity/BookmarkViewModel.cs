@@ -2,7 +2,6 @@
 {
     using Footage.Model;
     using Footage.ViewModel.Base;
-    using GalaSoft.MvvmLight;
 
     public abstract class BookmarkViewModel : EntityViewModel<Bookmark>
     {

@@ -1,6 +1,5 @@
 ﻿namespace Footage.Messages
 {
-    using Footage.ViewModel.Base;
     using GalaSoft.MvvmLight.Messaging;
 
     public class SelectionChangedMessage<T> : MessageBase

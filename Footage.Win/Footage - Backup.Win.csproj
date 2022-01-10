@@ -3,8 +3,8 @@
         <OutputType>WinExe</OutputType>
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
-        <StartupObject></StartupObject>
-        <AssemblyName>Footage.Win</AssemblyName>
+        <StartupObject>Footage.Win.Program</StartupObject>
+        <AssemblyName>Footage</AssemblyName>
     </PropertyGroup>
     <ItemGroup>
         <None Remove=".gitignore" />
@@ -17,7 +17,6 @@
         <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Footage.UI\Footage.UI.csproj" />
       <ProjectReference Include="..\Footage\Footage.csproj" />
     </ItemGroup>
 </Project>

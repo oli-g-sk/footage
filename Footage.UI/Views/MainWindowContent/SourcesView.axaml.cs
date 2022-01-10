@@ -1,9 +1,8 @@
-﻿using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-
-namespace Footage.Views.MainWindowContent
+﻿namespace Footage.UI.Views.MainWindowContent
 {
+    using Avalonia.Controls;
     using Avalonia.Interactivity;
+    using Avalonia.Markup.Xaml;
     using Footage.ViewModel.Section;
 
     public class SourcesView : UserControl

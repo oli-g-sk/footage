@@ -4,8 +4,7 @@ using Avalonia.Markup.Xaml;
 
 namespace Footage.Win
 {
-    using Footage.ViewModel;
-    using Footage.Views;
+    using Footage.UI.Views;
 
     public class App : Application
     {

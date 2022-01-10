@@ -2,13 +2,11 @@
 {
     using System;
     using Footage.Messages;
-    using Footage.Model;
     using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
     using JetBrains.Annotations;
-    using LibVLCSharp.Shared;
 
     public class PlaybackViewModel : SectionViewModel
     {

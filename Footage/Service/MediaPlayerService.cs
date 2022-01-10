@@ -2,7 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Footage.Model;
     using LibVLCSharp.Shared;
 
     public sealed class MediaPlayerService : IMediaPlayerService, IDisposable

@@ -1,7 +1,6 @@
 ﻿
 namespace Footage.Repository
 {
-    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Footage.Model;

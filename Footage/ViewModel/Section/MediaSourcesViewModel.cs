@@ -1,19 +1,12 @@
 ﻿namespace Footage.ViewModel.Section
 {
-    using System;
-    using System.Collections.ObjectModel;
-    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
-    using Avalonia.Controls;
-    using Avalonia.Threading;
     using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
-    using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
-    using GalaSoft.MvvmLight.Command;
 
     // TODO support different source types
     // maybe by TInput type being tuple (MediaSourceType, string)
@@ -61,7 +54,7 @@
 
         private async Task LoadAllSources()
         {
-            using var repo = Locator.Get<SourcesRepository>();
+            using var repo = new SourcesRepository();
             var sources = (await repo.GetAllSources()).Select(s => new MediaSourceViewModel(s));
             
             // TODO create an extension method for this

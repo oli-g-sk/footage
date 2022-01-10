@@ -1,11 +1,8 @@
-namespace Footage.Views
+namespace Footage.UI.Views
 {
-    using System;
     using Avalonia;
     using Avalonia.Controls;
-    using Avalonia.Interactivity;
     using Avalonia.Markup.Xaml;
-    using Footage.ViewModel;
 
     public partial class MainWindow : Window
     {

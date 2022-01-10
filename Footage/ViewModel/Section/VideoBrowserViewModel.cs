@@ -1,14 +1,11 @@
 ﻿namespace Footage.ViewModel.Section
 {
     using System;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
-    using Avalonia.Threading;
     using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
-    using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
 

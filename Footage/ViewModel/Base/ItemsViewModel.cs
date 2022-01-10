@@ -1,12 +1,10 @@
 ﻿namespace Footage.ViewModel.Base
 {
-    using System;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
     using Footage.Messages;
     using Footage.Model;
     using GalaSoft.MvvmLight.Command;
-    using GalaSoft.MvvmLight.Messaging;
 
     public abstract class ItemsViewModel<TViewModel, TModel> : SectionViewModel
         where TViewModel : EntityViewModel<TModel>

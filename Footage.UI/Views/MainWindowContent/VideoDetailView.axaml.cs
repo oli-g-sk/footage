@@ -1,9 +1,8 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
-
-namespace Footage.Views.MainWindowContent
+﻿namespace Footage.UI.Views.MainWindowContent
 {
+    using Avalonia.Controls;
+    using Avalonia.Markup.Xaml;
+
     public class VideoDetailView : UserControl
     {
         public VideoDetailView()
