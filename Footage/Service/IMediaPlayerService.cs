@@ -7,7 +7,11 @@
     {
         static IMediaPlayerService Instance { get; }
         
-        public MediaPlayer MainPlayer { get; }
+        public MediaPlayer Player { get; }
+
+        Task LoadMedia(string uri);
+        
+        Task UnloadMedia();
 
         Task<long> GetVideoDuration(string videoUri);
     }

@@ -6,15 +6,11 @@
 
     public sealed class MediaPlayerService : IMediaPlayerService, IDisposable
     {
-        private static IMediaPlayerService? instance;
-        
-        private static LibVLC LibVlc;
-
-        public static IMediaPlayerService Instance => instance ??= new MediaPlayerService();
+        private static readonly LibVLC LibVlc;
 
         private readonly MediaPlayer helperPlayer;
         
-        public MediaPlayer MainPlayer { get; }
+        public MediaPlayer Player { get; }
 
         static MediaPlayerService()
         {
@@ -22,10 +18,23 @@
             LibVlc = new LibVLC();
         }
         
-        private MediaPlayerService()
+        public MediaPlayerService()
         {
-            MainPlayer = new MediaPlayer(LibVlc);
+            Player = new MediaPlayer(LibVlc);
             helperPlayer = new MediaPlayer(LibVlc);
+        }
+
+        public async Task LoadMedia(string uri)
+        {
+            await UnloadMedia();
+            Player.Media = new Media(LibVlc, new Uri(uri));
+            await Task.CompletedTask;
+        }
+
+        public async Task UnloadMedia()
+        {
+            Player.Media?.Dispose();
+            await Task.CompletedTask;
         }
 
         public async Task<long> GetVideoDuration(string videoUri)
@@ -41,7 +50,7 @@
         public void Dispose()
         {
             helperPlayer.Dispose();
-            MainPlayer.Dispose();
+            Player.Dispose();
         }
     }
 }

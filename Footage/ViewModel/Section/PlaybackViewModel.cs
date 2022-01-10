@@ -11,15 +11,16 @@
 
     public class PlaybackViewModel : SectionViewModel
     {
+        private readonly IMediaPlayerService mediaPlayerService = new MediaPlayerService();
+        
         private VideoViewModel? selectedVideo;
         
         private MediaProviderBase? mediaProvider;
         
         
         // TODO later abstract away entire LibVLC dependency to IMediaPlayerService (using our own IMediaPlayer)
-        public MediaPlayer Player => MediaPlayerService.Instance.MainPlayer;
+        public MediaPlayer Player => mediaPlayerService.Player;
 
-        [CanBeNull]
         public VideoViewModel? SelectedVideo
         {
             get => selectedVideo;
@@ -116,8 +117,15 @@
             CurrentVideoDuration = 0;
 
             string? path = SelectedVideo == null ? null : mediaProvider?.GetFullPath(SelectedVideo.Item);
-            Player.Media = path != null ? new Media(Locator.LibVlc, new Uri(path)) : null;
-            
+            if (string.IsNullOrEmpty(path))
+            {
+                mediaPlayerService.UnloadMedia();
+            }
+            else
+            {
+                mediaPlayerService.LoadMedia(path);
+            }
+
             PlayPauseCommand.RaiseCanExecuteChanged();
             StopCommand.RaiseCanExecuteChanged();
             

@@ -8,7 +8,7 @@
 
     public class VideoBrowserRepository : RepositoryBase
     {
-        private IMediaPlayerService mediaPlayerService => MediaPlayerService.Instance;
+        private IMediaPlayerService mediaPlayerService => new MediaPlayerService();
         
         // TODO make async
         public IEnumerable<Video> FetchVideos(MediaSource selectedSource, int? batchSize = null)
