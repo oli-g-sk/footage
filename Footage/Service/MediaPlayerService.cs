@@ -8,13 +8,19 @@
     {
         private static IMediaPlayerService? instance;
         
-        private static LibVLC LibVlc => Locator.LibVlc;
+        private static LibVLC LibVlc;
 
         public static IMediaPlayerService Instance => instance ??= new MediaPlayerService();
 
         private readonly MediaPlayer helperPlayer;
         
         public MediaPlayer MainPlayer { get; }
+
+        static MediaPlayerService()
+        {
+            Core.Initialize();
+            LibVlc = new LibVLC();
+        }
         
         private MediaPlayerService()
         {
