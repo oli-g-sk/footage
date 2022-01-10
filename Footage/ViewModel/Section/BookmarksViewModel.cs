@@ -84,7 +84,7 @@
                     ? new RangeBookmarkViewModel(rb)
                     : new TimeBookmarkViewModel((bookmark as TimeBookmark)!);
                 
-                await Dispatcher.UIThread.InvokeAsync(() =>
+                await Dispatcher.InvokeAsync(() =>
                 {
                     Bookmarks.Add(viewModel);
                 });

@@ -11,6 +11,7 @@ namespace Footage.Win
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+            Locator.Initialize();
         }
 
         public override void OnFrameworkInitializationCompleted()

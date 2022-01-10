@@ -44,7 +44,7 @@
 
             foreach (var video in videos)
             {
-                await Dispatcher.UIThread.InvokeAsync(async () =>
+                await Dispatcher.InvokeAsync(async () =>
                 {
                     await repo.UpdateVideoDuration(selectedSource, video);
                     Items.Add(new VideoViewModel(video));
