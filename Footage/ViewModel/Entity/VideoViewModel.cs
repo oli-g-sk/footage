@@ -8,7 +8,7 @@
     {
         public long Duration => Item.Duration;
         
-        public VideoViewModel([NotNull] Video item) : base(item)
+        public VideoViewModel(Video item) : base(item)
         {
         }
 

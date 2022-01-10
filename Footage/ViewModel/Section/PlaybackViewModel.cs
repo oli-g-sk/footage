@@ -7,6 +7,7 @@
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
     using JetBrains.Annotations;
+    using LibVLCSharp.Shared;
 
     public class PlaybackViewModel : SectionViewModel
     {
@@ -14,6 +15,8 @@
         
         private MediaProviderBase? mediaProvider;
         
+        
+        // TODO later abstract away entire LibVLC dependency to IMediaPlayerService (using our own IMediaPlayer)
         public MediaPlayer Player => MediaPlayerService.Instance.MainPlayer;
 
         [CanBeNull]

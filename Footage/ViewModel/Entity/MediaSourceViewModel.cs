@@ -29,7 +29,7 @@
             }
         }
         
-        public MediaSourceViewModel([NotNull] MediaSource item) : base(item)
+        public MediaSourceViewModel(MediaSource item) : base(item)
         {
         }
     }
