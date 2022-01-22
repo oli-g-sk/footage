@@ -2,6 +2,7 @@
 using Footage.Service;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +32,16 @@ namespace Footage.Repository
             // TODO detect video changes (check if duration (and other metadata) match what's stored in DB)
 
             string path = GetVideoPath(mediaSource, video);
-            video.Duration = await mediaPlayerService.GetVideoDuration(path);
+
+            if (!File.Exists(path))
+            {
+                // TODO check if video file path is readable
+                video.IsMissing = true;
+            }
+            else
+            {
+                video.Duration = await mediaPlayerService.GetVideoDuration(path);
+            }
 #if DEBUG
             // await Task.Delay(300);
 #endif

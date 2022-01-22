@@ -13,5 +13,7 @@
         }
 
         public int BookmarksCount => Item.Bookmarks.Count;
+
+        public bool IsMissing => Item.IsMissing;
     }
 }

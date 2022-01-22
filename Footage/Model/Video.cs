@@ -4,6 +4,8 @@
 
     public class Video : Entity
     {
+        public bool IsMissing { get; set; }
+
         /// <summary>
         /// Id of the MediaSource it belongs to
         /// TODO remove?
