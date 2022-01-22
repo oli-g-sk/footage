@@ -14,7 +14,7 @@
 
     public class BookmarksViewModel : SectionViewModel
     {
-        private readonly BookmarksRepository repo = new BookmarksRepository();
+        private static BookmarksRepository Repo => Locator.Get<BookmarksRepository>();
 
         private VideoViewModel? selectedVideo;
         
@@ -41,7 +41,7 @@
         public void AddTimeBookmark(PlaybackViewModel playbackViewModel)
         {
             // TODO await
-            var task = repo.AddTimeBookmarkToVideo(selectedVideo.Item, playbackViewModel.PlaybackPosition);
+            var task = Repo.AddTimeBookmarkToVideo(selectedVideo.Item, playbackViewModel.PlaybackPosition);
             task.Wait();
             var bookmark = task.Result;
             Bookmarks.Add(new TimeBookmarkViewModel(bookmark));
@@ -54,9 +54,9 @@
             {
                 Bookmarks.Remove(bookmark);
             }
-            
+
             // TODO await
-            repo.RemoveBookmarks(selectedVideo.Item, selection.Select(b => b.Item));
+            Repo.RemoveBookmarks(selectedVideo.Item, selection.Select(b => b.Item));
             
             // TODO await
             SelectedBookmarks.Clear();
@@ -65,7 +65,7 @@
         private void SaveBookmarks()
         {
             // TODO await
-            var task = repo.UpdateBookmarkTimes(Bookmarks.Select(b => b.Item));
+            var task = Repo.UpdateBookmarkTimes(Bookmarks.Select(b => b.Item));
             task.Wait();
         }
 

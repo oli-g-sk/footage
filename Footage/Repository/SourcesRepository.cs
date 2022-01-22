@@ -12,7 +12,7 @@
     {
         public async Task<LocalMediaSource> AddLocalSource(string path, bool includeSubfolders)
         {
-            using var dao = new EntityDao();
+            using var dao = GetDao();
 
             var source = new LocalMediaSource
             {
@@ -31,7 +31,7 @@
 
         public async Task RemoveSource(MediaSource source)
         {
-            using var dao = new EntityDao();
+            using var dao = GetDao();
             await dao.Remove(source);
             await dao.Commit();
         }
@@ -57,20 +57,20 @@
                 });
             }
 
-            using var dao = new EntityDao();
+            using var dao = GetDao();
             await dao.InsertRange(videos);
             await dao.Commit();
         }
 
         public async Task<IEnumerable<MediaSource>> GetAllSources()
         {
-            using var dao = new EntityDao();
+            using var dao = GetDao();
             return await dao.Query<MediaSource>().ToListAsync();
         }
 
         private async Task<bool> VideoAlreadyImported(SourceVideoInfo sourceVideoInfo)
         {
-            using var dao = new EntityDao();
+            using var dao = GetDao();
             return await dao.Contains<Video>(v => v.MediaSource == sourceVideoInfo.Source
                                                 && v.MediaSourceUri == sourceVideoInfo.Identifier);
         }

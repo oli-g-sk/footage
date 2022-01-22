@@ -7,6 +7,11 @@
     {
         public static void Initialize()
         {
+            Footage.Locator.RegisterDefaultDatabase();
+            Footage.Locator.RegisterDefaultEngine();
+            Footage.Locator.RegisterDefaultRepositories();
+            Footage.Locator.RegisterDefaultServices();
+
             SimpleIoc.Default.Register<IDispatcher, AvaloniaDispatcher>();
         }
     }

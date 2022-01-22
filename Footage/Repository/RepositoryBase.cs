@@ -5,6 +5,6 @@
 
     public abstract class RepositoryBase
     {
-
+        protected IEntityDao GetDao() => Locator.Create<IEntityDao>();
     }
 }

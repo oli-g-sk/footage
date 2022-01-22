@@ -11,7 +11,7 @@
 
     public class PlaybackViewModel : SectionViewModel
     {
-        private readonly IMediaPlayerService mediaPlayerService = new MediaPlayerService();
+        private readonly IMediaPlayerService mediaPlayerService = Locator.Create<IMediaPlayerService>();
         
         private VideoViewModel? selectedVideo;
         

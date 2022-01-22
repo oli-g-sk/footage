@@ -10,7 +10,7 @@ namespace Footage.Repository
     {
         public async Task<TimeBookmark> AddTimeBookmarkToVideo(Video video, long position)
         {
-            using var dao = new EntityDao();
+            using var dao = GetDao();
 
             var bookmark = new TimeBookmark
             {
@@ -28,7 +28,7 @@ namespace Footage.Repository
 
         public async Task RemoveBookmarks(Video video, IEnumerable<Bookmark> bookmarks)
         {
-            using var dao = new EntityDao();
+            using var dao = GetDao();
 
             foreach (var bookmark in bookmarks)
             {
@@ -43,7 +43,7 @@ namespace Footage.Repository
 
         public async Task UpdateBookmarkTimes(IEnumerable<Bookmark> bookmarks)
         {
-            using var dao = new EntityDao();
+            using var dao = GetDao();
             await dao.UpdateRange(bookmarks);
             await dao.Commit();
         }
