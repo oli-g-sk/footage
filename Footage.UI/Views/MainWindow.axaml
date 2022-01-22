@@ -25,15 +25,21 @@
               RowDefinitions="Auto, *">
             
             <!-- player window -->
-            <Panel Grid.Row="0"
+            <Grid Grid.Row="0"
                    Width="640"
                    Height="360"
                    Background="#000000"
                    DataContext="{Binding Playback}">
                 <avalonia:VideoView MediaPlayer="{Binding Player}"
-                                    IsVisible="{Binding SelectedVideo, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                    IsVisible="{Binding VideoCanPlay}"
                                     Margin="1" />
-            </Panel>
+				<TextBlock Text="!"
+						   FontSize="72"
+						   Foreground="#00FF00"
+						   HorizontalAlignment="Center"
+						   VerticalAlignment="Center"
+						   IsVisible="{Binding SelectedVideoMissing}" />
+			</Grid>
             
             <!-- rest of column -->
             <mainWindowContent:VideoDetailView Grid.Row="1"/>

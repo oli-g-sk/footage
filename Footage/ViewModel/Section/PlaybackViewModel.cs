@@ -19,6 +19,10 @@
         // TODO later abstract away entire LibVLC dependency to IMediaPlayerService (using our own IMediaPlayer)
         public MediaPlayer Player => mediaPlayerService.Player;
 
+        public bool SelectedVideoMissing => SelectedVideo != null && SelectedVideo.IsMissing;
+
+        public bool VideoCanPlay => SelectedVideo != null && !SelectedVideoMissing;
+
         public long CurrentVideoDuration => mediaPlayerService.Duration;
 
         public float PlaybackProgress
@@ -60,6 +64,8 @@
         protected override void AfterSelectedVideoChanged()
         {
             // TODO await
+            RaisePropertyChanged(nameof(SelectedVideoMissing));
+            RaisePropertyChanged(nameof(VideoCanPlay));
             ReloadSelectedVideo();
         }
 
@@ -91,11 +97,11 @@
         {
             PlaybackProgress = 0;
 
-            if (SelectedVideo == null)
+            if (SelectedVideoMissing)
             {
                 await mediaPlayerService.UnloadMedia();
             }
-            else 
+            else if (SelectedVideo != null)
             {
                 string? path = DetailRepo.GetVideoPath(SelectedMediaSource.Item, SelectedVideo.Item);
                 await DetailRepo.ProcessSelectedVideo(SelectedMediaSource.Item, SelectedVideo.Item);
