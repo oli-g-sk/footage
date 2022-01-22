@@ -41,9 +41,12 @@
 
         private void OnSelectedVideoChanged(SelectionChangedMessage<VideoViewModel> message)
         {
-            BeforeSelectedVideoChanged();
-            SelectedVideo = message.SelectedItem;
-            AfterSelectedVideoChanged();
+            if (message.SelectedItem != null)
+            {
+                BeforeSelectedVideoChanged();
+                SelectedVideo = message.SelectedItem;
+                AfterSelectedVideoChanged();
+            }
         }
 
         private void OnMediaSourceChanged(SelectionChangedMessage<MediaSourceViewModel> message)
