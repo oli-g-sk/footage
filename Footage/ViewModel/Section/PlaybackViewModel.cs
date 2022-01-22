@@ -10,42 +10,16 @@
     using GalaSoft.MvvmLight.Command;
     using LibVLCSharp.Shared;
 
-    public class PlaybackViewModel : SectionViewModel
+    public class PlaybackViewModel : VideoDetailViewModelBase
     {
-        private static VideoBrowserRepository BrowserRepo => Locator.Get<VideoBrowserRepository>();
         private static VideoDetailRepository DetailRepo => Locator.Get<VideoDetailRepository>();
 
         private readonly IMediaPlayerService mediaPlayerService = Locator.Create<IMediaPlayerService>();
-
-        private MediaSourceViewModel? selectedMediaSource;
-
-        private VideoViewModel? selectedVideo;
         
         // TODO later abstract away entire LibVLC dependency to IMediaPlayerService (using our own IMediaPlayer)
         public MediaPlayer Player => mediaPlayerService.Player;
 
-        public VideoViewModel? SelectedVideo
-        {
-            get => selectedVideo;
-            set
-            {
-                BeforeVideoChanged();
-                Set(ref selectedVideo, value);
-                AfterVideoChanged();
-            } 
-        }
-
-        private long currentVideoDuration;
-        // TODO save video duration to DB?
-        public long CurrentVideoDuration
-        {
-            get => currentVideoDuration;
-            set
-            {
-                Set(ref currentVideoDuration, value);
-                RaisePropertyChanged(nameof(CurrentVideoDurationTimeCode));
-            }
-        }
+        public long CurrentVideoDuration => mediaPlayerService.Duration;
 
         public float PlaybackProgress
         {
@@ -69,15 +43,26 @@
         public RelayCommand StopCommand { get; }
         
         public PlaybackViewModel()
-        {
-            MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, m => SelectedVideo = m.SelectedItem);
-            MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, OnMediaSourceChanged);
-            
+        {            
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
             
             Player.PositionChanged += Player_PositionChanged;
         }
+
+        protected override void BeforeSelectedVideoChanged()
+        {
+            // unload the media from the player - otherwise, if a new file would be loaded,
+            // the player would display frame from the previous file until the new file is actually played
+            Player.Stop();
+        }
+
+        protected override void AfterSelectedVideoChanged()
+        {
+            // TODO await
+            ReloadSelectedVideo();
+        }
+
 
         private void PlayPause()
         {
@@ -102,17 +87,9 @@
             return Player.Media != null;
         }
         
-        private void BeforeVideoChanged()
-        {
-            // unload the media from the player - otherwise, if a new file would be loaded,
-            // the player would display frame from the previous file until the new file is actually played
-            Player.Stop();
-        }
-        
-        private async Task AfterVideoChanged()
+        private async Task ReloadSelectedVideo()
         {
             PlaybackProgress = 0;
-            CurrentVideoDuration = 0;
 
             if (SelectedVideo == null)
             {
@@ -120,7 +97,7 @@
             }
             else 
             {
-                string? path = DetailRepo.GetVideoPath(selectedMediaSource.Item, SelectedVideo.Item);
+                string? path = DetailRepo.GetVideoPath(SelectedMediaSource.Item, SelectedVideo.Item);
                 await mediaPlayerService.LoadMedia(path);
             }
 
@@ -135,11 +112,6 @@
             StopCommand.RaiseCanExecuteChanged();
         }
 
-        private void OnMediaSourceChanged(SelectionChangedMessage<MediaSourceViewModel> message)
-        {
-            selectedMediaSource = message.SelectedItem;
-        }
-        
         private void Player_PositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)
         {
             RaisePropertyChanged(nameof(PlaybackProgress));

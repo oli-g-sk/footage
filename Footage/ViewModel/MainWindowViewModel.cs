@@ -9,14 +9,17 @@
         public MediaSourcesViewModel MediaSources { get; }
         
         public VideoBrowserViewModel VideoBrowser { get; }
-        
-        public VideoDetailViewModel VideoDetail { get; }
+
+        public PlaybackViewModel Playback { get; }
+
+        public BookmarksViewModel Bookmarks { get; }
 
         public MainWindowViewModel()
         {
             MediaSources = new MediaSourcesViewModel();
             VideoBrowser = new VideoBrowserViewModel();
-            VideoDetail = new VideoDetailViewModel();
+            Playback = new PlaybackViewModel();
+            Bookmarks = new BookmarksViewModel();
         }
 
         public void Dispose()

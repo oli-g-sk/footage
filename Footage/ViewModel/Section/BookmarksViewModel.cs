@@ -5,18 +5,14 @@
     using System.Collections.Specialized;
     using System.Linq;
     using System.Threading.Tasks;
-    using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
-    using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
 
-    public class BookmarksViewModel : SectionViewModel
+    public class BookmarksViewModel : VideoDetailViewModelBase
     {
         private static BookmarksRepository Repo => Locator.Get<BookmarksRepository>();
-
-        private VideoViewModel? selectedVideo;
         
         public ObservableCollection<BookmarkViewModel> Bookmarks { get; }
 
@@ -29,10 +25,8 @@
         public BookmarksViewModel()
         {
             Bookmarks = new ObservableCollection<BookmarkViewModel>();
-            AddTimeBookmarkCommand = new RelayCommand<PlaybackViewModel>(AddTimeBookmark, _ => selectedVideo != null);
+            AddTimeBookmarkCommand = new RelayCommand<PlaybackViewModel>(AddTimeBookmark, _ => SelectedVideo != null);
             RemoveSelectedBookmarksCommand = new RelayCommand(RemoveSelectedBookmarks, () => SelectedBookmarks.Any());
-            
-            MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, OnSelectedVideoChanged);
             
             SelectedBookmarks.CollectionChanged += SelectedBookmarks_CollectionChanged;
         }
@@ -41,7 +35,7 @@
         public void AddTimeBookmark(PlaybackViewModel playbackViewModel)
         {
             // TODO await
-            var task = Repo.AddTimeBookmarkToVideo(selectedVideo.Item, playbackViewModel.PlaybackPosition);
+            var task = Repo.AddTimeBookmarkToVideo(SelectedVideo.Item, playbackViewModel.PlaybackPosition);
             task.Wait();
             var bookmark = task.Result;
             Bookmarks.Add(new TimeBookmarkViewModel(bookmark));
@@ -56,7 +50,7 @@
             }
 
             // TODO await
-            Repo.RemoveBookmarks(selectedVideo.Item, selection.Select(b => b.Item));
+            Repo.RemoveBookmarks(SelectedVideo.Item, selection.Select(b => b.Item));
             
             // TODO await
             SelectedBookmarks.Clear();
@@ -71,12 +65,12 @@
 
         private async Task LoadBookmarks()
         {
-            if (selectedVideo == null)
+            if (SelectedVideo == null)
             {
                 return;
             }
             
-            foreach (var bookmark in selectedVideo.Item.Bookmarks)
+            foreach (var bookmark in SelectedVideo.Item.Bookmarks)
             {
                 BookmarkViewModel viewModel = bookmark is RangeBookmark rb
                     ? new RangeBookmarkViewModel(rb)
@@ -89,15 +83,16 @@
             }
         }
 
-        private void OnSelectedVideoChanged(SelectionChangedMessage<VideoViewModel> message)
+        protected override void BeforeSelectedVideoChanged()
         {
             SaveBookmarks();
-            
+
             // TODO clear async
             Bookmarks.Clear();
-            
-            selectedVideo = message.SelectedItem;
-            
+        }
+
+        protected override void AfterSelectedVideoChanged()
+        {
             AddTimeBookmarkCommand.RaiseCanExecuteChanged();
             RemoveSelectedBookmarksCommand.RaiseCanExecuteChanged();
 

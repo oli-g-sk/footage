@@ -22,8 +22,7 @@
         <mainWindowContent:VideoBrowserView Grid.Column="1"
                                             DataContext="{Binding VideoBrowser}" />
         <Grid Grid.Column="2"
-              RowDefinitions="Auto, *"
-              DataContext="{Binding VideoDetail}" >
+              RowDefinitions="Auto, *">
             
             <!-- player window -->
             <Panel Grid.Row="0"
