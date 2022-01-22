@@ -12,7 +12,8 @@
 
     public class PlaybackViewModel : SectionViewModel
     {
-        private static VideoBrowserRepository Repo => Locator.Get<VideoBrowserRepository>();
+        private static VideoBrowserRepository BrowserRepo => Locator.Get<VideoBrowserRepository>();
+        private static VideoDetailRepository DetailRepo => Locator.Get<VideoDetailRepository>();
 
         private readonly IMediaPlayerService mediaPlayerService = Locator.Create<IMediaPlayerService>();
 
@@ -119,7 +120,7 @@
             }
             else 
             {
-                string? path = Repo.GetVideoPath(selectedMediaSource.Item, SelectedVideo.Item);
+                string? path = DetailRepo.GetVideoPath(selectedMediaSource.Item, SelectedVideo.Item);
                 await mediaPlayerService.LoadMedia(path);
             }
 

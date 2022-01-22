@@ -27,6 +27,7 @@ namespace Footage
             SimpleIoc.Default.Register<BookmarksRepository>();
             SimpleIoc.Default.Register<SourcesRepository>();
             SimpleIoc.Default.Register<VideoBrowserRepository>();
+            SimpleIoc.Default.Register<VideoDetailRepository>();
         }
 
         public static void RegisterDefaultServices()
