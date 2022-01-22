@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
+    using Footage.Dao;
     using Footage.Model;
     using Footage.Service;
     using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@
     {
         public async Task<LocalMediaSource> AddLocalSource(string path, bool includeSubfolders)
         {
+            using var dao = new EntityDao();
+
             var source = new LocalMediaSource
             {
                 RootPath = path,
@@ -18,8 +21,8 @@
                 Name = Path.GetFileName(path)
             };
             
-            await Dao.Insert(source);
-            await Dao.Commit();
+            await dao.Insert(source);
+            await dao.Commit();
 
             await ImportNewFiles(source);
             
@@ -28,8 +31,9 @@
 
         public async Task RemoveSource(MediaSource source)
         {
-            await Dao.Remove(source);
-            await Dao.Commit();
+            using var dao = new EntityDao();
+            await dao.Remove(source);
+            await dao.Commit();
         }
 
         public async Task ImportNewFiles(LocalMediaSource source)
@@ -53,18 +57,21 @@
                 });
             }
 
-            await Dao.InsertRange(videos);
-            await Dao.Commit();
+            using var dao = new EntityDao();
+            await dao.InsertRange(videos);
+            await dao.Commit();
         }
 
         public async Task<IEnumerable<MediaSource>> GetAllSources()
         {
-            return await Dao.Query<MediaSource>().ToListAsync();
+            using var dao = new EntityDao();
+            return await dao.Query<MediaSource>().ToListAsync();
         }
 
         private async Task<bool> VideoAlreadyImported(SourceVideoInfo sourceVideoInfo)
         {
-            return await Dao.Contains<Video>(v => v.MediaSource == sourceVideoInfo.Source
+            using var dao = new EntityDao();
+            return await dao.Contains<Video>(v => v.MediaSource == sourceVideoInfo.Source
                                                 && v.MediaSourceUri == sourceVideoInfo.Identifier);
         }
     }

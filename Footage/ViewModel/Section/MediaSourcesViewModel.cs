@@ -12,6 +12,8 @@
     // maybe by TInput type being tuple (MediaSourceType, string)
     public class MediaSourcesViewModel : ItemsAddViewModel<MediaSourceViewModel, MediaSource, string?>
     {
+        private readonly SourcesRepository repo = new SourcesRepository();
+
         private bool selectionEnabled;
 
         public bool SelectionEnabled
@@ -35,7 +37,6 @@
         
         protected override async Task<MediaSource> CreateAndStoreModel(string? input)
         {
-            using var repo = new SourcesRepository();
             var model = await repo.AddLocalSource(input, true);
 
             // TODO move source files refresh to selection changed handler?
@@ -48,13 +49,11 @@
 
         protected override async Task DeleteModel(MediaSource item)
         {
-            using var repo = new SourcesRepository();
             await repo.RemoveSource(item);
         }
 
         private async Task LoadAllSources()
         {
-            using var repo = new SourcesRepository();
             var sources = (await repo.GetAllSources()).Select(s => new MediaSourceViewModel(s));
             
             // TODO create an extension method for this

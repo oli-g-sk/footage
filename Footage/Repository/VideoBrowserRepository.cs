@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using Footage.Dao;
     using Footage.Model;
     using Footage.Service;
     using Microsoft.EntityFrameworkCore;
@@ -11,15 +12,16 @@
         private IMediaPlayerService mediaPlayerService => new MediaPlayerService();
         
         // TODO make async
-        public IEnumerable<Video> FetchVideos(MediaSource selectedSource, int? batchSize = null)
+        public async Task<IEnumerable<Video>> FetchVideos(MediaSource selectedSource, int? batchSize = null)
         {
             // TODO use batch size limit
-            
-            var videos = Dao.Query<Video>(v => v.MediaSource == selectedSource)
+            using var dao = new EntityDao();
+
+            var videos = dao.Query<Video>(v => v.MediaSource == selectedSource)
                 .Include(v => v.MediaSource)
                 .Include(v => v.Bookmarks);
             
-            return videos;
+            return await videos.ToListAsync();
         }
 
         public async Task UpdateVideoDuration(MediaSource mediaSource, Video video)
@@ -31,9 +33,10 @@
 #if DEBUG
             // await Task.Delay(300);
 #endif
-            
-            await Dao.Update(video);
-            await Dao.Commit();
+
+            using var dao = new EntityDao();
+            await dao.Update(video);
+            await dao.Commit();
         }
     }
     

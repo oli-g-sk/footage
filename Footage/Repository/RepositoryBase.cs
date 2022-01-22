@@ -3,18 +3,8 @@
     using System;
     using Footage.Dao;
 
-    public abstract class RepositoryBase : IDisposable
+    public abstract class RepositoryBase
     {
-        protected IEntityDao Dao { get; }
 
-        protected RepositoryBase()
-        {
-            Dao = new EntityDao();
-        }
-        
-        public virtual void Dispose()
-        {
-            Dao.Dispose();
-        }
     }
 }

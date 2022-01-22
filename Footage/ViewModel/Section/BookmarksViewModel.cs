@@ -14,6 +14,8 @@
 
     public class BookmarksViewModel : SectionViewModel
     {
+        private readonly BookmarksRepository repo = new BookmarksRepository();
+
         private VideoViewModel? selectedVideo;
         
         public ObservableCollection<BookmarkViewModel> Bookmarks { get; }
@@ -38,7 +40,6 @@
         // TODO make async
         public void AddTimeBookmark(PlaybackViewModel playbackViewModel)
         {
-            using var repo = new BookmarksRepository();
             // TODO await
             var task = repo.AddTimeBookmarkToVideo(selectedVideo.Item, playbackViewModel.PlaybackPosition);
             task.Wait();
@@ -48,8 +49,6 @@
 
         private void RemoveSelectedBookmarks()
         {
-            using var repo = new BookmarksRepository();
-
             var selection = new List<BookmarkViewModel>(SelectedBookmarks);
             foreach (var bookmark in selection)
             {
@@ -65,7 +64,6 @@
 
         private void SaveBookmarks()
         {
-            using var repo = new BookmarksRepository();
             // TODO await
             var task = repo.UpdateBookmarkTimes(Bookmarks.Select(b => b.Item));
             task.Wait();

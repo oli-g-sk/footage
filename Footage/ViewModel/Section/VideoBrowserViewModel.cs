@@ -11,6 +11,8 @@
 
     public class VideoBrowserViewModel : ItemsViewModel<VideoViewModel, Video>
     {
+        private readonly VideoBrowserRepository repo = new VideoBrowserRepository();
+
         private MediaSource? selectedSource;
 
         public VideoBrowserViewModel()
@@ -38,9 +40,7 @@
             
             MessengerInstance.Send(new IsBusyChangedMessage(true));
             
-            using var repo = new VideoBrowserRepository();
-            
-            var videos = repo.FetchVideos(selectedSource, batchSize).ToList();
+            var videos = await repo.FetchVideos(selectedSource, batchSize);
 
             foreach (var video in videos)
             {
@@ -50,7 +50,7 @@
                 });
 
 #if DEBUG
-                // await Task.Delay(25);
+                await Task.Delay(125);
 #endif
             }
             
