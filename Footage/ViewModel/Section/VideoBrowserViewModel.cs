@@ -46,7 +46,6 @@
             {
                 await Dispatcher.InvokeAsync(async () =>
                 {
-                    await repo.UpdateVideoDuration(selectedSource, video);
                     Items.Add(new VideoViewModel(video));
                 });
 
