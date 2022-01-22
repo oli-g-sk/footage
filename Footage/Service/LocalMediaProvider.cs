@@ -5,7 +5,7 @@
     using System.Linq;
     using Footage.Model;
 
-    public class LocalMediaProvider : MediaProviderBase
+    public class LocalMediaProvider : MediaProviderBase, ILocalMediaProvider
     {
         private static readonly string[] Extensions = { "mov", "mp4", "mkv" };
 

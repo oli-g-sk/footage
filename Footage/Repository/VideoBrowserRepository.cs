@@ -11,10 +11,13 @@
     public class VideoBrowserRepository : RepositoryBase
     {
         private readonly IMediaPlayerService mediaPlayerService;
+        private readonly IMediaProviderFactory mediaProviderFactory;
 
-        public VideoBrowserRepository(IMediaPlayerService mediaPlayerService)
+        public VideoBrowserRepository(IMediaPlayerService mediaPlayerService,
+            IMediaProviderFactory mediaProviderFactory)
         {
             this.mediaPlayerService = mediaPlayerService;
+            this.mediaProviderFactory = mediaProviderFactory;
         }
 
         // TODO make async
@@ -30,11 +33,15 @@
             return await videos.ToListAsync();
         }
 
+        public string GetVideoPath(MediaSource mediaSource, Video video)
+        {
+            var mediaProvider = mediaProviderFactory.GetMediaProvider(mediaSource);
+            return mediaProvider.GetFullPath(video);
+        }
+
         public async Task UpdateVideoDuration(MediaSource mediaSource, Video video)
         {
-            var mediaProvider = MediaProviderBase.GetMediaProvider(mediaSource);
-
-            string path = mediaProvider.GetFullPath(video);
+            string path = GetVideoPath(mediaSource, video);
             video.Duration = await mediaPlayerService.GetVideoDuration(path);
 #if DEBUG
             // await Task.Delay(300);

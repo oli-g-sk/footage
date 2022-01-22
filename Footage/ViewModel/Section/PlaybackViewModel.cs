@@ -1,22 +1,24 @@
 ﻿namespace Footage.ViewModel.Section
 {
     using System;
+    using System.Threading.Tasks;
     using Footage.Messages;
+    using Footage.Repository;
     using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
-    using JetBrains.Annotations;
     using LibVLCSharp.Shared;
 
     public class PlaybackViewModel : SectionViewModel
     {
+        private static VideoBrowserRepository Repo => Locator.Get<VideoBrowserRepository>();
+
         private readonly IMediaPlayerService mediaPlayerService = Locator.Create<IMediaPlayerService>();
-        
+
+        private MediaSourceViewModel? selectedMediaSource;
+
         private VideoViewModel? selectedVideo;
-        
-        private MediaProviderBase? mediaProvider;
-        
         
         // TODO later abstract away entire LibVLC dependency to IMediaPlayerService (using our own IMediaPlayer)
         public MediaPlayer Player => mediaPlayerService.Player;
@@ -101,53 +103,40 @@
         
         private void BeforeVideoChanged()
         {
-            if (Player.Media != null)
-            {
-                Player.Media.ParsedChanged -= PlayerMedia_ParsedChanged;
-            }
-
             // unload the media from the player - otherwise, if a new file would be loaded,
             // the player would display frame from the previous file until the new file is actually played
             Player.Stop();
         }
         
-        private void AfterVideoChanged()
+        private async Task AfterVideoChanged()
         {
             PlaybackProgress = 0;
             CurrentVideoDuration = 0;
 
-            string? path = SelectedVideo == null ? null : mediaProvider?.GetFullPath(SelectedVideo.Item);
-            if (string.IsNullOrEmpty(path))
+            if (SelectedVideo == null)
             {
-                mediaPlayerService.UnloadMedia();
+                await mediaPlayerService.UnloadMedia();
             }
-            else
+            else 
             {
-                mediaPlayerService.LoadMedia(path);
+                string? path = Repo.GetVideoPath(selectedMediaSource.Item, SelectedVideo.Item);
+                await mediaPlayerService.LoadMedia(path);
             }
+
+            PlaybackProgress = 0;
+
+            RaisePropertyChanged(nameof(PlaybackPosition));
+            RaisePropertyChanged(nameof(PlaybackPositionTimeCode));
+            RaisePropertyChanged(nameof(CurrentVideoDuration));
+            RaisePropertyChanged(nameof(CurrentVideoDurationTimeCode));
 
             PlayPauseCommand.RaiseCanExecuteChanged();
             StopCommand.RaiseCanExecuteChanged();
-            
-            if (Player.Media != null)
-            {
-                Player.Media.ParsedChanged += PlayerMedia_ParsedChanged;
-            }
         }
 
         private void OnMediaSourceChanged(SelectionChangedMessage<MediaSourceViewModel> message)
         {
-            mediaProvider = MediaProviderBase.GetMediaProvider(message.SelectedItem.Item);
-        }
-
-        void PlayerMedia_ParsedChanged(object? sender, MediaParsedChangedEventArgs e)
-        {
-            if (e.ParsedStatus == MediaParsedStatus.Done)
-            {
-                CurrentVideoDuration = Player.Media.Duration;
-            }
-
-            Player.Media.ParsedChanged -= PlayerMedia_ParsedChanged;
+            selectedMediaSource = message.SelectedItem;
         }
         
         private void Player_PositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)

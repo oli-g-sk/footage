@@ -31,7 +31,7 @@ namespace Footage
 
         public static void RegisterDefaultServices()
         {
-            SimpleIoc.Default.Register<LocalMediaProvider>();
+            SimpleIoc.Default.Register<IMediaProviderFactory, MediaProviderFactory>();
         }
 
         internal static T Get<T>()
