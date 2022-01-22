@@ -26,8 +26,10 @@ namespace Footage.Repository
             return mediaProvider.GetFullPath(video);
         }
 
-        public async Task UpdateVideoDuration(MediaSource mediaSource, Video video)
+        public async Task ProcessSelectedVideo(MediaSource mediaSource, Video video)
         {
+            // TODO detect video changes (check if duration (and other metadata) match what's stored in DB)
+
             string path = GetVideoPath(mediaSource, video);
             video.Duration = await mediaPlayerService.GetVideoDuration(path);
 #if DEBUG

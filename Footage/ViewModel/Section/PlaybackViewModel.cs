@@ -98,6 +98,7 @@
             else 
             {
                 string? path = DetailRepo.GetVideoPath(SelectedMediaSource.Item, SelectedVideo.Item);
+                await DetailRepo.ProcessSelectedVideo(SelectedMediaSource.Item, SelectedVideo.Item);
                 await mediaPlayerService.LoadMedia(path);
             }
 
