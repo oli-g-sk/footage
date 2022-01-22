@@ -9,6 +9,7 @@
     using Footage.Context;
     using Footage.Model;
     using Microsoft.EntityFrameworkCore;
+    using NLog;
 
     public class EntityDao : IEntityDao
     {
@@ -152,7 +153,10 @@
             Debugger.Break();
             
             // TODO KURVA this thrown exception is swallowed, nothing happens :(
+            Logger.Log(LogLevel.Error, $"DB exception occurred: {ex}");
             throw new DbException(ex);
         }
+
+        private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
     }
 }
