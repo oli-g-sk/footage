@@ -39,12 +39,9 @@
 
         public async Task<long> GetVideoDuration(string videoUri)
         {
-            helperPlayer.Media = new Media(LibVlc, new Uri(videoUri));
-            await helperPlayer.Media.Parse();
-            long duration = helperPlayer.Media.Duration; 
-            helperPlayer.Media.Dispose();
-            helperPlayer.Media = null;
-            return duration;
+            using var media = new Media(LibVlc, new Uri(videoUri));
+            await media.Parse();
+            return media.Duration; 
         }
 
         public void Dispose()
