@@ -52,6 +52,17 @@
             await Repo.RemoveSource(item);
         }
 
+        protected override void AfterSelectionChanged()
+        {
+            base.AfterSelectionChanged();
+
+            // TODO await
+            if (SelectedItem?.Item is LocalMediaSource localSource)
+            {
+                Repo.ImportNewFiles(localSource);
+            }
+        }
+
         private async Task LoadAllSources()
         {
             var sources = (await Repo.GetAllSources()).Select(s => new MediaSourceViewModel(s));
