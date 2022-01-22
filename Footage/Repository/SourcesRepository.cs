@@ -12,17 +12,12 @@
     {
         public async Task<LocalMediaSource> AddLocalSource(string path, bool includeSubfolders)
         {
-            using var dao = GetDao();
-
             var source = new LocalMediaSource
             {
                 RootPath = path,
                 IncludeSubfolders = includeSubfolders,
                 Name = Path.GetFileName(path)
             };
-            
-            await dao.Insert(source);
-            await dao.Commit();
 
             await ImportNewFiles(source);
             
