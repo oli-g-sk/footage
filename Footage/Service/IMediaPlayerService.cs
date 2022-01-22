@@ -5,7 +5,7 @@
 
     public interface IMediaPlayerService
     {
-        static IMediaPlayerService Instance { get; }
+        public long Duration { get; }
         
         public MediaPlayer Player { get; }
 

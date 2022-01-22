@@ -9,6 +9,8 @@
         private static readonly LibVLC LibVlc;
 
         private readonly MediaPlayer helperPlayer;
+
+        public long Duration { get; private set; }
         
         public MediaPlayer Player { get; }
 
@@ -28,12 +30,15 @@
         {
             await UnloadMedia();
             Player.Media = new Media(LibVlc, new Uri(uri));
+            await Player.Media.Parse();
+            Duration = Player.Media.Duration;
             await Task.CompletedTask;
         }
 
         public async Task UnloadMedia()
         {
             Player.Media?.Dispose();
+            Duration = 0;
             await Task.CompletedTask;
         }
 
