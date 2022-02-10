@@ -45,11 +45,7 @@
                     continue;
                 }
                 
-                videos.Add(new Video
-                {
-                    MediaSource = source,
-                    MediaSourceUri = sourceVideo.Identifier
-                });
+                videos.Add(sourceVideo);
             }
 
             using var dao = GetDao();
@@ -63,11 +59,11 @@
             return await dao.Query<MediaSource>().ToListAsync();
         }
 
-        private async Task<bool> VideoAlreadyImported(SourceVideoInfo sourceVideoInfo)
+        private async Task<bool> VideoAlreadyImported(Video video)
         {
             using var dao = GetDao();
-            return await dao.Contains<Video>(v => v.MediaSource == sourceVideoInfo.Source
-                                                && v.MediaSourceUri == sourceVideoInfo.Identifier);
+            return await dao.Contains<Video>(v => v.MediaSource == video.MediaSource
+                                                && v.MediaSourceUri == video.MediaSourceUri);
         }
     }
 }

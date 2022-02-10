@@ -16,13 +16,17 @@
         {
         }
         
-        public override IEnumerable<SourceVideoInfo> FetchVideos()
+        public override IEnumerable<Video> FetchVideos()
         {
             var searchOption = Source.IncludeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
             var files = Directory.EnumerateFiles(Source.RootPath, "*", searchOption).Where(IsFileCompatible); 
             
-            return files.Select(filename => new SourceVideoInfo(Source, Path.GetRelativePath(Source.RootPath, filename)));
+            return files.Select(filename => new Video
+            {
+               MediaSource = Source,
+               MediaSourceUri = Path.GetRelativePath(Source.RootPath, filename) 
+            });
         }
 
         protected override string GetFullPathInternal(Video video)
