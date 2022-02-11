@@ -1,4 +1,4 @@
-﻿namespace Footage.Service
+﻿namespace Footage.Engine.LibVlc
 {
     using System;
     using System.Threading.Tasks;

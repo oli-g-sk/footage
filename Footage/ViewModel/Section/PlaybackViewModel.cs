@@ -15,23 +15,20 @@
     {
         private static VideoDetailRepository DetailRepo => Locator.Get<VideoDetailRepository>();
 
-        private readonly IMediaPlayerService mediaPlayerService = Locator.Create<IMediaPlayerService>();
-        
-        // TODO later abstract away entire LibVLC dependency to IMediaPlayerService (using our own IMediaPlayer)
-        public MediaPlayer Player => mediaPlayerService.Player;
+        private readonly IMediaPlayerService player = Locator.Create<IMediaPlayerService>();
 
         public bool SelectedVideoMissing => SelectedVideo != null && SelectedVideo.IsMissing;
 
         public bool VideoCanPlay => SelectedVideo != null && !SelectedVideoMissing;
 
-        public long CurrentVideoDuration => mediaPlayerService.Duration;
+        public long CurrentVideoDuration => player.Duration;
 
         public float PlaybackProgress
         {
-            get => Math.Max(Player.Position, 0);
+            get => Math.Max(player.Position, 0);
             set
             {
-                Player.Position = value;
+                player.Position = value;
                 RaisePropertyChanged(nameof(PlaybackProgress));
                 RaisePropertyChanged(nameof(PlaybackPositionTimeCode));
             }
@@ -52,14 +49,14 @@
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
             
-            Player.PositionChanged += Player_PositionChanged;
+            player.PositionChanged += Player_PositionChanged;
         }
 
         protected override void BeforeSelectedVideoChanged()
         {
             // unload the media from the player - otherwise, if a new file would be loaded,
             // the player would display frame from the previous file until the new file is actually played
-            Player.Stop();
+            player.Stop();
         }
 
         protected override void AfterSelectedVideoChanged()
@@ -73,25 +70,25 @@
 
         private void PlayPause()
         {
-            if (Player.IsPlaying)
+            if (player.IsPlaying)
             {
-                Player.Pause();
+                player.Pause();
             }
             else
             {
-                Player.Play();
+                player.Play();
             }
         }
 
         private void Stop()
         {
-            Player.Stop();
+            player.Stop();
             PlaybackProgress = 0;
         }
 
         private bool IsMediaLoaded()
         {
-            return Player.Media != null;
+            return player.IsMediaLoaded;
         }
         
         private async Task ReloadSelectedVideo()
@@ -100,13 +97,13 @@
 
             if (SelectedVideoMissing)
             {
-                await mediaPlayerService.UnloadMedia();
+                await player.UnloadMedia();
             }
             else if (SelectedVideo != null)
             {
                 string? path = DetailRepo.GetVideoPath(SelectedMediaSource.Item, SelectedVideo.Item);
                 await DetailRepo.ProcessSelectedVideo(SelectedMediaSource.Item, SelectedVideo.Item);
-                await mediaPlayerService.LoadMedia(path);
+                await player.LoadMedia(path);
             }
 
             PlaybackProgress = 0;
@@ -120,7 +117,7 @@
             StopCommand.RaiseCanExecuteChanged();
         }
 
-        private void Player_PositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)
+        private void Player_PositionChanged(object? sender, EventArgs e)
         {
             RaisePropertyChanged(nameof(PlaybackProgress));
             RaisePropertyChanged(nameof(PlaybackPositionTimeCode));

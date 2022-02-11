@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footage.Win", "Footage.Win\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footage.UI", "Footage.UI\Footage.UI.csproj", "{4AF4D2CD-6AC8-428B-B55D-D62F46C41C94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footage.Engine", "Footage.Engine\Footage.Engine.csproj", "{4BC9D4C8-8A0D-4182-8938-1D30A1E36762}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footage.Engine", "Footage.Engine\Footage.Engine.csproj", "{4BC9D4C8-8A0D-4182-8938-1D30A1E36762}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footage.Engine.LibVLC", "Footage.Engine.LibVLC\Footage.Engine.LibVLC.csproj", "{BB729E7D-A54A-4EC4-9C31-8BDEF1972B69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footage.Engine.LibVlc", "Footage.Engine.LibVlc\Footage.Engine.LibVlc.csproj", "{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{4BC9D4C8-8A0D-4182-8938-1D30A1E36762}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4BC9D4C8-8A0D-4182-8938-1D30A1E36762}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4BC9D4C8-8A0D-4182-8938-1D30A1E36762}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB729E7D-A54A-4EC4-9C31-8BDEF1972B69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB729E7D-A54A-4EC4-9C31-8BDEF1972B69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB729E7D-A54A-4EC4-9C31-8BDEF1972B69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB729E7D-A54A-4EC4-9C31-8BDEF1972B69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,6 +18,7 @@
         <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\Footage.Engine.LibVlc\Footage.Engine.LibVlc.csproj" />
       <ProjectReference Include="..\Footage.UI\Footage.UI.csproj" />
       <ProjectReference Include="..\Footage\Footage.csproj" />
     </ItemGroup>

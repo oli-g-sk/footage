@@ -1,4 +1,5 @@
 ﻿using Footage.Engine;
+using Footage.Engine.LibVlc;
 using Footage.Service;
 using System;
 using System.Collections.Generic;
