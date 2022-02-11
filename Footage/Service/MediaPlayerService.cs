@@ -6,6 +6,7 @@
     using LogLevel = LibVLCSharp.Shared.LogLevel;
     using NLogLevel = NLog.LogLevel;
     using NLog;
+    using Footage.Engine;
 
     public sealed class MediaPlayerService : IMediaPlayerService, IDisposable
     {
@@ -17,7 +18,7 @@
 
         public long Duration { get; private set; }
         
-        public MediaPlayer Player { get; }
+        private MediaPlayer Player { get; }
 
         static MediaPlayerService()
         {

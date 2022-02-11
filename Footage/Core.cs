@@ -26,11 +26,6 @@ namespace Footage
             SimpleIoc.Default.Register<IEntityDao, EntityDao>();
         }
 
-        internal static void RegisterDefaultEngine()
-        {
-            SimpleIoc.Default.Register<IMediaPlayerService, MediaPlayerService>();
-        }
-
         internal static void RegisterDefaultRepositories()
         {
             SimpleIoc.Default.Register<BookmarksRepository>();

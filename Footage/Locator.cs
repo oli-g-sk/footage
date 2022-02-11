@@ -1,4 +1,5 @@
 ﻿using Footage.Dao;
+using Footage.Engine;
 using Footage.Repository;
 using Footage.Service;
 using GalaSoft.MvvmLight.Ioc;

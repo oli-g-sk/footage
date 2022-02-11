@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Footage.Engine;
     using Footage.Messages;
     using Footage.Repository;
     using Footage.Service;

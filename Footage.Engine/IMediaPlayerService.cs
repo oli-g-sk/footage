@@ -1,13 +1,10 @@
-﻿namespace Footage.Service
+﻿namespace Footage.Engine
 {
     using System.Threading.Tasks;
-    using LibVLCSharp.Shared;
 
     public interface IMediaPlayerService
     {
         public long Duration { get; }
-        
-        public MediaPlayer Player { get; }
 
         Task LoadMedia(string uri);
         
