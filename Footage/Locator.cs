@@ -12,36 +12,35 @@ namespace Footage
 {
     internal class Locator
     {
-        internal static void RegisterDefaultDatabase()
-        {
-            SimpleIoc.Default.Register<IEntityDao, EntityDao>();
-        }
+        private static bool initialized;
 
-        internal static void RegisterDefaultEngine()
-        {
-            SimpleIoc.Default.Register<IMediaPlayerService, MediaPlayerService>();
-        }
+        private static IProvider Provider;
 
-        internal static void RegisterDefaultRepositories()
+        internal static void Initialize(IProvider provider)
         {
-            SimpleIoc.Default.Register<BookmarksRepository>();
-            SimpleIoc.Default.Register<SourcesRepository>();
-            SimpleIoc.Default.Register<VideoBrowserRepository>();
-            SimpleIoc.Default.Register<VideoDetailRepository>();
-        }
-
-        internal static void RegisterDefaultServices()
-        {
-            SimpleIoc.Default.Register<ISourceScopedServiceFactory, SourceScopedServiceFactory>();
+            Provider = provider;
+            initialized = true;
         }
 
         internal static T Get<T>()
         {
+            if (!initialized)
+                throw new InvalidOperationException("Footage.Core.Initialize muse be called before using!");
+
+            if (typeof(T) == typeof(IMediaPlayerService))
+                throw new ArgumentException("IMediaPlayerService cannot be accessed as singleton. Use Create<T> instead.");
+
             return SimpleIoc.Default.GetInstance<T>();
         }
 
         internal static T Create<T>()
         {
+            if (!initialized)
+                throw new InvalidOperationException("Footage.Core.Initialize muse be called before using!");
+
+            if (typeof(T) == typeof(IMediaPlayerService))
+                return (T)Provider.CreateMediaPlayer();
+
             return SimpleIoc.Default.GetInstanceWithoutCaching<T>();
         }
     }

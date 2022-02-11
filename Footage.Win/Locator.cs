@@ -7,7 +7,8 @@
     {
         public static void Initialize()
         {
-            Footage.Core.Initialize();
+            Footage.Core.Initialize(new Provider());
+
             SimpleIoc.Default.Register<IDispatcher, AvaloniaDispatcher>();
         }
     }

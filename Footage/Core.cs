@@ -1,4 +1,6 @@
-﻿using Footage.Service;
+﻿using Footage.Dao;
+using Footage.Repository;
+using Footage.Service;
 using GalaSoft.MvvmLight.Ioc;
 using System;
 using System.Collections.Generic;
@@ -10,12 +12,36 @@ namespace Footage
 {
     public class Core
     {
-        public static void Initialize()
+        public static void Initialize(IProvider implProvider)
         {
-            Locator.RegisterDefaultDatabase();
-            Locator.RegisterDefaultRepositories();
-            Locator.RegisterDefaultServices();
-            Locator.RegisterDefaultEngine();
+            RegisterDefaultDatabase();
+            RegisterDefaultRepositories();
+            RegisterDefaultServices();
+
+            Locator.Initialize(implProvider);
+        }
+
+        internal static void RegisterDefaultDatabase()
+        {
+            SimpleIoc.Default.Register<IEntityDao, EntityDao>();
+        }
+
+        internal static void RegisterDefaultEngine()
+        {
+            SimpleIoc.Default.Register<IMediaPlayerService, MediaPlayerService>();
+        }
+
+        internal static void RegisterDefaultRepositories()
+        {
+            SimpleIoc.Default.Register<BookmarksRepository>();
+            SimpleIoc.Default.Register<SourcesRepository>();
+            SimpleIoc.Default.Register<VideoBrowserRepository>();
+            SimpleIoc.Default.Register<VideoDetailRepository>();
+        }
+
+        internal static void RegisterDefaultServices()
+        {
+            SimpleIoc.Default.Register<ISourceScopedServiceFactory, SourceScopedServiceFactory>();
         }
     }
 }
