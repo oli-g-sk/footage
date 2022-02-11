@@ -33,7 +33,7 @@
 
         public async Task ImportNewFiles(LocalMediaSource source)
         {
-            var provider = new LocalMediaProvider(source);
+            var provider = new LocalMediaProviderService(source);
             var sourceVideos = provider.FetchVideos();
 
             var videos = new List<Video>();

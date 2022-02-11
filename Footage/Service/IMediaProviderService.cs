@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Footage.Model;
 
-    public interface IMediaProvider
+    public interface IMediaProviderService
     {
         IEnumerable<SourceVideoInfo> FetchVideos();
 

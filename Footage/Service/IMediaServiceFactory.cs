@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Footage.Service
 {
-    public interface IMediaProviderFactory
+    public interface IMediaServiceFactory
     {
-        MediaProviderBase GetMediaProvider(Video video);
-
-        MediaProviderBase GetMediaProvider(MediaSource mediaSource);
+        IMediaProviderService GetMediaProvider(MediaSource mediaSource);
     }
 }

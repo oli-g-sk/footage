@@ -4,13 +4,13 @@
     using System.Collections.Generic;
     using Footage.Model;
 
-    public abstract class MediaProviderBase : IMediaProvider
+    public abstract class MediaProviderServiceBase : IMediaProviderService
     {
         protected MediaSource Source { get; }
         
         public abstract IEnumerable<SourceVideoInfo> FetchVideos();
 
-        protected MediaProviderBase(MediaSource source)
+        protected MediaProviderServiceBase(MediaSource source)
         {
             Source = source;
         }

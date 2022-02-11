@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Footage.Service
 {
-    internal interface ILocalMediaProvider : IMediaProvider
+    internal interface ILocalMediaProviderService : IMediaProviderService
     {
     }
 }

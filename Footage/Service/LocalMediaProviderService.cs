@@ -5,14 +5,14 @@
     using System.Linq;
     using Footage.Model;
 
-    public class LocalMediaProvider : MediaProviderBase, ILocalMediaProvider
+    public class LocalMediaProviderService : MediaProviderServiceBase, ILocalMediaProviderService
     {
         private static readonly string[] Extensions = { "mov", "mp4", "mkv" };
 
         private new LocalMediaSource Source => (LocalMediaSource) base.Source;
 
         // ReSharper disable once SuggestBaseTypeForParameter
-        public LocalMediaProvider(LocalMediaSource source) : base(source)
+        public LocalMediaProviderService(LocalMediaSource source) : base(source)
         {
         }
         
