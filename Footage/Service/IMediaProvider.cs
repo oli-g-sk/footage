@@ -5,7 +5,7 @@
 
     public interface IMediaProvider
     {
-        IEnumerable<Video> FetchVideos();
+        IEnumerable<SourceVideoInfo> FetchVideos();
 
         /// <summary>
         /// Retrieves the full path to the video file for direct playback / streaming.

@@ -8,7 +8,7 @@
     {
         protected MediaSource Source { get; }
         
-        public abstract IEnumerable<Video> FetchVideos();
+        public abstract IEnumerable<SourceVideoInfo> FetchVideos();
 
         protected MediaProviderBase(MediaSource source)
         {
