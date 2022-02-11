@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace Footage
 {
-    public class Locator
+    internal class Locator
     {
-        public static void RegisterDefaultDatabase()
+        internal static void RegisterDefaultDatabase()
         {
             SimpleIoc.Default.Register<IEntityDao, EntityDao>();
         }
 
-        public static void RegisterDefaultEngine()
+        internal static void RegisterDefaultEngine()
         {
             SimpleIoc.Default.Register<IMediaPlayerService, MediaPlayerService>();
         }
 
-        public static void RegisterDefaultRepositories()
+        internal static void RegisterDefaultRepositories()
         {
             SimpleIoc.Default.Register<BookmarksRepository>();
             SimpleIoc.Default.Register<SourcesRepository>();
@@ -30,7 +30,7 @@ namespace Footage
             SimpleIoc.Default.Register<VideoDetailRepository>();
         }
 
-        public static void RegisterDefaultServices()
+        internal static void RegisterDefaultServices()
         {
             SimpleIoc.Default.Register<ISourceScopedServiceFactory, SourceScopedServiceFactory>();
         }
