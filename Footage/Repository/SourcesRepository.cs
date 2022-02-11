@@ -6,6 +6,7 @@
     using Footage.Dao;
     using Footage.Model;
     using Footage.Service;
+    using Footage.Service.SourceScoped;
     using Microsoft.EntityFrameworkCore;
 
     public class SourcesRepository : RepositoryBase

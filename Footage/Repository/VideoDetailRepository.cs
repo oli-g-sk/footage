@@ -12,18 +12,18 @@ namespace Footage.Repository
     public class VideoDetailRepository : RepositoryBase
     {
         private readonly IMediaPlayerService mediaPlayerService;
-        private readonly IMediaServiceFactory mediaServiceFactory;
+        private readonly ISourceScopedServiceFactory sourceScopedServiceFactory;
 
         public VideoDetailRepository(IMediaPlayerService mediaPlayerService,
-            IMediaServiceFactory mediaServiceFactory)
+            ISourceScopedServiceFactory sourceScopedServiceFactory)
         {
             this.mediaPlayerService = mediaPlayerService;
-            this.mediaServiceFactory = mediaServiceFactory;
+            this.sourceScopedServiceFactory = sourceScopedServiceFactory;
         }
 
         public string GetVideoPath(MediaSource mediaSource, Video video)
         {
-            var mediaProvider = mediaServiceFactory.GetMediaProvider(mediaSource);
+            var mediaProvider = sourceScopedServiceFactory.GetMediaProviderService(mediaSource);
             return mediaProvider.GetFullPath(video);
         }
 

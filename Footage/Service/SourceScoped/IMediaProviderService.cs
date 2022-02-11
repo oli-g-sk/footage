@@ -1,4 +1,4 @@
-﻿namespace Footage.Service
+﻿namespace Footage.Service.SourceScoped
 {
     using System.Collections.Generic;
     using Footage.Model;
