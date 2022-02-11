@@ -10,6 +10,13 @@
 
     public class SourcesRepository : RepositoryBase
     {
+        private IMediaProviderFactory mediaProviderFactory;
+
+        public SourcesRepository(IMediaProviderFactory mediaProviderFactory)
+        {
+            this.mediaProviderFactory = mediaProviderFactory;
+        }
+        
         public async Task<LocalMediaSource> AddLocalSource(string path, bool includeSubfolders)
         {
             var source = new LocalMediaSource
@@ -31,9 +38,9 @@
             await dao.Commit();
         }
 
-        public async Task ImportNewFiles(LocalMediaSource source)
+        public async Task ImportNewFiles(MediaSource source)
         {
-            var provider = new LocalMediaProvider(source);
+            var provider = mediaProviderFactory.GetMediaProvider(source);
             var sourceVideos = provider.FetchVideos();
 
             var videos = new List<Video>();
