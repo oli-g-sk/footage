@@ -8,6 +8,7 @@
     using System.Threading.Tasks;
     using Footage.Messages;
     using Footage.Model;
+    using Footage.Presentation;
     using Footage.Repository;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
@@ -17,7 +18,7 @@
     {
         private static BookmarksRepository Repo => Locator.Get<BookmarksRepository>();
         
-        public ObservableCollection<BookmarkViewModel> Bookmarks { get; }
+        public ObservableCollectionEx<BookmarkViewModel> Bookmarks { get; }
 
         public ObservableCollection<BookmarkViewModel> SelectedBookmarks { get; } = new();
         
@@ -27,12 +28,14 @@
         
         public BookmarksViewModel()
         {
-            Bookmarks = new ObservableCollection<BookmarkViewModel>();
+            Bookmarks = new ObservableCollectionEx<BookmarkViewModel>();
             AddTimeBookmarkCommand = new RelayCommand<PlaybackViewModel>(AddTimeBookmark, _ => SelectedVideo != null);
             RemoveSelectedBookmarksCommand = new RelayCommand(RemoveSelectedBookmarks, () => SelectedBookmarks.Any());
             
-            Bookmarks.CollectionChanged += Bookmarks_CollectionChanged;
             SelectedBookmarks.CollectionChanged += SelectedBookmarks_CollectionChanged;
+            
+            Bookmarks.ForNewItems(i => i.TimeChanged += Bookmark_TimeChanged);
+            Bookmarks.ForOldItems(i => i.TimeChanged -= Bookmark_TimeChanged);
         }
 
         // TODO make async
@@ -102,24 +105,6 @@
 
             // TODO await
             LoadBookmarks();
-        }
-        
-        private void Bookmarks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.NewItems != null)
-            {
-                foreach (BookmarkViewModel item in e.NewItems)
-                {
-                    item.TimeChanged += Bookmark_TimeChanged;
-                }
-            }
-            if (e.OldItems != null)
-            {
-                foreach (BookmarkViewModel item in e.NewItems)
-                {
-                    item.TimeChanged -= Bookmark_TimeChanged;
-                }
-            }
         }
 
         private void Bookmark_TimeChanged(long time)
