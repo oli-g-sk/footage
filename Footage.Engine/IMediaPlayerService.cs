@@ -1,5 +1,6 @@
 ﻿namespace Footage.Engine
 {
+    using System;
     using System.Threading.Tasks;
 
     public interface IMediaPlayerService
