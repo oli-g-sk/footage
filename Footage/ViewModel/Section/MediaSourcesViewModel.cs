@@ -49,15 +49,9 @@
             MessengerInstance.Register<IsBusyChangedMessage>(this, m => SelectedSourceLoading = m.IsBusy);
         }
 
-        protected override void OnItemAdded(MediaSourceViewModel viewModel)
+        protected override async Task OnItemAdded(MediaSourceViewModel viewModel)
         {
-            base.OnItemAdded(viewModel);
-            
-            Task.Run(async () =>
-            {
-                await UpdateSource(viewModel);
-            });
-
+            await UpdateSource(viewModel);
             SelectedItem = viewModel;
         }
 

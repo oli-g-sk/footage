@@ -35,9 +35,9 @@
             OnItemAdded(viewModel);
         }
 
-        protected virtual void OnItemAdded(TViewModel viewModel)
+        protected virtual Task OnItemAdded(TViewModel viewModel)
         {
-            
+            return Task.CompletedTask;
         }
 
         protected abstract bool CanAddItem(TInput item);
