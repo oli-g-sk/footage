@@ -6,19 +6,20 @@ namespace Footage.Repository
     using System.Threading.Tasks;
     using Footage.Model;
     using Footage.Service;
+    using Footage.Service.SourceScoped;
 
     public class LibraryRepository : RepositoryBase
     {
-        private readonly IMediaProviderFactory mediaProviderFactory;
+        private readonly ISourceScopedServiceFactory sourceScopedServiceFactory;
         
-        public LibraryRepository(IMediaProviderFactory mediaProviderFactory)
+        public LibraryRepository(ISourceScopedServiceFactory sourceScopedServiceFactory)
         {
-            this.mediaProviderFactory = mediaProviderFactory;
+            this.sourceScopedServiceFactory = sourceScopedServiceFactory;
         }
         
         public async Task ImportNewFiles(MediaSource source)
         {
-            var provider = mediaProviderFactory.GetMediaProvider(source);
+            var provider = sourceScopedServiceFactory.GetMediaProviderService(source);
             var sourceVideos = provider.FetchVideos();
 
             var videos = new List<Video>();
