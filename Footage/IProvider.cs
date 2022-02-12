@@ -13,6 +13,8 @@ namespace Footage
     /// </summary>
     public interface IProvider
     {
+        IDispatcher Dispatcher { get; }
+
         IMediaPlayerService CreateMediaPlayer();
     }
 }
