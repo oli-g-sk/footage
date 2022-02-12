@@ -41,12 +41,12 @@
 
         private async Task FetchVideos(int? batchSize = null)
         {
-            IsFetchingVideos = true;
-            
             if (selectedSource == null)
             {
                 return;
             }
+            
+            IsFetchingVideos = true;
             
             MessengerInstance.Send(new IsBusyChangedMessage(true));
             
