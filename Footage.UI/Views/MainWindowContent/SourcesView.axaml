@@ -35,7 +35,11 @@
                         <TextBlock DockPanel.Dock="Right"
                                    VerticalAlignment="Center"
                                    IsVisible="{Binding IsBusy}"
-                                   Text="..." />
+                                   Text="⌛" />
+                        <TextBlock DockPanel.Dock="Right"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{Binding !IsBusy}"
+                                   Text="{Binding VideoCount}" />
                         <StackPanel Orientation="Vertical"
                                     IsEnabled="{Binding !IsBusy}">
                             <TextBlock Text="{Binding Name}"

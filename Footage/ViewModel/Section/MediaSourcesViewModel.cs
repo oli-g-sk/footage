@@ -105,6 +105,8 @@
 
             await LibraryRepo.ImportNewFiles(source.Item);
             
+            source.VideoCount = LibraryRepo.GetVideoCount(source.Item); 
+            
             await Dispatcher.InvokeAsync(() =>
             {
                 source.IsBusy = false;

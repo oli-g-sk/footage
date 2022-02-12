@@ -8,6 +8,14 @@
     {
         public string Name => Item.Name;
 
+        private int videoCount;
+
+        public int VideoCount
+        {
+            get => videoCount;
+            set => Set(ref videoCount, value);
+        }
+
         // TODO include a second description line for other (future) source types
         public string Description =>
             (Item is LocalMediaSource localMediaSource) ? localMediaSource.RootPath : "Unknown source";

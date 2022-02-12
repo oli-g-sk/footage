@@ -56,6 +56,12 @@ namespace Footage.Repository
             await dao.Commit();
         }
 
+        public int GetVideoCount(MediaSource source)
+        {
+            using var dao = GetDao();
+            return dao.Query<Video>(v => v.MediaSource == source).Count();
+        }
+
         private bool MediaInfoLoaded(Video video)
         {
             return video.Duration > 0;
