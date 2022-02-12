@@ -19,6 +19,5 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Footage.UI\Footage.UI.csproj" />
-      <ProjectReference Include="..\Footage\Footage.csproj" />
     </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
-﻿using Footage.Model;
+﻿using Footage.Engine;
+using Footage.Model;
 using Footage.Service;
 using System;
 using System.Collections.Generic;
@@ -11,19 +12,19 @@ namespace Footage.Repository
 {
     public class VideoDetailRepository : RepositoryBase
     {
-        private readonly IMediaPlayerService mediaPlayerService;
-        private readonly IMediaProviderFactory mediaProviderFactory;
+        // TODO replace by future MediaInfoService, playback is not needed here
+        private readonly IMediaPlayer mediaPlayer;
+        private readonly ISourceScopedServiceFactory sourceScopedServiceFactory;
 
-        public VideoDetailRepository(IMediaPlayerService mediaPlayerService,
-            IMediaProviderFactory mediaProviderFactory)
+        public VideoDetailRepository(ISourceScopedServiceFactory sourceScopedServiceFactory)
         {
-            this.mediaPlayerService = mediaPlayerService;
-            this.mediaProviderFactory = mediaProviderFactory;
+            this.mediaPlayer = Locator.Create<IMediaPlayer>();
+            this.sourceScopedServiceFactory = sourceScopedServiceFactory;
         }
 
         public string GetVideoPath(MediaSource mediaSource, Video video)
         {
-            var mediaProvider = mediaProviderFactory.GetMediaProvider(mediaSource);
+            var mediaProvider = sourceScopedServiceFactory.GetMediaProviderService(mediaSource);
             return mediaProvider.GetFullPath(video);
         }
 
@@ -40,7 +41,7 @@ namespace Footage.Repository
             }
             else
             {
-                video.Duration = await mediaPlayerService.GetVideoDuration(path);
+                video.Duration = await mediaPlayer.GetVideoDuration(path);
             }
 #if DEBUG
             // await Task.Delay(300);

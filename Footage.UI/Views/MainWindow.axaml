@@ -30,7 +30,7 @@
                    Height="360"
                    Background="#000000"
                    DataContext="{Binding Playback}">
-                <avalonia:VideoView MediaPlayer="{Binding Player}"
+                <avalonia:VideoView Name="VideoViewLibVlc"
                                     IsVisible="{Binding VideoCanPlay}"
                                     Margin="1" />
 				<TextBlock Text="!"

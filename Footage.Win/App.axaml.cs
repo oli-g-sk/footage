@@ -4,6 +4,7 @@ using Avalonia.Markup.Xaml;
 
 namespace Footage.Win
 {
+    using Footage.UI;
     using Footage.UI.Views;
 
     public class App : Application
@@ -11,7 +12,7 @@ namespace Footage.Win
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
-            Locator.Initialize();
+            Core.Initialize();
         }
 
         public override void OnFrameworkInitializationCompleted()

@@ -1,4 +1,5 @@
-﻿namespace Footage.Repository
+﻿
+namespace Footage.Repository
 {
     using System.Collections.Generic;
     using System.Linq;

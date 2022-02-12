@@ -1,4 +1,4 @@
-﻿namespace Footage.Service
+﻿namespace Footage.Engine.LibVlc
 {
     using System;
     using System.Threading.Tasks;
@@ -6,20 +6,31 @@
     using LogLevel = LibVLCSharp.Shared.LogLevel;
     using NLogLevel = NLog.LogLevel;
     using NLog;
+    using Footage.Engine;
 
-    public sealed class MediaPlayerService : IMediaPlayerService, IDisposable
+    public sealed class MediaPlayer : IMediaPlayer, IDisposable
     {
         private static ILogger VlcLog => LogManager.GetLogger("LibVLC");
 
         private static readonly LibVLC LibVlc;
 
-        private readonly MediaPlayer helperPlayer;
+        public LibVLCSharp.Shared.MediaPlayer Player { get; }
 
         public long Duration { get; private set; }
-        
-        public MediaPlayer Player { get; }
 
-        static MediaPlayerService()
+        public float Position 
+        { 
+            get => Player.Position; 
+            set => Player.Position = value; 
+        }
+
+        public bool IsPlaying => Player.IsPlaying;
+
+        public bool IsMediaLoaded => Player.Media != null;
+
+        public event EventHandler PositionChanged;
+
+        static MediaPlayer()
         {
             Core.Initialize();
             LibVlc = new LibVLC();
@@ -52,10 +63,28 @@
             }
         }
 
-        public MediaPlayerService()
+        public MediaPlayer()
         {
-            Player = new MediaPlayer(LibVlc);
-            helperPlayer = new MediaPlayer(LibVlc);
+            Player = new LibVLCSharp.Shared.MediaPlayer(LibVlc);
+            Player.PositionChanged += Player_PositionChanged;
+        }
+
+        public async Task Play()
+        {
+            Player.Play();
+            await Task.CompletedTask;
+        }
+
+        public async Task Pause()
+        {
+            Player.Pause();
+            await Task.CompletedTask;
+        }
+
+        public async Task Stop()
+        {
+            Player.Stop();
+            await Task.CompletedTask;
         }
 
         public async Task LoadMedia(string uri)
@@ -83,8 +112,12 @@
 
         public void Dispose()
         {
-            helperPlayer.Dispose();
             Player.Dispose();
+        }
+
+        private void Player_PositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)
+        {
+            PositionChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

@@ -4,6 +4,6 @@
 
     public class ViewModelBase : GalaSoft.MvvmLight.ViewModelBase
     {
-        protected IDispatcher Dispatcher => SimpleIoc.Default.GetInstance<IDispatcher>();
+        protected static IDispatcher Dispatcher => Locator.Dispatcher;
     }
 }

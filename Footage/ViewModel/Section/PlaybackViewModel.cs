@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Footage.Engine;
     using Footage.Messages;
     using Footage.Repository;
     using Footage.Service;
@@ -14,16 +15,13 @@
     {
         private static VideoDetailRepository DetailRepo => Locator.Get<VideoDetailRepository>();
 
-        private readonly IMediaPlayerService mediaPlayerService = Locator.Create<IMediaPlayerService>();
-        
-        // TODO later abstract away entire LibVLC dependency to IMediaPlayerService (using our own IMediaPlayer)
-        public MediaPlayer Player => mediaPlayerService.Player;
+        public IMediaPlayer Player { get; } = Locator.Create<IMediaPlayer>();
 
         public bool SelectedVideoMissing => SelectedVideo != null && SelectedVideo.IsMissing;
 
         public bool VideoCanPlay => SelectedVideo != null && !SelectedVideoMissing;
 
-        public long CurrentVideoDuration => mediaPlayerService.Duration;
+        public long CurrentVideoDuration => Player.Duration;
 
         public float PlaybackProgress
         {
@@ -90,7 +88,7 @@
 
         private bool IsMediaLoaded()
         {
-            return Player.Media != null;
+            return Player.IsMediaLoaded;
         }
         
         private async Task ReloadSelectedVideo()
@@ -99,13 +97,13 @@
 
             if (SelectedVideoMissing)
             {
-                await mediaPlayerService.UnloadMedia();
+                await Player.UnloadMedia();
             }
             else if (SelectedVideo != null)
             {
                 string? path = DetailRepo.GetVideoPath(SelectedMediaSource.Item, SelectedVideo.Item);
                 await DetailRepo.ProcessSelectedVideo(SelectedMediaSource.Item, SelectedVideo.Item);
-                await mediaPlayerService.LoadMedia(path);
+                await Player.LoadMedia(path);
             }
 
             PlaybackProgress = 0;
@@ -119,7 +117,7 @@
             StopCommand.RaiseCanExecuteChanged();
         }
 
-        private void Player_PositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)
+        private void Player_PositionChanged(object? sender, EventArgs e)
         {
             RaisePropertyChanged(nameof(PlaybackProgress));
             RaisePropertyChanged(nameof(PlaybackPositionTimeCode));

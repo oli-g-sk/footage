@@ -1,43 +1,49 @@
 ﻿using Footage.Dao;
+using Footage.Engine;
 using Footage.Repository;
 using Footage.Service;
 using GalaSoft.MvvmLight.Ioc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Footage
 {
-    public class Locator
+    internal class Locator
     {
-        public static void RegisterDefaultDatabase()
-        {
-            SimpleIoc.Default.Register<IEntityDao, EntityDao>();
-        }
+        private static bool initialized;
 
-        public static void RegisterDefaultRepositories()
-        {
-            SimpleIoc.Default.Register<BookmarksRepository>();
-            SimpleIoc.Default.Register<SourcesRepository>();
-            SimpleIoc.Default.Register<LibraryRepository>();
-            SimpleIoc.Default.Register<VideoBrowserRepository>();
-            SimpleIoc.Default.Register<VideoDetailRepository>();
-        }
+        private static IProvider Provider;
 
-        public static void RegisterDefaultServices()
+        internal static IDispatcher Dispatcher => Provider.Dispatcher;
+
+        internal static void Initialize(IProvider provider)
         {
-            SimpleIoc.Default.Register<IMediaProviderFactory, MediaProviderFactory>();
-        }
-        
-        public static void RegisterDefaultEngine()
-        {
-            SimpleIoc.Default.Register<IMediaPlayerService, MediaPlayerService>();
+            Provider = provider;
+            initialized = true;
         }
 
         internal static T Get<T>()
         {
+            if (!initialized)
+                throw new InvalidOperationException("Footage.Core.Initialize muse be called before using!");
+
+            if (typeof(T) == typeof(IMediaPlayer))
+                throw new ArgumentException("IMediaPlayerService cannot be accessed as singleton. Use Create<T> instead.");
+
             return SimpleIoc.Default.GetInstance<T>();
         }
 
         internal static T Create<T>()
         {
+            if (!initialized)
+                throw new InvalidOperationException("Footage.Core.Initialize muse be called before using!");
+
+            if (typeof(T) == typeof(IMediaPlayer))
+                return (T)Provider.CreateMediaPlayer();
+
             return SimpleIoc.Default.GetInstanceWithoutCaching<T>();
         }
     }
