@@ -1,5 +1,6 @@
 ﻿namespace Footage.ViewModel.Entity
 {
+    using System;
     using Footage.Model;
     using Footage.ViewModel.Base;
 
@@ -9,8 +10,15 @@
 
         public long VideoDuration => Item.Video.Duration;
 
+        public event Action<long> TimeChanged; 
+
         public BookmarkViewModel(Bookmark bookmark) : base(bookmark)
         {
+        }
+
+        protected void OnTimeChanged(long newTime)
+        {
+            TimeChanged?.Invoke(newTime);
         }
     }
 }

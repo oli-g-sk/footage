@@ -50,6 +50,19 @@
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
             
             Player.PositionChanged += Player_PositionChanged;
+            MessengerInstance.Register<BookmarkTimeChangedMessage>(this, OnBookmarkTimeChanged);
+        }
+
+        private void OnBookmarkTimeChanged(BookmarkTimeChangedMessage message)
+        {
+            if (Player.IsPlaying)
+            {
+                Player.Pause();
+            }
+
+            float position = message.Time / (float) CurrentVideoDuration;
+            Player.Position = position;
+            RaisePropertyChanged(nameof(PlaybackProgress));
         }
 
         protected override void BeforeSelectedVideoChanged()

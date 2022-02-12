@@ -1,14 +1,17 @@
 ﻿namespace Footage.ViewModel.Section
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.Linq;
     using System.Threading.Tasks;
+    using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
+    using GalaSoft.MvvmLight.Messaging;
 
     public class BookmarksViewModel : VideoDetailViewModelBase
     {
@@ -28,6 +31,7 @@
             AddTimeBookmarkCommand = new RelayCommand<PlaybackViewModel>(AddTimeBookmark, _ => SelectedVideo != null);
             RemoveSelectedBookmarksCommand = new RelayCommand(RemoveSelectedBookmarks, () => SelectedBookmarks.Any());
             
+            Bookmarks.CollectionChanged += Bookmarks_CollectionChanged;
             SelectedBookmarks.CollectionChanged += SelectedBookmarks_CollectionChanged;
         }
 
@@ -100,6 +104,29 @@
             LoadBookmarks();
         }
         
+        private void Bookmarks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.NewItems != null)
+            {
+                foreach (BookmarkViewModel item in e.NewItems)
+                {
+                    item.TimeChanged += Bookmark_TimeChanged;
+                }
+            }
+            if (e.OldItems != null)
+            {
+                foreach (BookmarkViewModel item in e.NewItems)
+                {
+                    item.TimeChanged -= Bookmark_TimeChanged;
+                }
+            }
+        }
+
+        private void Bookmark_TimeChanged(long time)
+        {
+            MessengerInstance.Send(new BookmarkTimeChangedMessage(time));
+        }
+
         private void SelectedBookmarks_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
         {
             RemoveSelectedBookmarksCommand.RaiseCanExecuteChanged();

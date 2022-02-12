@@ -13,6 +13,7 @@
             {
                 Item.Time = value;
                 RaisePropertyChanged(nameof(Time));
+                OnTimeChanged(value);
             }
         }
         
