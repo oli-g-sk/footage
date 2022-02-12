@@ -14,19 +14,19 @@
 
         private static readonly LibVLC LibVlc;
 
-        private readonly MediaPlayer player;
+        public MediaPlayer Player { get; }
 
         public long Duration { get; private set; }
 
         public float Position 
         { 
-            get => player.Position; 
-            set => player.Position = value; 
+            get => Player.Position; 
+            set => Player.Position = value; 
         }
 
-        public bool IsPlaying => player.IsPlaying;
+        public bool IsPlaying => Player.IsPlaying;
 
-        public bool IsMediaLoaded => player.Media != null;
+        public bool IsMediaLoaded => Player.Media != null;
 
         public event EventHandler PositionChanged;
 
@@ -65,40 +65,40 @@
 
         public MediaPlayerService()
         {
-            player = new MediaPlayer(LibVlc);
-            player.PositionChanged += Player_PositionChanged;
+            Player = new MediaPlayer(LibVlc);
+            Player.PositionChanged += Player_PositionChanged;
         }
 
         public async Task Play()
         {
-            player.Play();
+            Player.Play();
             await Task.CompletedTask;
         }
 
         public async Task Pause()
         {
-            player.Pause();
+            Player.Pause();
             await Task.CompletedTask;
         }
 
         public async Task Stop()
         {
-            player.Stop();
+            Player.Stop();
             await Task.CompletedTask;
         }
 
         public async Task LoadMedia(string uri)
         {
             await UnloadMedia();
-            player.Media = new Media(LibVlc, new Uri(uri));
-            await player.Media.Parse();
-            Duration = player.Media.Duration;
+            Player.Media = new Media(LibVlc, new Uri(uri));
+            await Player.Media.Parse();
+            Duration = Player.Media.Duration;
             await Task.CompletedTask;
         }
 
         public async Task UnloadMedia()
         {
-            player.Media?.Dispose();
+            Player.Media?.Dispose();
             Duration = 0;
             await Task.CompletedTask;
         }
@@ -112,7 +112,7 @@
 
         public void Dispose()
         {
-            player.Dispose();
+            Player.Dispose();
         }
 
         private void Player_PositionChanged(object? sender, MediaPlayerPositionChangedEventArgs e)

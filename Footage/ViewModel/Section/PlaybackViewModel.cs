@@ -15,20 +15,20 @@
     {
         private static VideoDetailRepository DetailRepo => Locator.Get<VideoDetailRepository>();
 
-        private readonly IMediaPlayerService player = Locator.Create<IMediaPlayerService>();
+        public IMediaPlayerService Player { get; } = Locator.Create<IMediaPlayerService>();
 
         public bool SelectedVideoMissing => SelectedVideo != null && SelectedVideo.IsMissing;
 
         public bool VideoCanPlay => SelectedVideo != null && !SelectedVideoMissing;
 
-        public long CurrentVideoDuration => player.Duration;
+        public long CurrentVideoDuration => Player.Duration;
 
         public float PlaybackProgress
         {
-            get => Math.Max(player.Position, 0);
+            get => Math.Max(Player.Position, 0);
             set
             {
-                player.Position = value;
+                Player.Position = value;
                 RaisePropertyChanged(nameof(PlaybackProgress));
                 RaisePropertyChanged(nameof(PlaybackPositionTimeCode));
             }
@@ -49,14 +49,14 @@
             PlayPauseCommand = new RelayCommand(PlayPause, IsMediaLoaded);
             StopCommand = new RelayCommand(Stop, IsMediaLoaded);
             
-            player.PositionChanged += Player_PositionChanged;
+            Player.PositionChanged += Player_PositionChanged;
         }
 
         protected override void BeforeSelectedVideoChanged()
         {
             // unload the media from the player - otherwise, if a new file would be loaded,
             // the player would display frame from the previous file until the new file is actually played
-            player.Stop();
+            Player.Stop();
         }
 
         protected override void AfterSelectedVideoChanged()
@@ -70,25 +70,25 @@
 
         private void PlayPause()
         {
-            if (player.IsPlaying)
+            if (Player.IsPlaying)
             {
-                player.Pause();
+                Player.Pause();
             }
             else
             {
-                player.Play();
+                Player.Play();
             }
         }
 
         private void Stop()
         {
-            player.Stop();
+            Player.Stop();
             PlaybackProgress = 0;
         }
 
         private bool IsMediaLoaded()
         {
-            return player.IsMediaLoaded;
+            return Player.IsMediaLoaded;
         }
         
         private async Task ReloadSelectedVideo()
@@ -97,13 +97,13 @@
 
             if (SelectedVideoMissing)
             {
-                await player.UnloadMedia();
+                await Player.UnloadMedia();
             }
             else if (SelectedVideo != null)
             {
                 string? path = DetailRepo.GetVideoPath(SelectedMediaSource.Item, SelectedVideo.Item);
                 await DetailRepo.ProcessSelectedVideo(SelectedMediaSource.Item, SelectedVideo.Item);
-                await player.LoadMedia(path);
+                await Player.LoadMedia(path);
             }
 
             PlaybackProgress = 0;
