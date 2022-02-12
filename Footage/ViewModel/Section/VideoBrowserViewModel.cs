@@ -15,6 +15,14 @@
 
         private MediaSource? selectedSource;
 
+        private bool isFetchingVideos;
+
+        public bool IsFetchingVideos
+        {
+            get => isFetchingVideos;
+            set => Set(ref isFetchingVideos, value);
+        }
+
         public VideoBrowserViewModel()
         {
             MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, OnMediaSourceChanged);
@@ -33,6 +41,8 @@
 
         private async Task FetchVideos(int? batchSize = null)
         {
+            IsFetchingVideos = true;
+            
             if (selectedSource == null)
             {
                 return;
@@ -55,6 +65,8 @@
             }
             
             MessengerInstance.Send(new IsBusyChangedMessage(false));
+
+            IsFetchingVideos = false;
         }
 
         protected override Task DeleteModel(Video item)

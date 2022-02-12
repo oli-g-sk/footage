@@ -8,6 +8,11 @@
              x:Class="Footage.UI.Views.MainWindowContent.VideoBrowserView"
              d:DataContext="{d:DesignInstance section:VideoBrowserViewModel}">
     <DockPanel>
+        <ProgressBar DockPanel.Dock="Top"
+                     IsVisible="{Binding IsFetchingVideos}"
+                     HorizontalAlignment="Stretch"
+                     IsIndeterminate="True"
+                     Height="4" />
         <ListBox Items="{Binding Items}"
                  SelectedItem="{Binding SelectedItem}">
             <ItemsControl.ItemsPanel>

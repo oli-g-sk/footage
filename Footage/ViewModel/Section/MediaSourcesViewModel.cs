@@ -15,23 +15,38 @@
         private static SourcesRepository SourceRepo => Locator.Get<SourcesRepository>();
         private static LibraryRepository LibraryRepo => Locator.Get<LibraryRepository>();
 
-        private bool selectionEnabled;
+        public bool InteractionEnabled => !AnySourceUpdating && !SelectedSourceLoading;
 
-        public bool SelectionEnabled
+        private bool anySourceUpdating;
+        public bool AnySourceUpdating
         {
-            get => selectionEnabled;
+            get => anySourceUpdating;
             set
             {
-                Set(ref selectionEnabled, value);
+                Set(ref anySourceUpdating, value);
+                RaisePropertyChanged(nameof(InteractionEnabled));
                 RemoveSelectedItemCommand.RaiseCanExecuteChanged();
             } 
+        }
+
+        private bool selectedSourceLoading;
+
+        public bool SelectedSourceLoading
+        {
+            get => selectedSourceLoading;
+            set
+            {
+                Set(ref selectedSourceLoading, value);
+                RaisePropertyChanged(nameof(InteractionEnabled));
+                RemoveSelectedItemCommand.RaiseCanExecuteChanged();
+            }
         }
 
         public MediaSourcesViewModel()
         {
             Task.Run(LoadAllSources);
 
-            MessengerInstance.Register<IsBusyChangedMessage>(this, m => SelectionEnabled = !m.IsBusy);
+            MessengerInstance.Register<IsBusyChangedMessage>(this, m => SelectedSourceLoading = m.IsBusy);
         }
 
         protected override void OnItemAdded(MediaSourceViewModel viewModel)
@@ -39,9 +54,7 @@
             base.OnItemAdded(viewModel);
             Task.Run(async () =>
             {
-                viewModel.IsBusy = true;
                 await UpdateSource(viewModel);
-                viewModel.IsBusy = false;
             });
         }
 
@@ -52,7 +65,7 @@
 
         protected override bool CanRemoveSelectedItem()
         {
-            return base.CanRemoveSelectedItem() && SelectionEnabled;
+            return base.CanRemoveSelectedItem() && InteractionEnabled;
         }
 
         protected override async Task<MediaSource> CreateAndStoreModel(string? input)
@@ -69,8 +82,6 @@
 
         private async Task LoadAllSources()
         {
-            SelectionEnabled = false;
-            
             var sources = (await SourceRepo.GetAllSources()).Select(s => new MediaSourceViewModel(s));
             
             // TODO create an extension method for this
@@ -80,8 +91,6 @@
             }
             
             await UpdateAllSources();
-            
-            SelectionEnabled = true;
         }
 
         private async Task UpdateAllSources()
@@ -91,11 +100,19 @@
 
         private async Task UpdateSource(MediaSourceViewModel source)
         {
-            source.IsBusy = true;
-            
-            
+            await Dispatcher.InvokeAsync(() =>
+            {
+                AnySourceUpdating = true;
+                source.IsBusy = true;
+            });
+
             await LibraryRepo.ImportNewFiles(source.Item);
-            source.IsBusy = false;
+            
+            await Dispatcher.InvokeAsync(() =>
+            {
+                source.IsBusy = false;
+                AnySourceUpdating = false;
+            });
         }
     }
 }

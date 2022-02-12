@@ -16,9 +16,14 @@
                     Command="{Binding RemoveSelectedItemCommand}" />
             <TextBlock Text="Media sources" />
         </DockPanel>
+        <ProgressBar DockPanel.Dock="Top"
+                     IsVisible="{Binding AnySourceUpdating}"
+                     HorizontalAlignment="Stretch"
+                     IsIndeterminate="True"
+                     Height="4" />
         <ListBox Items="{Binding Items}"
                  SelectedItem="{Binding SelectedItem}"
-                 IsEnabled="{Binding SelectionEnabled}">
+                 IsEnabled="{Binding InteractionEnabled}">
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
