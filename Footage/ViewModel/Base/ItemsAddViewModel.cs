@@ -29,8 +29,15 @@
             var task = CreateAndStoreModel(input);
             task.Wait();
             var model = task.Result;
+
+            var viewModel = CreateViewModel(model); 
+            Items.Add(viewModel);
+            OnItemAdded(viewModel);
+        }
+
+        protected virtual void OnItemAdded(TViewModel viewModel)
+        {
             
-            Items.Add(CreateViewModel(model));
         }
 
         protected abstract bool CanAddItem(TInput item);

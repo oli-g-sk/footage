@@ -30,7 +30,18 @@
             
             MessengerInstance.Register<IsBusyChangedMessage>(this, m => SelectionEnabled = !m.IsBusy);
         }
-        
+
+        protected override void OnItemAdded(MediaSourceViewModel viewModel)
+        {
+            base.OnItemAdded(viewModel);
+            Task.Run(async () =>
+            {
+                viewModel.IsBusy = true;
+                await UpdateSource(viewModel);
+                viewModel.IsBusy = false;
+            });
+        }
+
         protected override bool CanAddItem(string? item)
         {
             return !string.IsNullOrEmpty(item);
@@ -48,17 +59,6 @@
             await SourceRepo.RemoveSource(item);
         }
 
-        protected override void AfterSelectionChanged()
-        {
-            base.AfterSelectionChanged();
-
-            if (SelectedItem?.Item is LocalMediaSource localSource)
-            {
-                // TODO await
-                LibraryRepo.ImportNewFiles(localSource);
-            }
-        }
-
         private async Task LoadAllSources()
         {
             var sources = (await SourceRepo.GetAllSources()).Select(s => new MediaSourceViewModel(s));
@@ -68,6 +68,22 @@
             {
                 Items.Add(source);
             }
+
+            await UpdateAllSources();
+        }
+
+        private async Task UpdateAllSources()
+        {
+            await Task.WhenAll(Items.Select(UpdateSource));
+        }
+
+        private async Task UpdateSource(MediaSourceViewModel source)
+        {
+            source.IsBusy = true;
+            
+            
+            await LibraryRepo.ImportNewFiles(source.Item);
+            source.IsBusy = false;
         }
     }
 }
