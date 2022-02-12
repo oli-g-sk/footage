@@ -38,15 +38,21 @@ namespace Footage.Repository
                     MediaSource = source,
                     MediaSourceUri = sourceVideo.Identifier
                 };
-
-                var videoUri = provider.GetFullPath(video);
-                video.Duration = await mediaInfo.GetDuration(videoUri);
-
+                
                 videos.Add(video);
             }
 
             using var dao = GetDao();
             await dao.InsertRange(videos);
+            await dao.Commit();
+
+            foreach (var video in videos)
+            {
+                var videoUri = provider.GetFullPath(video);
+                video.Duration = await mediaInfo.GetDuration(videoUri);
+            }
+
+            await dao.UpdateRange(videos);
             await dao.Commit();
         }
 
