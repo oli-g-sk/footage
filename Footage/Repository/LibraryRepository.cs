@@ -42,6 +42,11 @@ namespace Footage.Repository
             await dao.InsertRange(videos);
             await dao.Commit();
         }
+
+        private bool MediaInfoLoaded(Video video)
+        {
+            return video.Duration > 0;
+        }
         
         private async Task<bool> VideoAlreadyImported(SourceVideoInfo sourceVideoInfo)
         {

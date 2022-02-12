@@ -4,15 +4,12 @@
     using System.Collections.Generic;
     using Footage.Model;
 
-    public abstract class MediaProviderServiceBase : IMediaProviderService
+    public abstract class MediaProviderServiceBase : SourceScopedServiceBase, IMediaProviderService
     {
-        protected MediaSource Source { get; }
-        
         public abstract IEnumerable<SourceVideoInfo> FetchVideos();
 
-        protected MediaProviderServiceBase(MediaSource source)
+        protected MediaProviderServiceBase(MediaSource source) : base(source)
         {
-            Source = source;
         }
 
         public string GetFullPath(Video video)
