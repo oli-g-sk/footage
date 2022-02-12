@@ -5,6 +5,7 @@
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using System;
+    using Footage.Model;
 
     public abstract class VideoDetailViewModelBase : SectionViewModel
     {
@@ -14,13 +15,19 @@
         protected VideoViewModel? SelectedVideo
         {
             get => selectedVideo;
-            private set => Set(ref selectedVideo, value);
+            private set
+            {
+                BeforeSelectedVideoChanged();
+                Set(ref selectedVideo, value);
+                AfterSelectedVideoChanged();
+            }
         }
 
         protected VideoDetailViewModelBase()
         {
             MessengerInstance.Register<SelectionChangedMessage<VideoViewModel>>(this, OnSelectedVideoChanged);
             MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, OnMediaSourceChanged);
+            MessengerInstance.Register<EntityDeletedMessage<MediaSource>>(this, OnMediaSourceDeleted);
         }
 
         protected virtual void BeforeSelectedVideoChanged()
@@ -43,9 +50,7 @@
         {
             if (message.SelectedItem != null)
             {
-                BeforeSelectedVideoChanged();
                 SelectedVideo = message.SelectedItem;
-                AfterSelectedVideoChanged();
             }
         }
 
@@ -54,6 +59,15 @@
             BeforeMediaSourceChanged();
             SelectedMediaSource = message.SelectedItem;
             AfterMediaSourceChanged();
+        }
+        
+        private void OnMediaSourceDeleted(EntityDeletedMessage<MediaSource> msg)
+        {
+            // if we deleted source containing the currently selected video, unload the video
+            if (SelectedVideo != null && msg.DeletedEntity.Equals(SelectedVideo.Item.MediaSource))
+            {
+                SelectedVideo = null;
+            }
         }
     }
 }

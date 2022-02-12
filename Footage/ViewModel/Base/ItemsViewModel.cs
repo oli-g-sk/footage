@@ -38,9 +38,18 @@
 
         private void RemoveSelectedItem()
         {
+            if (SelectedItem == null)
+            {
+                return;
+                
+            }
+            
+            var entity = SelectedItem.Item;
             // TODO await
-            var task = DeleteModel(SelectedItem.Item);
+            var task = DeleteModel(entity);
             task.Wait();
+            
+            MessengerInstance.Send(new EntityDeletedMessage<TModel>(entity));
             Items.Remove(SelectedItem);
         }
 

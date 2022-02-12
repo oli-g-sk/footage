@@ -27,6 +27,7 @@
             return Id;
         }
 
+        // TODO remove operator overloads, only use Equals
         public static bool operator ==(Entity? left, Entity? right)
         {
             return Equals(left, right);
