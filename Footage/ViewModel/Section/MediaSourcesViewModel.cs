@@ -52,10 +52,13 @@
         protected override void OnItemAdded(MediaSourceViewModel viewModel)
         {
             base.OnItemAdded(viewModel);
+            
             Task.Run(async () =>
             {
                 await UpdateSource(viewModel);
             });
+
+            SelectedItem = viewModel;
         }
 
         protected override bool CanAddItem(string? item)
