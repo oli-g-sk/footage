@@ -20,14 +20,17 @@
         public bool SelectionEnabled
         {
             get => selectionEnabled;
-            set => Set(ref selectionEnabled, value);
+            set
+            {
+                Set(ref selectionEnabled, value);
+                RemoveSelectedItemCommand.RaiseCanExecuteChanged();
+            } 
         }
 
         public MediaSourcesViewModel()
         {
-            Task.Run(LoadAllSources)
-                .ContinueWith(_ => SelectionEnabled = true);
-            
+            Task.Run(LoadAllSources);
+
             MessengerInstance.Register<IsBusyChangedMessage>(this, m => SelectionEnabled = !m.IsBusy);
         }
 
@@ -46,7 +49,12 @@
         {
             return !string.IsNullOrEmpty(item);
         }
-        
+
+        protected override bool CanRemoveSelectedItem()
+        {
+            return base.CanRemoveSelectedItem() && SelectionEnabled;
+        }
+
         protected override async Task<MediaSource> CreateAndStoreModel(string? input)
         {
             return await SourceRepo.AddLocalSource(input, true);
@@ -61,6 +69,8 @@
 
         private async Task LoadAllSources()
         {
+            SelectionEnabled = false;
+            
             var sources = (await SourceRepo.GetAllSources()).Select(s => new MediaSourceViewModel(s));
             
             // TODO create an extension method for this
@@ -68,8 +78,10 @@
             {
                 Items.Add(source);
             }
-
+            
             await UpdateAllSources();
+            
+            SelectionEnabled = true;
         }
 
         private async Task UpdateAllSources()
