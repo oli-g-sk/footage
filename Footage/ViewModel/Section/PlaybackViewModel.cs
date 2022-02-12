@@ -15,7 +15,7 @@
     {
         private static VideoDetailRepository DetailRepo => Locator.Get<VideoDetailRepository>();
 
-        public IMediaPlayerService Player { get; } = Locator.Create<IMediaPlayerService>();
+        public IMediaPlayer Player { get; } = Locator.Create<IMediaPlayer>();
 
         public bool SelectedVideoMissing => SelectedVideo != null && SelectedVideo.IsMissing;
 

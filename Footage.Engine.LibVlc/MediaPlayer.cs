@@ -8,13 +8,13 @@
     using NLog;
     using Footage.Engine;
 
-    public sealed class MediaPlayerService : IMediaPlayerService, IDisposable
+    public sealed class MediaPlayer : IMediaPlayer, IDisposable
     {
         private static ILogger VlcLog => LogManager.GetLogger("LibVLC");
 
         private static readonly LibVLC LibVlc;
 
-        public MediaPlayer Player { get; }
+        public LibVLCSharp.Shared.MediaPlayer Player { get; }
 
         public long Duration { get; private set; }
 
@@ -30,7 +30,7 @@
 
         public event EventHandler PositionChanged;
 
-        static MediaPlayerService()
+        static MediaPlayer()
         {
             Core.Initialize();
             LibVlc = new LibVLC();
@@ -63,9 +63,9 @@
             }
         }
 
-        public MediaPlayerService()
+        public MediaPlayer()
         {
-            Player = new MediaPlayer(LibVlc);
+            Player = new LibVLCSharp.Shared.MediaPlayer(LibVlc);
             Player.PositionChanged += Player_PositionChanged;
         }
 

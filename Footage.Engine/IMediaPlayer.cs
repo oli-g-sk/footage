@@ -3,7 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
-    public interface IMediaPlayerService
+    public interface IMediaPlayer
     {
         event EventHandler PositionChanged;
 

@@ -13,12 +13,12 @@ namespace Footage.Repository
     public class VideoDetailRepository : RepositoryBase
     {
         // TODO replace by future MediaInfoService, playback is not needed here
-        private readonly IMediaPlayerService mediaPlayerService;
+        private readonly IMediaPlayer mediaPlayer;
         private readonly ISourceScopedServiceFactory sourceScopedServiceFactory;
 
         public VideoDetailRepository(ISourceScopedServiceFactory sourceScopedServiceFactory)
         {
-            this.mediaPlayerService = Locator.Create<IMediaPlayerService>();
+            this.mediaPlayer = Locator.Create<IMediaPlayer>();
             this.sourceScopedServiceFactory = sourceScopedServiceFactory;
         }
 
@@ -41,7 +41,7 @@ namespace Footage.Repository
             }
             else
             {
-                video.Duration = await mediaPlayerService.GetVideoDuration(path);
+                video.Duration = await mediaPlayer.GetVideoDuration(path);
             }
 #if DEBUG
             // await Task.Delay(300);

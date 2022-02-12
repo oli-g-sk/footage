@@ -15,6 +15,6 @@ namespace Footage
     {
         IDispatcher Dispatcher { get; }
 
-        IMediaPlayerService CreateMediaPlayer();
+        IMediaPlayer CreateMediaPlayer();
     }
 }

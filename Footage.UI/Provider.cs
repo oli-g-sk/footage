@@ -5,18 +5,11 @@ namespace Footage.UI
 {
     internal class Provider : IProvider
     {
-        private IDispatcher dispatcher;
+        public IDispatcher Dispatcher { get; } = new AvaloniaDispatcher();
 
-        internal Provider()
+        public IMediaPlayer CreateMediaPlayer()
         {
-            dispatcher = new AvaloniaDispatcher();
-        }
-
-        public IDispatcher Dispatcher => dispatcher;
-
-        public IMediaPlayerService CreateMediaPlayer()
-        {
-            return new MediaPlayerService();
+            return new MediaPlayer();
         }
     }
 }

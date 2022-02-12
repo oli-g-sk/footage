@@ -30,7 +30,7 @@ namespace Footage
             if (!initialized)
                 throw new InvalidOperationException("Footage.Core.Initialize muse be called before using!");
 
-            if (typeof(T) == typeof(IMediaPlayerService))
+            if (typeof(T) == typeof(IMediaPlayer))
                 throw new ArgumentException("IMediaPlayerService cannot be accessed as singleton. Use Create<T> instead.");
 
             return SimpleIoc.Default.GetInstance<T>();
@@ -41,7 +41,7 @@ namespace Footage
             if (!initialized)
                 throw new InvalidOperationException("Footage.Core.Initialize muse be called before using!");
 
-            if (typeof(T) == typeof(IMediaPlayerService))
+            if (typeof(T) == typeof(IMediaPlayer))
                 return (T)Provider.CreateMediaPlayer();
 
             return SimpleIoc.Default.GetInstanceWithoutCaching<T>();

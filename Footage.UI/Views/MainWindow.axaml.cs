@@ -12,12 +12,10 @@ namespace Footage.UI.Views
     {
         // TODO remove singleton mainwindow
         public static MainWindow Instance { get; private set; }
-
-        private VideoView videoView;
         
-        private MainWindowViewModel ViewModel => DataContext as MainWindowViewModel;
+        private MainWindowViewModel? ViewModel => DataContext as MainWindowViewModel;
 
-        private MediaPlayerService Player => ViewModel.Playback.Player as MediaPlayerService;
+        private MediaPlayer? Player => ViewModel?.Playback.Player as MediaPlayer;
 
         public MainWindow()
         {
@@ -31,7 +29,8 @@ namespace Footage.UI.Views
         private void InitializeComponent()
         {
             AvaloniaXamlLoader.Load(this);
-            videoView = this.FindControl<VideoView>("VideoViewLibVlc");
+            
+            var videoView = this.FindControl<VideoView>("VideoViewLibVlc");
             EngineBindingLibVlc.Bind(Player, videoView);
         }
     }

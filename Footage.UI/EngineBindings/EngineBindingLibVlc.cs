@@ -6,9 +6,9 @@
 
     public static class EngineBindingLibVlc
     {
-        public static void Bind(IMediaPlayerService mediaPlayerService, VideoView videoView)
+        public static void Bind(IMediaPlayer mediaPlayer, VideoView videoView)
         {
-            var libVlcPlayer = mediaPlayerService as MediaPlayerService;
+            var libVlcPlayer = mediaPlayer as MediaPlayer;
             videoView.MediaPlayer = libVlcPlayer.Player;
         }
     }
