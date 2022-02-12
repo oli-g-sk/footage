@@ -12,13 +12,13 @@ namespace Footage.Repository
 {
     public class VideoDetailRepository : RepositoryBase
     {
+        // TODO replace by future MediaInfoService, playback is not needed here
         private readonly IMediaPlayerService mediaPlayerService;
         private readonly ISourceScopedServiceFactory sourceScopedServiceFactory;
 
-        public VideoDetailRepository(IMediaPlayerService mediaPlayerService,
-            ISourceScopedServiceFactory sourceScopedServiceFactory)
+        public VideoDetailRepository(ISourceScopedServiceFactory sourceScopedServiceFactory)
         {
-            this.mediaPlayerService = mediaPlayerService;
+            this.mediaPlayerService = Locator.Create<IMediaPlayerService>();
             this.sourceScopedServiceFactory = sourceScopedServiceFactory;
         }
 
