@@ -89,7 +89,7 @@
 
         public async Task LoadMedia(string uri)
         {
-            await UnloadMedia();
+            await UnloadMedia(); // TODO LATER is unload needed before load?
             Player.Media = new Media(LibVlc, new Uri(uri));
             await Player.Media.Parse();
             Duration = Player.Media.Duration;
@@ -99,6 +99,7 @@
         public async Task UnloadMedia()
         {
             Player.Media?.Dispose();
+            Player.Media = null;
             Duration = 0;
             await Task.CompletedTask;
         }

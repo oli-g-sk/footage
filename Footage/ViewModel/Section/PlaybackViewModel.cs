@@ -108,7 +108,7 @@
         {
             PlaybackProgress = 0;
 
-            if (SelectedVideoMissing)
+            if (SelectedVideo == null || SelectedVideoMissing)
             {
                 await Player.UnloadMedia();
             }
@@ -118,8 +118,6 @@
                 await DetailRepo.ProcessSelectedVideo(SelectedMediaSource.Item, SelectedVideo.Item);
                 await Player.LoadMedia(path);
             }
-
-            PlaybackProgress = 0;
 
             RaisePropertyChanged(nameof(PlaybackPosition));
             RaisePropertyChanged(nameof(PlaybackPositionTimeCode));
