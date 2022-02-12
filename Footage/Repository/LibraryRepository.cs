@@ -20,6 +20,8 @@ namespace Footage.Repository
         public async Task ImportNewFiles(MediaSource source)
         {
             var provider = sourceScopedServiceFactory.GetMediaProviderService(source);
+            var mediaInfo = sourceScopedServiceFactory.GetMediaInfoService(source);
+            
             var sourceVideos = provider.FetchVideos();
 
             var videos = new List<Video>();
@@ -31,11 +33,16 @@ namespace Footage.Repository
                     continue;
                 }
                 
-                videos.Add(new Video
+                var video = new Video
                 {
                     MediaSource = source,
                     MediaSourceUri = sourceVideo.Identifier
-                });
+                };
+
+                var videoUri = provider.GetFullPath(video);
+                video.Duration = await mediaInfo.GetDuration(videoUri);
+
+                videos.Add(video);
             }
 
             using var dao = GetDao();

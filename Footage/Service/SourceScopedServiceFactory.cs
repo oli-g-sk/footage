@@ -25,5 +25,20 @@ namespace Footage.Service
 
             throw new NotImplementedException($"Unsupported media source: {mediaSource}");
         }
+
+        public IMediaInfoService GetMediaInfoService(MediaSource mediaSource)
+        {
+            if (mediaSource == null)
+            {
+                throw new ArgumentNullException(nameof(mediaSource));
+            }
+
+            if (mediaSource is LocalMediaSource localMediaSource)
+            {
+                return new LocalMediaInfoPlayerService();
+            }
+
+            throw new NotImplementedException($"Unsupported media source: {mediaSource}");
+        }
     }
 }

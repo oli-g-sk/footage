@@ -12,5 +12,7 @@ namespace Footage.Service
     public interface ISourceScopedServiceFactory
     {
         IMediaProviderService GetMediaProviderService(MediaSource mediaSource);
+        
+        IMediaInfoService GetMediaInfoService(MediaSource mediaSource);
     }
 }
