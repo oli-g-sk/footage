@@ -17,6 +17,8 @@ namespace Footage
 
         private static IProvider Provider;
 
+        internal static IDispatcher Dispatcher => Provider.Dispatcher;
+
         internal static void Initialize(IProvider provider)
         {
             Provider = provider;
