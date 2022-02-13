@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Runtime.CompilerServices;
+    using System.Threading;
     using System.Threading.Tasks;
     using Footage.Context;
     using Footage.Model;
@@ -61,6 +62,7 @@
             
             try
             {
+                Log.Debug($"CRUD insert: {item}");
                 dbContext.Add(item);
             }
             catch (Exception ex)
@@ -80,6 +82,7 @@
 
             try
             {
+                Log.Debug($"CRUD insertRange: {typeof(T)}[], count: {items.Count()}");
                 dbContext.AddRange(items);
             }
             catch (Exception ex)
@@ -99,6 +102,7 @@
 
             try
             {
+                Log.Debug($"CRUD remove: {item}");
                 dbContext.Remove(item);
             }
             catch (Exception ex)
@@ -118,6 +122,7 @@
             
             try
             {
+                Log.Debug($"CRUD update: {item}");
                 dbContext.Update(item);
                 item.NotifyEntryUpdated();
             }
@@ -138,6 +143,7 @@
             
             try
             {
+                Log.Debug($"CRUD updateRange: {typeof(T)}[], count: {items.Count()}");
                 dbContext.UpdateRange(items);
                 foreach (var item in items)
                 {
@@ -154,6 +160,7 @@
 
         public IQueryable<T> Query<T>(Expression<Func<T, bool>>? predicate = null) where T : Entity
         {
+            Log.Debug($"CRUD query: {typeof(T)}");
             var entities = dbContext.Set<T>().AsQueryable();
 
             if (predicate != null)
