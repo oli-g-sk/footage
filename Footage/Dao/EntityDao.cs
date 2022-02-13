@@ -9,6 +9,7 @@
     using Footage.Context;
     using Footage.Model;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.ChangeTracking;
     using NLog;
     using NLog.Fluent;
 
@@ -16,19 +17,27 @@
     {
         private static ILogger Log => LogManager.GetCurrentClassLogger();
         
+        private static ILogger LogEF => LogManager.GetLogger("EntityFrameworkCore");
+        
         private readonly VideoContext dbContext;
         
         public EntityDao()
         {
             dbContext = new VideoContext();
+            dbContext.ChangeTracker.StateChanged += ChangeTracker_StateChanged;
+            dbContext.ChangeTracker.Tracked += ChangeTracker_Tracked;
+            dbContext.SavingChanges += DbContext_SavingChanges;
+            dbContext.SavedChanges += DbContext_SavedChanges;
+            dbContext.SaveChangesFailed += DbContext_SaveChangesFailed;
         }
 
         public async Task Commit()
         {
             try
             {
+                Log.Trace("Commiting DB changes.");
+                Log.Trace(dbContext.ChangeTracker.DebugView);
                 await dbContext.SaveChangesAsync();
-                Log.Trace("DB changes commited.");
             }
             catch (Exception ex)
             {
@@ -163,12 +172,46 @@
         {
             // TODO KURVA this thrown exception is swallowed, nothing happens :(
             
-            Logger.Log(LogLevel.Error, $"DB exception occurred: {ex}");
+            Log.Error($"DB exception occurred: {ex}");
             Debugger.Break();
             
             throw new DbException(ex);
         }
 
-        private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
+        private void LogContextMessage(string message)
+        {
+            LogEF.Trace($"{message} [ContextID: {dbContext.ContextId}]");
+        }
+        
+        #region Event handlers
+        
+        private void DbContext_SavingChanges(object? sender, SavingChangesEventArgs e)
+        {
+            LogContextMessage("Saving changes.");
+        }
+
+        private void DbContext_SaveChangesFailed(object? sender, SaveChangesFailedEventArgs e)
+        {
+            LogContextMessage($"Save changes failed: {e.Exception}.");
+            // TODO throw better exception
+            throw new Exception("Failed saving changes.", e.Exception);
+        }
+
+        private void DbContext_SavedChanges(object? sender, SavedChangesEventArgs e)
+        {
+            LogContextMessage($"Saved changes; entity count: {e.EntitiesSavedCount}.");
+        }
+
+        private void ChangeTracker_Tracked(object? sender, EntityTrackedEventArgs e)
+        {
+            LogContextMessage($"New entity tracked: {e.Entry.DebugView.ShortView}");
+        }
+
+        private void ChangeTracker_StateChanged(object? sender, EntityStateChangedEventArgs e)
+        {
+            LogContextMessage($"Entity state changed from {e.OldState} to {e.NewState} in {e.Entry.DebugView.ShortView}");
+        }
+        
+        #endregion
     }
 }
