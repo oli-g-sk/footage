@@ -10,9 +10,12 @@
     using Footage.Model;
     using Microsoft.EntityFrameworkCore;
     using NLog;
+    using NLog.Fluent;
 
     public class EntityDao : IEntityDao
     {
+        private static ILogger Log => LogManager.GetCurrentClassLogger();
+        
         private readonly VideoContext dbContext;
         
         public EntityDao()
@@ -22,7 +25,15 @@
 
         public async Task Commit()
         {
-            await dbContext.SaveChangesAsync();
+            try
+            {
+                await dbContext.SaveChangesAsync();
+                Log.Trace("DB changes commited.");
+            }
+            catch (Exception ex)
+            {
+                ProcessException(ex);
+            }
         }
 
         public async Task<bool> Contains<T>(Expression<Func<T, bool>> predicate) where T : Entity 
@@ -150,10 +161,11 @@
 
         private void ProcessException(Exception ex)
         {
+            // TODO KURVA this thrown exception is swallowed, nothing happens :(
+            
+            Logger.Log(LogLevel.Error, $"DB exception occurred: {ex}");
             Debugger.Break();
             
-            // TODO KURVA this thrown exception is swallowed, nothing happens :(
-            Logger.Log(LogLevel.Error, $"DB exception occurred: {ex}");
             throw new DbException(ex);
         }
 

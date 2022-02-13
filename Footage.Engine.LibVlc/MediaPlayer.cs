@@ -11,6 +11,8 @@
     public sealed class MediaPlayer : IMediaPlayer, IDisposable
     {
         private static ILogger VlcLog => LogManager.GetLogger("LibVLC");
+        
+        private static ILogger Log => LogManager.GetCurrentClassLogger();
 
         private static readonly LibVLC LibVlc;
 
@@ -93,6 +95,7 @@
             Player.Media = new Media(LibVlc, new Uri(uri));
             await Player.Media.Parse();
             Duration = Player.Media.Duration;
+            Log.Debug($"Loaded media file: {uri}.");
             await Task.CompletedTask;
         }
 
@@ -101,6 +104,7 @@
             Player.Media?.Dispose();
             Player.Media = null;
             Duration = 0;
+            Log.Debug("Unloaded media.");
             await Task.CompletedTask;
         }
 
