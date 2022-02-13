@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using Footage.Context;
     using Footage.Model;
@@ -35,8 +36,8 @@
         {
             try
             {
-                Log.Trace("Commiting DB changes.");
-                Log.Trace(dbContext.ChangeTracker.DebugView);
+                Log.Trace($"Commiting DB changes.");
+                // Log.Trace(dbContext.ChangeTracker.DebugView);
                 await dbContext.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -170,11 +171,14 @@
 
         private void ProcessException(Exception ex)
         {
-            // TODO KURVA this thrown exception is swallowed, nothing happens :(
-            
-            Log.Error($"DB exception occurred: {ex}");
+            Log.Error($"DB exception occurred: {ex.Message}");
+            if (ex.InnerException != null)
+            {
+                Log.Error(ex.InnerException.Message);
+            }
+
             Debugger.Break();
-            
+            // TODO crash the app!!!
             throw new DbException(ex);
         }
 
@@ -192,9 +196,7 @@
 
         private void DbContext_SaveChangesFailed(object? sender, SaveChangesFailedEventArgs e)
         {
-            LogContextMessage($"Save changes failed: {e.Exception}.");
-            // TODO throw better exception
-            throw new Exception("Failed saving changes.", e.Exception);
+            LogContextMessage($"Save changes failed: {e.Exception.Message}.");
         }
 
         private void DbContext_SavedChanges(object? sender, SavedChangesEventArgs e)
