@@ -53,6 +53,11 @@
             return await entities.AnyAsync(predicate);
         }
 
+        public async Task<T> Get<T>(int id) where T : Entity
+        {
+            return await dbContext.FindAsync<T>(id);
+        }
+
         public Task Insert<T>(T item) where T : Entity
         {
             if (item == null)

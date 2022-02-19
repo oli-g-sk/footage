@@ -10,6 +10,8 @@
     public interface IEntityDao : IDisposable
     {
         Task<bool> Contains<T>(Expression<Func<T, bool>> predicate) where T : Entity;
+
+        Task<T> Get<T>(int id) where T : Entity;
         
         Task Insert<T>(T item) where T : Entity;
 

@@ -21,8 +21,11 @@ namespace Footage.Repository
             this.sourceScopedServiceFactory = sourceScopedServiceFactory;
         }
         
-        public async Task ImportNewFiles(MediaSource source)
+        public async Task ImportNewFiles(int mediaSourceId)
         {
+            using var dao = GetDao();
+            var source = await dao.Get<MediaSource>(mediaSourceId);
+            
             var provider = sourceScopedServiceFactory.GetMediaProviderService(source);
             var mediaInfo = sourceScopedServiceFactory.GetMediaInfoService(source);
 
@@ -47,7 +50,6 @@ namespace Footage.Repository
             }
 
             Log.Info($"Number of new files in source '{source.Name}': {videos.Count}.");
-            using var dao = GetDao();
             await dao.InsertRange(videos);
             await dao.Commit();
             Log.Debug($"New files saved to DB in source '{source.Name}'.");
@@ -68,9 +70,10 @@ namespace Footage.Repository
             await dao.Commit();
         }
 
-        public int GetVideoCount(MediaSource source)
+        public async Task<int> GetVideoCount(int mediaSourceId)
         {
             using var dao = GetDao();
+            var source = await dao.Get<MediaSource>(mediaSourceId);
             return dao.Query<Video>(v => v.MediaSource == source).Count();
         }
 

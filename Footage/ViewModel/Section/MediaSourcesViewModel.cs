@@ -97,15 +97,17 @@
 
         private async Task UpdateSource(MediaSourceViewModel source)
         {
+            var sourceId = source.Item.Id;
+            
             await Dispatcher.InvokeAsync(() =>
             {
                 AnySourceUpdating = true;
                 source.IsBusy = true;
             });
 
-            await LibraryRepo.ImportNewFiles(source.Item);
+            await LibraryRepo.ImportNewFiles(sourceId);
             
-            source.VideoCount = LibraryRepo.GetVideoCount(source.Item); 
+            source.VideoCount = await LibraryRepo.GetVideoCount(sourceId); 
             
             await Dispatcher.InvokeAsync(() =>
             {
