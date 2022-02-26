@@ -18,6 +18,10 @@
                 IncludeSubfolders = includeSubfolders,
                 Name = Path.GetFileName(path)
             };
+
+            using var dao = GetDao();
+            await dao.Insert(source);
+            await dao.Commit();
             
             return source;
         }
