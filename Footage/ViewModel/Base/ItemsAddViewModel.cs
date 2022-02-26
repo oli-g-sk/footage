@@ -9,24 +9,19 @@
         where TViewModel : EntityViewModel<TModel>
         where TModel : Entity
     {
-        public RelayCommand<TInput> AddItemCommand { get; }
+        public RelayCommand AddItemCommand { get; }
 
         protected ItemsAddViewModel()
         {
-            AddItemCommand = new RelayCommand<TInput>(AddItem, CanAddItem);
+            AddItemCommand = new RelayCommand(AddItem, CanAddItem);
         }
         
-        protected abstract Task<TModel> CreateAndStoreModel(TInput input);
+        protected abstract Task<TModel> CreateAndStoreModel();
         
-        protected virtual void AddItem(TInput input)
+        private void AddItem()
         {
-            if (!CanAddItem(input))
-            {
-                throw new InvalidOperationException();
-            }
-            
             // TODO await
-            var task = CreateAndStoreModel(input);
+            var task = CreateAndStoreModel();
             task.Wait();
             var model = task.Result;
 
@@ -40,7 +35,10 @@
             return Task.CompletedTask;
         }
 
-        protected abstract bool CanAddItem(TInput item);
+        protected virtual bool CanAddItem()
+        {
+            return true;
+        }
         
         protected abstract TViewModel CreateViewModel(TModel model);
     }

@@ -14,6 +14,8 @@ namespace Footage
     public interface IProvider
     {
         IDispatcher Dispatcher { get; }
+        
+        IDialogService DialogService { get; }
 
         IMediaPlayer CreateMediaPlayer();
     }

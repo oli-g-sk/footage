@@ -10,8 +10,7 @@
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <Button DockPanel.Dock="Right" Content="Add"
-                    Name="BtnAddMediaSource"
-                    Click="BtnAddMediaSource_OnClick" />
+                    Command="{Binding AddItemCommand}"/>
             <Button DockPanel.Dock="Right" Content="Remove"
                     Command="{Binding RemoveSelectedItemCommand}" />
             <TextBlock Text="Media sources" />

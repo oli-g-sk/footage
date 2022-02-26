@@ -5,6 +5,7 @@
     using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
+    using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
 
@@ -55,19 +56,16 @@
             SelectedItem = viewModel;
         }
 
-        protected override bool CanAddItem(string? item)
-        {
-            return !string.IsNullOrEmpty(item);
-        }
-
         protected override bool CanRemoveSelectedItem()
         {
             return base.CanRemoveSelectedItem() && InteractionEnabled;
         }
 
-        protected override async Task<MediaSource> CreateAndStoreModel(string? input)
+        protected override async Task<MediaSource> CreateAndStoreModel()
         {
-            return await SourceRepo.AddLocalSource(input, true);
+            var dialogService = Locator.Get<IDialogService>();
+            string path = await dialogService.SelectFolder();
+            return await SourceRepo.AddLocalSource(path, true);
         }
         
         protected override MediaSourceViewModel CreateViewModel(MediaSource model) => new(model);

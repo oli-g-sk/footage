@@ -33,6 +33,9 @@ namespace Footage
             if (typeof(T) == typeof(IMediaPlayer))
                 throw new ArgumentException("IMediaPlayerService cannot be accessed as singleton. Use Create<T> instead.");
 
+            if (typeof(T) == typeof(IDialogService))
+                return (T) Provider.DialogService;
+
             return SimpleIoc.Default.GetInstance<T>();
         }
 
