@@ -26,7 +26,8 @@ namespace Footage.Repository
         {
             using var dao = GetDao();
             var video = await dao.Get<Video>(videoId);
-            var mediaProvider = sourceScopedServiceFactory.GetMediaProviderService(video.MediaSource);
+            var mediaSource = await dao.Get<MediaSource>(video.MediaSourceId);
+            var mediaProvider = sourceScopedServiceFactory.GetMediaProviderService(mediaSource);
             return mediaProvider.GetFullPath(video);
         }
 
