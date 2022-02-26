@@ -114,8 +114,9 @@
             }
             else if (SelectedVideo != null)
             {
-                string? path = DetailRepo.GetVideoPath(SelectedMediaSource.Item, SelectedVideo.Item);
-                await DetailRepo.ProcessSelectedVideo(SelectedMediaSource.Item, SelectedVideo.Item);
+                int videoId = SelectedVideo.Item.Id; 
+                string? path = await DetailRepo.GetVideoPath(videoId);
+                await DetailRepo.ProcessVideo(videoId);
                 await Player.LoadMedia(path);
             }
 

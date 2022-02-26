@@ -22,17 +22,20 @@ namespace Footage.Repository
             this.sourceScopedServiceFactory = sourceScopedServiceFactory;
         }
 
-        public string GetVideoPath(MediaSource mediaSource, Video video)
+        public async Task<string> GetVideoPath(int videoId)
         {
-            var mediaProvider = sourceScopedServiceFactory.GetMediaProviderService(mediaSource);
+            using var dao = GetDao();
+            var video = await dao.Get<Video>(videoId);
+            var mediaProvider = sourceScopedServiceFactory.GetMediaProviderService(video.MediaSource);
             return mediaProvider.GetFullPath(video);
         }
 
-        public async Task ProcessSelectedVideo(MediaSource mediaSource, Video video)
+        public async Task ProcessVideo(int videoId)
         {
-            // TODO detect video changes (check if duration (and other metadata) match what's stored in DB)
-
-            string path = GetVideoPath(mediaSource, video);
+            using var dao = GetDao();
+            
+            var video = await dao.Get<Video>(videoId);
+            string path = await GetVideoPath(videoId);
 
             if (!File.Exists(path))
             {
@@ -46,8 +49,7 @@ namespace Footage.Repository
 #if DEBUG
             // await Task.Delay(300);
 #endif
-
-            using var dao = GetDao();
+            
             await dao.Update(video);
             await dao.Commit();
         }

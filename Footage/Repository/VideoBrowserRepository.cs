@@ -11,12 +11,13 @@
     public class VideoBrowserRepository : RepositoryBase
     {
         // TODO make async
-        public async Task<IEnumerable<Video>> FetchVideos(MediaSource selectedSource, int? batchSize = null)
+        public async Task<IEnumerable<Video>> FetchVideos(int selectedMediaSourceId, int? batchSize = null)
         {
             // TODO use batch size limit
             using var dao = GetDao();
+            var source = await dao.Get<MediaSource>(selectedMediaSourceId);
 
-            var videos = dao.Query<Video>(v => v.MediaSource == selectedSource)
+            var videos = dao.Query<Video>(v => v.MediaSource == source)
                 .Include(v => v.MediaSource)
                 .Include(v => v.Bookmarks);
             

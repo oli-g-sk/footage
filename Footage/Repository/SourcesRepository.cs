@@ -22,9 +22,10 @@
             return source;
         }
 
-        public async Task RemoveSource(MediaSource source)
+        public async Task RemoveSource(int mediaSourceId)
         {
             using var dao = GetDao();
+            var source = await dao.Get<MediaSource>(mediaSourceId);
             await dao.Remove(source);
             await dao.Commit();
         }

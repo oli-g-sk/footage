@@ -50,7 +50,7 @@
             
             MessengerInstance.Send(new IsBusyChangedMessage(true));
             
-            var videos = await Repo.FetchVideos(selectedSource, batchSize);
+            var videos = await Repo.FetchVideos(selectedSource.Id, batchSize);
 
             foreach (var video in videos)
             {

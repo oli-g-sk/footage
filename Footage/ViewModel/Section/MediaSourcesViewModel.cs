@@ -74,7 +74,7 @@
 
         protected override async Task DeleteModel(MediaSource item)
         {
-            await SourceRepo.RemoveSource(item);
+            await SourceRepo.RemoveSource(item.Id);
         }
 
         private async Task LoadAllSources()
