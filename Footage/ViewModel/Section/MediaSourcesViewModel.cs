@@ -26,6 +26,8 @@
             {
                 Set(ref anySourceUpdating, value);
                 RaisePropertyChanged(nameof(InteractionEnabled));
+                
+                AddItemCommand.RaiseCanExecuteChanged();
                 RemoveSelectedItemCommand.RaiseCanExecuteChanged();
             } 
         }
@@ -39,6 +41,8 @@
             {
                 Set(ref selectedSourceLoading, value);
                 RaisePropertyChanged(nameof(InteractionEnabled));
+                
+                AddItemCommand.RaiseCanExecuteChanged();
                 RemoveSelectedItemCommand.RaiseCanExecuteChanged();
             }
         }
@@ -54,6 +58,11 @@
         {
             await UpdateSource(viewModel);
             SelectedItem = viewModel;
+        }
+
+        protected override bool CanAddItem()
+        {
+            return base.CanAddItem() && InteractionEnabled;
         }
 
         protected override bool CanRemoveSelectedItem()
