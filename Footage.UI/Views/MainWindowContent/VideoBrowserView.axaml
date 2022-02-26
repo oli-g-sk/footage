@@ -4,9 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:section="clr-namespace:Footage.ViewModel.Section;assembly=Footage"
              xmlns:entity="clr-namespace:Footage.ViewModel.Entity;assembly=Footage"
+             xmlns:converters="clr-namespace:Footage.UI.Converters"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Footage.UI.Views.MainWindowContent.VideoBrowserView"
              d:DataContext="{d:DesignInstance section:VideoBrowserViewModel}">
+    <UserControl.Resources>
+        <converters:TimeSpanConverter
+            x:Key="VideoDurationConverter"
+            ShowMilliseconds="False"
+            HoursDisplayMode="Never" />
+    </UserControl.Resources>
     <DockPanel>
         <ProgressBar DockPanel.Dock="Top"
                      IsVisible="{Binding IsFetchingVideos}"
@@ -30,7 +37,7 @@
                                    Background="#CCCCDD">
                             <DockPanel DockPanel.Dock="Bottom">
                                 <TextBlock DockPanel.Dock="Right"
-                                           Text="{Binding Duration}" />
+                                           Text="{Binding Duration, Converter={StaticResource VideoDurationConverter}}" />
                                 <TextBlock Text="{Binding BookmarksCount}" />
                             </DockPanel>
                         </DockPanel>

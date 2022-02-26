@@ -36,9 +36,9 @@
 
         public long PlaybackPosition => (long) (PlaybackProgress * CurrentVideoDuration);
 
-        public string PlaybackPositionTimeCode => LongMillisToTimecode(PlaybackPosition);
+        public TimeSpan PlaybackPositionTimeCode => TimeSpan.FromMilliseconds(PlaybackPosition);
 
-        public string CurrentVideoDurationTimeCode => LongMillisToTimecode(CurrentVideoDuration);
+        public TimeSpan CurrentVideoDurationTimeCode => TimeSpan.FromMilliseconds(CurrentVideoDuration);
 
         public RelayCommand PlayPauseCommand { get; }
         
@@ -133,11 +133,6 @@
         {
             RaisePropertyChanged(nameof(PlaybackProgress));
             RaisePropertyChanged(nameof(PlaybackPositionTimeCode));
-        }
-
-        private static string LongMillisToTimecode(long millis)
-        {
-            return TimeSpan.FromMilliseconds(millis).ToString(@"hh\:mm\:ss\.fff");
         }
     }
 }
