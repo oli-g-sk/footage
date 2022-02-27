@@ -11,6 +11,8 @@
 
         public long Duration { get; }
 
+        public int Volume { get; set; }
+
         bool IsPlaying { get; }
 
         bool IsMediaLoaded { get; }

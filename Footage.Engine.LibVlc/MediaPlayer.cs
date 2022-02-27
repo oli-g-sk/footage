@@ -26,6 +26,20 @@
             set => Player.Position = value; 
         }
 
+        public int Volume
+        {
+            get => Player.Volume;
+            set
+            {
+                if (value < 0 || value > 100) 
+                { 
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+
+                Player.Volume = value;
+            }
+        }
+
         public bool IsPlaying => Player.IsPlaying;
 
         public bool IsMediaLoaded => Player.Media != null;

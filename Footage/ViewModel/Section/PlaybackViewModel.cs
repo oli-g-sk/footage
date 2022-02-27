@@ -40,6 +40,16 @@
 
         public TimeSpan CurrentVideoDurationTimeCode => TimeSpan.FromMilliseconds(CurrentVideoDuration);
 
+        public int Volume
+        {
+            get => Player.Volume;
+            set
+            {
+                Player.Volume = value;
+                RaisePropertyChanged(nameof(Volume));
+            }
+        }
+
         public RelayCommand PlayPauseCommand { get; }
         
         public RelayCommand StopCommand { get; }
