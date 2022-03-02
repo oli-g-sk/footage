@@ -6,16 +6,19 @@
 			 VerticalContentAlignment="Top"
              x:Class="Footage.UI.Controls.DateRangeControl">
 	<UserControl.Styles>
-		<Style Selector="TextBox">
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="MinWidth" Value="0" />
-		</Style>
 		<Style Selector="NumericUpDown">
 			<Setter Property="VerticalAlignment" Value="Center" />
 			<Setter Property="ShowButtonSpinner" Value="False" />
 			<Setter Property="Increment" Value="1" />
 			<Setter Property="ParsingNumberStyle" Value="None" />
+			<Setter Property="HorizontalContentAlignment" Value="Center" />
 			<Setter Property="MinWidth" Value="0" />
+		</Style>
+		<Style Selector="NumericUpDown.Year">
+			<Setter Property="Width" Value="60" />
+		</Style>
+		<Style Selector="NumericUpDown.Day">
+			<Setter Property="Width" Value="48" />
 		</Style>
 		<Style Selector="Slider">
 			<Setter Property="Margin" Value="4,0" />
@@ -32,8 +35,10 @@
 	<StackPanel Orientation="Vertical">
 		<DockPanel>
 			<NumericUpDown DockPanel.Dock="Left"
+						   Classes="Year"
 						   Value="2022" />
 			<NumericUpDown DockPanel.Dock="Right"
+						   Classes="Day"
 						   Maximum="31"
 						   Minimum="1"
 						   Value="31" />
@@ -41,8 +46,10 @@
 		</DockPanel>
 		<DockPanel>
 			<NumericUpDown DockPanel.Dock="Left"
+						   Classes="Year"
 						   Value="2022" />
 			<NumericUpDown DockPanel.Dock="Right"
+						   Classes="Day"
 						   Maximum="31"
 						   Minimum="1"
 						   Value="31" />
