@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:section="clr-namespace:Footage.ViewModel.Section;assembly=Footage"
              xmlns:entity="clr-namespace:Footage.ViewModel.Entity;assembly=Footage"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="Footage.UI.Views.MainWindowContent.SourcesView"
-             d:DataContext="{d:DesignInstance section:MediaSourcesViewModel}">
+			 xmlns:controls="clr-namespace:Footage.UI.Controls"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+             x:Class="Footage.UI.Views.MainWindowContent.SourcesView">
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <Button DockPanel.Dock="Right" Content="Add"
@@ -20,6 +20,7 @@
                      HorizontalAlignment="Stretch"
                      IsIndeterminate="True"
                      Height="4" />
+		<controls:DateRangeControl DockPanel.Dock="Bottom" />
         <ListBox Items="{Binding Items}"
                  SelectedItem="{Binding SelectedItem}"
                  IsEnabled="{Binding InteractionEnabled}">
