@@ -61,6 +61,8 @@
             
             Player.PositionChanged += Player_PositionChanged;
             MessengerInstance.Register<BookmarkTimeChangedMessage>(this, OnBookmarkTimeChanged);
+
+            Volume = 50;
         }
 
         private void OnBookmarkTimeChanged(BookmarkTimeChangedMessage message)
