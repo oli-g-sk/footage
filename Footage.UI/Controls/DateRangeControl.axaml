@@ -17,6 +17,13 @@
 		</Style>
 		<Style Selector="Slider">
 			<Setter Property="Margin" Value="4,0" />
+			<Setter Property="Minimum" Value="1" />
+			<Setter Property="Maximum" Value="12" />
+			<Setter Property="SmallChange" Value="1" />
+			<Setter Property="LargeChange" Value="1" />
+			<Setter Property="TickFrequency" Value="1" />
+			<Setter Property="TickPlacement" Value="BottomRight" />
+			<Setter Property="IsSnapToTickEnabled" Value="True" />
 		</Style>
 	</UserControl.Styles>
 	
@@ -28,9 +35,7 @@
 			<TextBox DockPanel.Dock="Right"
 					 Classes="TextInput"
 					 Text="31" />
-			<Slider Minimum="1"
-					Maximum="12"
-					Value="12"/>
+			<Slider Value="12"/>
 		</DockPanel>
 		<DockPanel>
 			<NumericUpDown DockPanel.Dock="Left"
@@ -40,9 +45,7 @@
 			<TextBox DockPanel.Dock="Right"
 					 MinWidth="0"
 					 Text="31" />
-			<Slider Minimum="1"
-					Maximum="12"
-					Value="12"/>
+			<Slider Value="12"/>
 		</DockPanel>
 	</StackPanel>
 </UserControl>
