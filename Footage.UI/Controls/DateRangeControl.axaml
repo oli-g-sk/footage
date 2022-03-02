@@ -33,15 +33,19 @@
 		<DockPanel>
 			<NumericUpDown DockPanel.Dock="Left"
 						   Value="2022" />
-			<TextBox DockPanel.Dock="Right"
-					 Text="31" />
+			<NumericUpDown DockPanel.Dock="Right"
+						   Maximum="31"
+						   Minimum="1"
+						   Value="31" />
 			<Slider Value="12"/>
 		</DockPanel>
 		<DockPanel>
 			<NumericUpDown DockPanel.Dock="Left"
 						   Value="2022" />
-			<TextBox DockPanel.Dock="Right"
-					 Text="31" />
+			<NumericUpDown DockPanel.Dock="Right"
+						   Maximum="31"
+						   Minimum="1"
+						   Value="31" />
 			<Slider Value="12"/>
 		</DockPanel>
 	</StackPanel>
