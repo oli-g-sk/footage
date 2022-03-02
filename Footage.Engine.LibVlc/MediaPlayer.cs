@@ -10,6 +10,8 @@
 
     public sealed class MediaPlayer : IMediaPlayer, IDisposable
     {
+        private int volume;
+
         private static ILogger VlcLog => LogManager.GetLogger("LibVLC");
         
         private static ILogger Log => LogManager.GetCurrentClassLogger();
@@ -28,7 +30,11 @@
 
         public int Volume
         {
-            get => Player.Volume;
+            get
+            {
+                return volume;
+            }
+
             set
             {
                 if (value < 0 || value > 100) 
@@ -36,6 +42,7 @@
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }
 
+                volume = value;
                 Player.Volume = value;
             }
         }
@@ -88,6 +95,7 @@
         public async Task Play()
         {
             Player.Play();
+            Player.Volume = volume;
             await Task.CompletedTask;
         }
 
