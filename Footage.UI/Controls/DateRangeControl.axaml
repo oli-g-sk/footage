@@ -13,6 +13,8 @@
 		<Style Selector="NumericUpDown">
 			<Setter Property="VerticalAlignment" Value="Center" />
 			<Setter Property="ShowButtonSpinner" Value="False" />
+			<Setter Property="Increment" Value="1" />
+			<Setter Property="ParsingNumberStyle" Value="None" />
 			<Setter Property="MinWidth" Value="0" />
 		</Style>
 		<Style Selector="Slider">
@@ -29,21 +31,16 @@
 	
 	<StackPanel Orientation="Vertical">
 		<DockPanel>
-			<TextBox DockPanel.Dock="Left"
-					 Classes="TextInput"
-					 Text="2022" />
+			<NumericUpDown DockPanel.Dock="Left"
+						   Value="2022" />
 			<TextBox DockPanel.Dock="Right"
-					 Classes="TextInput"
 					 Text="31" />
 			<Slider Value="12"/>
 		</DockPanel>
 		<DockPanel>
 			<NumericUpDown DockPanel.Dock="Left"
-						   VerticalAlignment="Center"
-						   ShowButtonSpinner="False"
 						   Value="2022" />
 			<TextBox DockPanel.Dock="Right"
-					 MinWidth="0"
 					 Text="31" />
 			<Slider Value="12"/>
 		</DockPanel>
