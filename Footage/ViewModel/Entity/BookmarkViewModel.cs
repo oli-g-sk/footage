@@ -10,6 +10,16 @@
 
         public long VideoDuration => Item.Video.Duration;
 
+        public BookmarkPriority Priority
+        {
+            get => Item.Priority;
+            set
+            {
+                Item.Priority = value;
+                RaisePropertyChanged(nameof(Priority));
+            }
+        }
+
         public event Action<long> TimeChanged; 
 
         public BookmarkViewModel(Bookmark bookmark) : base(bookmark)

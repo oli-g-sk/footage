@@ -15,7 +15,8 @@ namespace Footage.Repository
             var bookmark = new TimeBookmark
             {
                 Time = position,
-                Video = video
+                Video = video,
+                Priority = BookmarkPriority.Medium,
             };
             
             video.Bookmarks.Add(bookmark);
