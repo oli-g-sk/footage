@@ -8,6 +8,7 @@
     using Avalonia.Controls;
     using Avalonia.Controls.Mixins;
     using Avalonia.Markup.Xaml;
+    using Footage.ViewModel.Section;
 
     public class VideoBrowserView : UserControl
     {
@@ -17,6 +18,8 @@
         
         private double verticalHeightMax;
 
+        private VideoBrowserViewModel ViewModel => DataContext as VideoBrowserViewModel;
+        
         public VideoBrowserView()
         {
             InitializeComponent();
@@ -46,7 +49,7 @@
                             if (delta <= Double.Epsilon)
                             {
                                 Debug.WriteLine("At Bottom");
-                                // TODO fetch videos
+                                ViewModel.FetchMoreCommand.Execute(null);
                             }
                         }).DisposeWith(disposables);
                 });
