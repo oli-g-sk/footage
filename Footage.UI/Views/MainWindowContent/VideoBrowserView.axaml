@@ -24,7 +24,8 @@
                      IsIndeterminate="True"
                      Height="4" />
         <ListBox Items="{Binding Items}"
-                 SelectedItem="{Binding SelectedItem}">
+                 SelectedItem="{Binding SelectedItem}"
+                 Name="ListBox">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />
