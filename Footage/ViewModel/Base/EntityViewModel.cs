@@ -1,22 +1,29 @@
 ﻿namespace Footage.ViewModel.Base
 {
     using System;
+    using Footage.Messages;
     using Footage.Model;
     using GalaSoft.MvvmLight;
 
     public class EntityViewModel<T> : ViewModelBase where T : Entity
     {
-        public T Item { get; }
+        public T Item { get; private set; }
         
         public EntityViewModel(T item)
         {
             Item = item;
-            Item.EntryUpdated += Item_EntryUpdated;
+            MessengerInstance.Register<EntityUpdatedMessage<T>>(this, OnEntityUpdated);
         }
 
-        private void Item_EntryUpdated(object? sender, EventArgs e)
+        private void OnEntityUpdated(EntityUpdatedMessage<T> message)
         {
-            RaisePropertyChanged(string.Empty);
+            if (message.UpdatedEntity.Id == Item.Id)
+            {
+                Item = message.UpdatedEntity;
+                
+                // update all ViewModel properties
+                RaisePropertyChanged(string.Empty);
+            }
         }
     }
 }
