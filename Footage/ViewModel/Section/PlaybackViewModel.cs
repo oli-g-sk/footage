@@ -86,12 +86,8 @@
 
         protected override void AfterSelectedVideoChanged()
         {
-            // TODO await
-            RaisePropertyChanged(nameof(SelectedVideoMissing));
-            RaisePropertyChanged(nameof(VideoCanPlay));
             ReloadSelectedVideo();
         }
-
 
         private void PlayPause()
         {
@@ -136,6 +132,8 @@
             RaisePropertyChanged(nameof(PlaybackPositionTimeCode));
             RaisePropertyChanged(nameof(CurrentVideoDuration));
             RaisePropertyChanged(nameof(CurrentVideoDurationTimeCode));
+            RaisePropertyChanged(nameof(SelectedVideoMissing));
+            RaisePropertyChanged(nameof(VideoCanPlay));
 
             PlayPauseCommand.RaiseCanExecuteChanged();
             StopCommand.RaiseCanExecuteChanged();
