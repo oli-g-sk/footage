@@ -2,26 +2,47 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Footage.Dao;
     using Footage.Model;
-    using Footage.Service;
     using Microsoft.EntityFrameworkCore;
 
     public class VideoBrowserRepository : RepositoryBase
     {
-        // TODO make async
-        public async Task<IEnumerable<Video>> FetchVideos(int selectedMediaSourceId, int? batchSize = null)
-        {
-            // TODO use batch size limit
-            using var dao = GetDao();
-            var source = await dao.Get<MediaSource>(selectedMediaSourceId);
+        private int currentPage;
 
-            var videos = dao.Query<Video>(v => v.MediaSource == source)
+        private int mediaSourceId;
+        
+#if DEBUG
+        private const int BatchSize = 5;
+#else
+        private const int BatchSize = 100;
+#endif
+        
+        public async Task UpdateVideoQuery(int selectedMediaSourceId)
+        {
+            currentPage = 0;
+            
+            mediaSourceId = selectedMediaSourceId;
+            // TODO apply filters
+            
+            await Task.CompletedTask;
+        }
+
+        public async Task<IEnumerable<Video>> Fetch()
+        {
+            using var dao = GetDao();
+            var query = dao.Query<Video>(v => v.MediaSourceId == mediaSourceId)
                 .Include(v => v.MediaSource)
                 .Include(v => v.Bookmarks);
+
+            var batch = query.Skip(currentPage * BatchSize)
+                .Take(BatchSize);
             
-            return await videos.ToListAsync();
+            currentPage++;
+            
+            return await batch.ToListAsync();
         }
     }
     

@@ -15,6 +15,9 @@
             HoursDisplayMode="Never" />
     </UserControl.Resources>
     <DockPanel>
+        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch">
+            <Button DockPanel.Dock="Right" Command="{Binding FetchMoreCommand}">Load more</Button>
+        </DockPanel>
         <ProgressBar DockPanel.Dock="Top"
                      IsVisible="{Binding IsFetchingVideos}"
                      HorizontalAlignment="Stretch"
