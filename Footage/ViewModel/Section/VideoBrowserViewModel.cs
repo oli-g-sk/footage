@@ -28,6 +28,17 @@
             }
         }
 
+        private bool bookmarkedOnly;
+        public bool BookmarkedOnly
+        {
+            get => bookmarkedOnly;
+            set
+            {
+                Set(ref bookmarkedOnly, value);
+                ReloadVideos();
+            }
+        }
+
         public RelayCommand FetchMoreCommand { get; }
         
         public VideoBrowserViewModel()
@@ -59,15 +70,15 @@
         {
             selectedSource = message.SelectedItem?.Item;
             
+            // TODO await?
+            ReloadVideos();
+        }
+
+        private async Task ReloadVideos()
+        {
             // TODO clear async
             Items.Clear();
             
-            // TODO await?
-            FetchVideos();
-        }
-
-        private async Task FetchVideos()
-        {
             if (selectedSource == null)
             {
                 return;
@@ -77,7 +88,7 @@
             
             MessengerInstance.Send(new IsBusyChangedMessage(true));
             
-            await Repo.UpdateVideoQuery(selectedSource.Id);
+            await Repo.UpdateVideoQuery(selectedSource.Id, BookmarkedOnly);
             
             await Fetch();
 

@@ -16,7 +16,11 @@
     </UserControl.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch">
-            <Button DockPanel.Dock="Right" Command="{Binding FetchMoreCommand}">Load more</Button>
+            <CheckBox DockPanel.Dock="Right"
+                      HorizontalAlignment="Right"
+                      Content="Bookmarked only"
+                      IsChecked="{Binding BookmarkedOnly}"
+                      IsEnabled="{Binding !IsFetchingVideos}" />
         </DockPanel>
         <ProgressBar DockPanel.Dock="Top"
                      IsVisible="{Binding IsFetchingVideos}"
