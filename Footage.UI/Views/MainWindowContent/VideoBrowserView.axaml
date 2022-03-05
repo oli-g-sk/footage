@@ -15,12 +15,18 @@
             HoursDisplayMode="Never" />
     </UserControl.Resources>
     <DockPanel>
-        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch">
-            <CheckBox DockPanel.Dock="Right"
-                      HorizontalAlignment="Right"
-                      Content="Bookmarked only"
-                      IsChecked="{Binding BookmarkedOnly}"
-                      IsEnabled="{Binding !IsFetchingVideos}" />
+        <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch"
+                   IsEnabled="{Binding !IsFetchingVideos}">
+            <StackPanel Orientation="Horizontal"
+                        DataContext="{Binding BookmarkFilter}">
+                <CheckBox DockPanel.Dock="Top"
+                          Content="Bookmarked only"
+                          HorizontalAlignment="Left"
+                          IsChecked="{Binding Enabled}"/>
+                <ToggleButton Content="L" IsChecked="{Binding IncludeLow}"/>
+                <ToggleButton Content="M" IsChecked="{Binding IncludeMedium}"/>
+                <ToggleButton Content="H" IsChecked="{Binding IncludeHigh}"/>
+            </StackPanel>
         </DockPanel>
         <ProgressBar DockPanel.Dock="Top"
                      IsVisible="{Binding IsFetchingVideos}"

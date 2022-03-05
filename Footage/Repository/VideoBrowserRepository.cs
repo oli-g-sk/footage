@@ -5,7 +5,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using Footage.Dao;
+    using Footage.Extensions;
     using Footage.Model;
+    using Footage.ModelHelper;
     using Microsoft.EntityFrameworkCore;
 
     public class VideoBrowserRepository : RepositoryBase
@@ -13,7 +15,7 @@
         private int currentPage;
 
         private int mediaSourceId;
-        private bool bookmarkedOnly;
+        private BookmarkFilter bookmarkFilter;
         
 #if DEBUG
         private const int BatchSize = 5;
@@ -21,12 +23,12 @@
         private const int BatchSize = 100;
 #endif
         
-        public async Task UpdateVideoQuery(int selectedMediaSourceId, bool bookmarkedOnly)
+        public async Task UpdateVideoQuery(int selectedMediaSourceId, BookmarkFilter bookmarkFilter)
         {
             currentPage = 0;
             
             mediaSourceId = selectedMediaSourceId;
-            this.bookmarkedOnly = bookmarkedOnly;
+            this.bookmarkFilter = bookmarkFilter;
 
             await Task.CompletedTask;
         }
@@ -35,11 +37,17 @@
         {
             using var dao = GetDao();
             var query = dao.Query<Video>(v => v.MediaSourceId == mediaSourceId);
-
+            
             // apply filters
-            if (bookmarkedOnly)
+            if (bookmarkFilter.Enabled)
             {
                 query = query.Where(v => v.Bookmarks.Any());
+                IList<IQueryable<Video>> partialQueries = new List<IQueryable<Video>>();
+
+                query = query.Where(v => 
+                    (bookmarkFilter.IncludeLow && v.Bookmarks.Any(b => b.Priority == BookmarkPriority.Low))
+                 || (bookmarkFilter.IncludeMedium && v.Bookmarks.Any(b => b.Priority == BookmarkPriority.Medium))
+                 || (bookmarkFilter.IncludeHigh && v.Bookmarks.Any(b => b.Priority == BookmarkPriority.High)));
             }
 
             // resolve navigation properties

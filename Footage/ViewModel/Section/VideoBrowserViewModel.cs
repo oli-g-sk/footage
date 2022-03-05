@@ -1,13 +1,16 @@
 ﻿namespace Footage.ViewModel.Section
 {
     using System;
+    using System.ComponentModel;
     using System.Linq;
     using System.Threading.Tasks;
     using Footage.Messages;
     using Footage.Model;
+    using Footage.ModelHelper;
     using Footage.Repository;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
+    using Footage.ViewModel.Helper;
     using GalaSoft.MvvmLight.Command;
 
     public class VideoBrowserViewModel : ItemsViewModel<VideoViewModel, Video>
@@ -15,6 +18,8 @@
         private static VideoBrowserRepository Repo => Locator.Get<VideoBrowserRepository>();
 
         private MediaSource? selectedSource;
+
+        private BookmarkFilter bookmarkFilter;
 
         private bool isFetchingVideos;
 
@@ -28,16 +33,7 @@
             }
         }
 
-        private bool bookmarkedOnly;
-        public bool BookmarkedOnly
-        {
-            get => bookmarkedOnly;
-            set
-            {
-                Set(ref bookmarkedOnly, value);
-                ReloadVideos();
-            }
-        }
+        public BookmarkFilterViewModel BookmarkFilter { get; private set; }
 
         public RelayCommand FetchMoreCommand { get; }
         
@@ -45,6 +41,10 @@
         {
             MessengerInstance.Register<SelectionChangedMessage<MediaSourceViewModel>>(this, OnMediaSourceChanged);
             FetchMoreCommand = new RelayCommand(FetchMore, CanFetchMore);
+
+            bookmarkFilter = new BookmarkFilter();
+            BookmarkFilter = new BookmarkFilterViewModel(bookmarkFilter);
+            BookmarkFilter.FilterChanged += (_, _) => OnFilterChanged();
         }
 
         private void FetchMore()
@@ -88,7 +88,7 @@
             
             MessengerInstance.Send(new IsBusyChangedMessage(true));
             
-            await Repo.UpdateVideoQuery(selectedSource.Id, BookmarkedOnly);
+            await Repo.UpdateVideoQuery(selectedSource.Id, bookmarkFilter);
             
             await Fetch();
 
@@ -117,6 +117,11 @@
         protected override Task DeleteModel(Video item)
         {
             throw new NotImplementedException();
+        }
+
+        private void OnFilterChanged()
+        {
+            ReloadVideos();
         }
     }
 }
