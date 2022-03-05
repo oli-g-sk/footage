@@ -25,8 +25,10 @@
             return files.Select(filename => new SourceVideoInfo(Source, Path.GetRelativePath(Source.RootPath, filename)));
         }
 
-        protected override string GetFullPathInternal(Video video)
+        public override string GetFullPath(Video video)
         {
+            CheckVideo(video);
+            
             return Path.Combine(Source.RootPath, video.MediaSourceUri);
         }
 
