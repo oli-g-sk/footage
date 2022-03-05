@@ -1,5 +1,6 @@
 ﻿namespace Footage.Service.SourceScoped
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -23,6 +24,16 @@
             var files = Directory.EnumerateFiles(Source.RootPath, "*", searchOption).Where(IsFileCompatible); 
             
             return files.Select(filename => new SourceVideoInfo(Source, Path.GetRelativePath(Source.RootPath, filename)));
+        }
+
+        public override DateTime GetDateCreated(Video video)
+        {
+            string? path = GetFullPath(video);
+            var fileInfo = new FileInfo(path);
+            
+            // TODO handle missing file
+            
+            return fileInfo.CreationTime;
         }
 
         public override string GetFullPath(Video video)

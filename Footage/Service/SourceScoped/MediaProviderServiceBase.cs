@@ -10,13 +10,15 @@
         
         public abstract string GetFullPath(Video video);
 
+        public abstract DateTime GetDateCreated(Video video);
+
         protected MediaProviderServiceBase(MediaSource source) : base(source)
         {
         }
 
         protected void CheckVideo(Video video)
         {
-            if (video.MediaSource != Source)
+            if (video.MediaSource.Id != Source.Id)
             {
                 throw new ArgumentException($"Video {video.Id} does not belong to source {Source.Id} '{Source.Name}'");
             }
