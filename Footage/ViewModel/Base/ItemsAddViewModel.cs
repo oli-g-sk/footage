@@ -16,7 +16,7 @@
             AddItemCommand = new RelayCommand(AddItem, CanAddItem);
         }
         
-        protected abstract Task<TModel> CreateAndStoreModel();
+        protected abstract Task<TModel?> CreateAndStoreModel();
         
         private void AddItem()
         {
@@ -24,6 +24,11 @@
             var task = CreateAndStoreModel();
             task.Wait();
             var model = task.Result;
+
+            if (model == null)
+            {
+                return;
+            }
 
             var viewModel = CreateViewModel(model); 
             Items.Add(viewModel);

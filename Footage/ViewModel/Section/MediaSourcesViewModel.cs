@@ -74,6 +74,12 @@
         {
             var dialogService = Locator.Get<IDialogService>();
             string path = await dialogService.SelectFolder();
+
+            if (path == null)
+            {
+                return null;
+            }
+            
             return await SourceRepo.AddLocalSource(path, true);
         }
         
