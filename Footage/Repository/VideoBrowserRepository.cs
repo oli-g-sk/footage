@@ -13,6 +13,7 @@
 
         private int mediaSourceId;
         private BookmarkFilter bookmarkFilter;
+        private DateFilterBase? dateFilter;
         
 #if DEBUG
         private const int BatchSize = 5;
@@ -20,12 +21,14 @@
         private const int BatchSize = 100;
 #endif
         
-        public async Task UpdateVideoQuery(int selectedMediaSourceId, BookmarkFilter bookmarkFilter)
+        public async Task UpdateVideoQuery(int selectedMediaSourceId,
+            BookmarkFilter bookmarkFilter, DateFilterBase? dateFilter = null)
         {
             currentPage = 0;
             
             mediaSourceId = selectedMediaSourceId;
             this.bookmarkFilter = bookmarkFilter;
+            this.dateFilter = dateFilter;
 
             await Task.CompletedTask;
         }
@@ -36,6 +39,15 @@
             var query = dao.Query<Video>(v => v.MediaSourceId == mediaSourceId);
             
             // apply filters
+            
+            if (dateFilter != null)
+            {
+                if (dateFilter is SingleDayFilter singleDayFilter)
+                {
+                    query = query.Where(v => v.DateCreated == singleDayFilter.Date)
+                }
+            }
+            
             if (bookmarkFilter.Enabled)
             {
                 query = query.Where(v => 
