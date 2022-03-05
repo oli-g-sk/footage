@@ -1,5 +1,6 @@
 ﻿namespace Footage.Model
 {
+    using System;
     using System.Collections.Generic;
 
     public class Video : Entity
@@ -21,6 +22,8 @@
         public string MediaSourceUri { get; set; }
         
         public long Duration { get; set; }
+        
+        public DateTime DateCreated { get; set; }
 
         public List<Bookmark> Bookmarks { get; } = new();
         
