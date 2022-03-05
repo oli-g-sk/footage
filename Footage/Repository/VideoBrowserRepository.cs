@@ -1,11 +1,8 @@
 ﻿namespace Footage.Repository
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Footage.Dao;
-    using Footage.Extensions;
     using Footage.Model;
     using Footage.ModelHelper;
     using Microsoft.EntityFrameworkCore;
@@ -41,9 +38,6 @@
             // apply filters
             if (bookmarkFilter.Enabled)
             {
-                query = query.Where(v => v.Bookmarks.Any());
-                IList<IQueryable<Video>> partialQueries = new List<IQueryable<Video>>();
-
                 query = query.Where(v => 
                     (bookmarkFilter.IncludeLow && v.Bookmarks.Any(b => b.Priority == BookmarkPriority.Low))
                  || (bookmarkFilter.IncludeMedium && v.Bookmarks.Any(b => b.Priority == BookmarkPriority.Medium))
