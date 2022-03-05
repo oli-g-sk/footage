@@ -2,6 +2,7 @@
 namespace Footage.Repository
 {
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
     using Footage.Model;
@@ -60,7 +61,8 @@ namespace Footage.Repository
                 // (here, when loaded to player, etc)
                 var videoUri = provider.GetFullPath(video);
                 video.Duration = await mediaInfo.GetDuration(videoUri);
-                
+                video.DateCreated = provider.GetDateCreated(video);
+
                 // TODO FOO-33 FOO-22 scan media info in background for ALL videos, not just newly imported (for potential changes)
             }
 
