@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Avalonia.Controls;
     using Footage.Service;
+    using Footage.UI.Dialogs;
     using Footage.UI.Views;
 
     public class AvaloniaDialogService : IDialogService
@@ -29,6 +30,11 @@
             
             string? path = task.Result;
             return path;
+        }
+
+        public async Task<bool> ShowYesNo(string title, string message)
+        {
+            return await SimpleDialog.ShowYesNo(MainWindow.Instance, title, message);
         }
     }
 }
