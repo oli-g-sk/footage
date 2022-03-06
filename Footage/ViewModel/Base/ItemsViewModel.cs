@@ -33,24 +33,33 @@
         {
             Items = new ObservableCollection<TViewModel>();
 
-            RemoveSelectedItemCommand = new RelayCommand(RemoveSelectedItem, CanRemoveSelectedItem);
+            // TODO use async command
+            RemoveSelectedItemCommand = new RelayCommand(() => RemoveSelectedItem(), CanRemoveSelectedItem);
         }
 
-        private void RemoveSelectedItem()
+        private async Task RemoveSelectedItem()
         {
             if (SelectedItem == null)
             {
                 return;
-                
             }
             
             var entity = SelectedItem.Item;
-            // TODO await
-            var task = DeleteModel(entity);
-            task.Wait();
             
+            var confirmed = await IsItemRemoveConfirmed(entity);
+            if (!confirmed)
+            {
+                return;
+            }
+            
+            await DeleteModel(entity);
             MessengerInstance.Send(new EntityDeletedMessage<TModel>(entity));
             Items.Remove(SelectedItem);
+        }
+
+        protected virtual Task<bool> IsItemRemoveConfirmed(TModel item)
+        {
+            return Task.FromResult(true);
         }
 
         protected abstract Task DeleteModel(TModel item);

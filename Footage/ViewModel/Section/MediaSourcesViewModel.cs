@@ -70,10 +70,19 @@
             return base.CanRemoveSelectedItem() && InteractionEnabled;
         }
 
-        protected override async Task<MediaSource> CreateAndStoreModel()
+        protected override async Task<bool> IsItemRemoveConfirmed(MediaSource item)
         {
             var dialogService = Locator.Get<IDialogService>();
-            string path = await dialogService.SelectFolder();
+            
+            // l18n
+            return await dialogService.ShowYesNo("Delete media source",
+                "Are you sure you want to delete the selected media source?");
+        }
+
+        protected override async Task<MediaSource?> CreateAndStoreModel()
+        {
+            var dialogService = Locator.Get<IDialogService>();
+            string? path = await dialogService.SelectFolder();
 
             if (path == null)
             {
