@@ -33,6 +33,7 @@
             }
         }
 
+        // TODO move to MainWindowViewModel
         public BookmarkFilterViewModel BookmarkFilter { get; private set; }
 
         public RelayCommand FetchMoreCommand { get; }

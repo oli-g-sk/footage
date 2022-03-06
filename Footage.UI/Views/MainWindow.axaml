@@ -16,8 +16,7 @@
     
     <Grid ColumnDefinitions="Auto, *, Auto">
         
-        <mainWindowContent:SourcesView Grid.Column="0"
-                                       DataContext="{Binding MediaSources}" />
+        <mainWindowContent:SourcesView Grid.Column="0" />
         
         <mainWindowContent:VideoBrowserView Grid.Column="1"
                                             DataContext="{Binding VideoBrowser}" />

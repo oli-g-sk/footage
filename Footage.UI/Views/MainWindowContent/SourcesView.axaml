@@ -2,52 +2,60 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:section="clr-namespace:Footage.ViewModel.Section;assembly=Footage"
              xmlns:entity="clr-namespace:Footage.ViewModel.Entity;assembly=Footage"
+             xmlns:viewModel="clr-namespace:Footage.ViewModel;assembly=Footage"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="Footage.UI.Views.MainWindowContent.SourcesView"
-             d:DataContext="{d:DesignInstance section:MediaSourcesViewModel}">
-    <DockPanel>
-        <DockPanel DockPanel.Dock="Top">
-            <Button DockPanel.Dock="Right" Content="Add"
-                    Command="{Binding AddItemCommand}"/>
-            <Button DockPanel.Dock="Right" Content="Remove"
-                    Command="{Binding RemoveSelectedItemCommand}" />
-            <TextBlock Text="Media sources" />
+             d:DataContext="{d:DesignInstance viewModel:MainWindowViewModel}">
+    <Grid RowDefinitions="*,Auto">
+        <DockPanel Grid.Row="0" DataContext="{Binding MediaSources}">
+            <DockPanel DockPanel.Dock="Top">
+                <Button DockPanel.Dock="Right" Content="Add"
+                        Command="{Binding AddItemCommand}"/>
+                <Button DockPanel.Dock="Right" Content="Remove"
+                        Command="{Binding RemoveSelectedItemCommand}" />
+                <TextBlock Text="Media sources" />
+            </DockPanel>
+            <ProgressBar DockPanel.Dock="Top"
+                         IsVisible="{Binding AnySourceUpdating}"
+                         HorizontalAlignment="Stretch"
+                         IsIndeterminate="True"
+                         Height="4" />
+            <Calendar SelectionMode="SingleRange" 
+                      DockPanel.Dock="Bottom" />
+            <ListBox Items="{Binding Items}"
+                     SelectedItem="{Binding SelectedItem}"
+                     IsEnabled="{Binding InteractionEnabled}">
+                <ListBox.Styles>
+                    <Style Selector="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListBox.Styles>
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="entity:MediaSourceViewModel">
+                        <DockPanel>
+                            <TextBlock DockPanel.Dock="Right"
+                                       VerticalAlignment="Center"
+                                       IsVisible="{Binding IsBusy}"
+                                       Text="⌛" />
+                            <TextBlock DockPanel.Dock="Right"
+                                       VerticalAlignment="Center"
+                                       IsVisible="{Binding !IsBusy}"
+                                       Text="{Binding VideoCount}" />
+                            <StackPanel Orientation="Vertical"
+                                        IsEnabled="{Binding !IsBusy}">
+                                <TextBlock Text="{Binding Name}"
+                                           FontWeight="Bold" />
+                                <TextBlock Text="{Binding Description}" />
+                            </StackPanel>
+                        </DockPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </DockPanel>
-        <ProgressBar DockPanel.Dock="Top"
-                     IsVisible="{Binding AnySourceUpdating}"
-                     HorizontalAlignment="Stretch"
-                     IsIndeterminate="True"
-                     Height="4" />
-        <ListBox Items="{Binding Items}"
-                 SelectedItem="{Binding SelectedItem}"
-                 IsEnabled="{Binding InteractionEnabled}">
-            <ListBox.Styles>
-                <Style Selector="ListBoxItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-            </ListBox.Styles>
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="entity:MediaSourceViewModel">
-                    <DockPanel>
-                        <TextBlock DockPanel.Dock="Right"
-                                   VerticalAlignment="Center"
-                                   IsVisible="{Binding IsBusy}"
-                                   Text="⌛" />
-                        <TextBlock DockPanel.Dock="Right"
-                                   VerticalAlignment="Center"
-                                   IsVisible="{Binding !IsBusy}"
-                                   Text="{Binding VideoCount}" />
-                        <StackPanel Orientation="Vertical"
-                                    IsEnabled="{Binding !IsBusy}">
-                            <TextBlock Text="{Binding Name}"
-                                       FontWeight="Bold" />
-                            <TextBlock Text="{Binding Description}" />
-                        </StackPanel>
-                    </DockPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-    </DockPanel>
+        <Calendar Grid.Row="1"
+                  DataContext="{Binding CalendarFilter}"
+                  SelectedDates="{Binding SelectedDates}"
+                  SelectionMode="SingleRange"/>
+    </Grid>
 </UserControl>

@@ -8,6 +8,8 @@
     {
         public MediaSourcesViewModel MediaSources { get; }
         
+        public CalendarFilterViewModel CalendarFilter { get; }
+        
         public VideoBrowserViewModel VideoBrowser { get; }
 
         public PlaybackViewModel Playback { get; }
@@ -17,6 +19,7 @@
         public MainWindowViewModel()
         {
             MediaSources = new MediaSourcesViewModel();
+            CalendarFilter = new CalendarFilterViewModel();
             VideoBrowser = new VideoBrowserViewModel();
             Playback = new PlaybackViewModel();
             Bookmarks = new BookmarksViewModel();

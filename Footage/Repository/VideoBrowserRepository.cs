@@ -44,7 +44,7 @@
             {
                 if (dateFilter is SingleDayFilter singleDayFilter)
                 {
-                    query = query.Where(v => v.DateCreated == singleDayFilter.Date)
+                    query = query.Where(v => v.DateCreated == singleDayFilter.Date);
                 }
             }
             

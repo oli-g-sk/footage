@@ -8,6 +8,7 @@
     using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
+    using Footage.ViewModel.Helper;
 
     // TODO support different source types
     // maybe by TInput type being tuple (MediaSourceType, string)
@@ -46,6 +47,8 @@
                 RemoveSelectedItemCommand.RaiseCanExecuteChanged();
             }
         }
+        
+        public CalendarFilterViewModel CalendarFilter { get; set; }  
 
         public MediaSourcesViewModel()
         {
