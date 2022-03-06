@@ -36,7 +36,7 @@
             var query = dao.Query<Video>(v => v.MediaSourceId == mediaSourceId);
             
             // apply filters
-            if (bookmarkFilter.Enabled)
+            if (bookmarkFilter?.Enabled ?? false)
             {
                 query = query.Where(v => 
                     (bookmarkFilter.IncludeLow && v.Bookmarks.Any(b => b.Priority == BookmarkPriority.Low))
