@@ -9,12 +9,22 @@ namespace Footage.UI.Dialogs
 
     public class SimpleDialog : Window
     {
+        private bool inTextInputMode;
+        
+        private TextBlock txtMessage;
+        private Button btnPositive;
+        private Button btnNegative;
+        private TextBox txtInput;
+        
         public SimpleDialog()
         {
             InitializeComponent();
 #if DEBUG
             this.AttachDevTools();
 #endif
+            txtMessage = this.Find<TextBlock>("TxtMessage");
+            btnPositive = this.Find<Button>("BtnPositive");
+            btnNegative = this.Find<Button>("BtnNegative");
         }
 
         private void InitializeComponent()
@@ -24,33 +34,53 @@ namespace Footage.UI.Dialogs
 
         private void BtnPositive_OnClick(object? sender, RoutedEventArgs e)
         {
-            Close(true);
+            Close(GetResultObject(true));
         }
 
         private void BtnNegative_OnClick(object? sender, RoutedEventArgs e)
         {
-            Close(false);
+            Close(GetResultObject(false));
+        }
+
+        private object GetResultObject(bool isConfirmed)
+        {
+            if (inTextInputMode)
+            {
+                return (isConfirmed, txtInput.Text);
+            }
+
+            return isConfirmed;
         }
         
         public static async Task<bool> ShowYesNo(Window owner, string title, string message)
         {
-            return await Show(owner, title, message, "Yes", "No");
+            var dialog = CreateDialog(title, message, "Yes", "No");
+            return await dialog.ShowDialog<bool>(owner);
         }
 
-        private static async Task<bool> Show(Window owner, string title, string message, string positive, string negative)
+        public static async Task<(bool Confirmed, string InputValue)> ShowInput(Window owner, string title, string message,
+            string? inputText = null)
+        {
+            var dialog = CreateDialog(title, message, "Ok", "Cancel");
+
+            dialog.inTextInputMode = true;
+            dialog.txtInput.IsVisible = true;
+            dialog.txtInput.Text = inputText;
+            dialog.txtInput.SelectAll();
+            
+            return await dialog.ShowDialog<(bool Confirmed, string InputValue)>(owner);
+        }
+        
+        private static SimpleDialog CreateDialog(string title, string message, string positive, string negative)
         {
             var dialog = new SimpleDialog();
             dialog.Title = title;
-            
-            var txtMessage = dialog.Find<TextBlock>("TxtMessage");
-            var btnPositive = dialog.Find<Button>("BtnPositive");
-            var btnNegative = dialog.Find<Button>("BtnNegative");
-            
-            txtMessage.Text = message;
-            btnPositive.Content = positive;
-            btnNegative.Content = negative;
-            
-            return await dialog.ShowDialog<bool>(owner);
+
+            dialog.txtMessage.Text = message;
+            dialog.btnPositive.Content = positive;
+            dialog.btnNegative.Content = negative;
+
+            return dialog;
         }
     }
 }

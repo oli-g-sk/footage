@@ -12,9 +12,14 @@
 	<Grid RowDefinitions="*, Auto">
 		<Border Grid.Row="0"
 				Padding="16">
-			<TextBlock Text=""
-			           Name="TxtMessage"
-					   TextWrapping="Wrap"/>
+			<StackPanel Orientation="Vertical">
+				<TextBlock Text=""
+				           Name="TxtMessage"
+				           TextWrapping="Wrap"/>
+				<TextBox Margin="0,16,0,0"
+				         Name="TxtInput"
+				         IsVisible="False" />
+			</StackPanel>
 		</Border>
 		<Border Grid.Row="1"
 				Background="#11000000"

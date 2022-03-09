@@ -36,5 +36,10 @@
         {
             return await SimpleDialog.ShowYesNo(MainWindow.Instance, title, message);
         }
+
+        public async Task<(bool Confirmed, string InputValue)> ShowInput(string title, string message, string? inputText = null)
+        {
+            return await SimpleDialog.ShowInput(MainWindow.Instance, title, message, inputText);
+        }
     }
 }
