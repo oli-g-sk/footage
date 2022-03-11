@@ -5,7 +5,7 @@
     using Footage.Model;
     using GalaSoft.MvvmLight.Command;
 
-    public abstract class ItemsAddViewModel<TViewModel, TModel, TInput> : ItemsViewModel<TViewModel, TModel>
+    public abstract class ItemsAddViewModel<TViewModel, TModel> : ItemsViewModel<TViewModel, TModel>
         where TViewModel : EntityViewModel<TModel>
         where TModel : Entity
     {

@@ -11,7 +11,7 @@
 
     // TODO support different source types
     // maybe by TInput type being tuple (MediaSourceType, string)
-    public class MediaSourcesViewModel : ItemsAddViewModel<MediaSourceViewModel, MediaSource, string?>
+    public class MediaSourcesViewModel : ItemsAddViewModel<MediaSourceViewModel, MediaSource>
     {
         private static SourcesRepository SourceRepo => Locator.Get<SourcesRepository>();
         private static LibraryRepository LibraryRepo => Locator.Get<LibraryRepository>();
