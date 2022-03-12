@@ -19,7 +19,8 @@
             
             using var dao = GetDao();
             await dao.Insert(project);
-
+            await dao.Commit();
+            
             return project;
         }
 
@@ -41,6 +42,7 @@
 
             project.Name = newName;
             await dao.Update(project);
+            await dao.Commit();
         }
         
         public async Task<IEnumerable<Project>> GetAllProjects()
