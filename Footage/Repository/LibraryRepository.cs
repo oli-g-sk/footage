@@ -50,6 +50,12 @@ namespace Footage.Repository
             }
 
             Log.Info($"Number of new files in source '{source.Name}': {videos.Count}.");
+
+            if (!videos.Any())
+            {
+                return;
+            }
+            
             await dao.InsertRange(videos);
             await dao.Commit();
             Log.Debug($"New files saved to DB in source '{source.Name}'.");
