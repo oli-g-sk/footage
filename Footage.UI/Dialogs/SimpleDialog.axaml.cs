@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace Footage.UI.Dialogs
 {
+    using Avalonia.Input;
     using Avalonia.Interactivity;
 
     public class SimpleDialog : Window
@@ -68,9 +69,17 @@ namespace Footage.UI.Dialogs
             dialog.txtInput.Text = inputText;
             dialog.txtInput.SelectAll();
             
+            dialog.GotFocus += Dialog_GotFocus;
+            
             return await dialog.ShowDialog<(bool Confirmed, string InputValue)>(owner);
+            
+            void Dialog_GotFocus(object? sender, GotFocusEventArgs e)
+            {
+                dialog.GotFocus -= Dialog_GotFocus;
+                dialog.txtInput.Focus();
+            }
         }
-        
+
         private static SimpleDialog CreateDialog(string title, string message, string positive, string negative)
         {
             var dialog = new SimpleDialog();
