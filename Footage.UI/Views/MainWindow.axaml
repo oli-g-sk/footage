@@ -16,11 +16,15 @@
     
     <Grid ColumnDefinitions="Auto, *, Auto">
         
-        <mainWindowContent:SourcesView Grid.Column="0"
-                                       DataContext="{Binding MediaSources}" />
+	    <DockPanel Grid.Column="0">
+		    <mainWindowContent:ProjectsView DockPanel.Dock="Bottom"
+		                                    DataContext="{Binding Projects}"/>
+		    
+		    <mainWindowContent:SourcesView DataContext="{Binding MediaSources}" />
+	    </DockPanel>
         
-        <mainWindowContent:VideoBrowserView Grid.Column="1"
-                                            DataContext="{Binding VideoBrowser}" />
+	    <mainWindowContent:VideoBrowserView Grid.Column="1"
+	                                        DataContext="{Binding VideoBrowser}" />
         <Grid Grid.Column="2"
               RowDefinitions="Auto, *">
             

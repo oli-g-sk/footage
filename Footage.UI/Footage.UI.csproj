@@ -31,5 +31,9 @@
     <Compile Update="Views\MainWindowContent\VideoDetailView.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
+    <Compile Update="Views\MainWindowContent\ProjectsView.axaml.cs">
+      <DependentUpon>ProjectsView.axaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

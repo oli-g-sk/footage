@@ -8,6 +8,8 @@
     {
         public MediaSourcesViewModel MediaSources { get; }
         
+        public ProjectsViewModel Projects { get; }
+
         public VideoBrowserViewModel VideoBrowser { get; }
 
         public PlaybackViewModel Playback { get; }
@@ -17,6 +19,7 @@
         public MainWindowViewModel()
         {
             MediaSources = new MediaSourcesViewModel();
+            Projects = new ProjectsViewModel();
             VideoBrowser = new VideoBrowserViewModel();
             Playback = new PlaybackViewModel();
             Bookmarks = new BookmarksViewModel();
