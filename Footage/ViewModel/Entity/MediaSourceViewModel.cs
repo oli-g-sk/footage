@@ -4,10 +4,8 @@
     using Footage.ViewModel.Base;
     using JetBrains.Annotations;
 
-    public class MediaSourceViewModel : EntityViewModel<MediaSource>
+    public class MediaSourceViewModel : NamedEntityViewModel<MediaSource>
     {
-        public string Name => Item.Name;
-
         private int videoCount;
 
         public int VideoCount
