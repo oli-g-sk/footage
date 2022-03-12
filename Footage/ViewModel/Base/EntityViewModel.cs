@@ -7,6 +7,8 @@
 
     public class EntityViewModel<T> : ViewModelBase where T : IEntity
     {
+        public int Id => Item.Id;
+        
         public T Item { get; private set; }
         
         public EntityViewModel(T item)

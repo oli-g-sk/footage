@@ -3,6 +3,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:section="clr-namespace:Footage.ViewModel.Section;assembly=Footage"
+             xmlns:entity="clr-namespace:Footage.ViewModel.Entity;assembly=Footage"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              d:DataContext="{d:DesignInstance section:ProjectsViewModel}"
              x:Class="Footage.UI.Views.MainWindowContent.ProjectsView">
@@ -11,9 +12,19 @@
             <Button DockPanel.Dock="Right"
                     Command="{Binding AddItemCommand}"
                     Content="Add" />
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding RenameSelectedProjectCommand}"
+                    Content="Edit" />
             <Label>Projects</Label>
         </DockPanel>
         <ComboBox Items="{Binding Items}"
-				  HorizontalAlignment="Stretch" />
+                  SelectedItem="{Binding SelectedItem}"
+				  HorizontalAlignment="Stretch">
+            <ComboBox.ItemTemplate>
+                <DataTemplate DataType="entity:ProjectViewModel">
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
     </StackPanel>
 </UserControl>
