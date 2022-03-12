@@ -2,7 +2,7 @@
 {
     using Footage.Model;
 
-    public class EntityUpdatedMessage<T> where T : Entity
+    public class EntityUpdatedMessage<T> where T : IEntity
     {
         public T UpdatedEntity { get; }
         

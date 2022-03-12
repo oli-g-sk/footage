@@ -1,8 +1,6 @@
 ﻿namespace Footage.Model
 {
-    using System;
-
-    public class Entity
+    public class Entity : IEntity
     {
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public int Id { get; set; }
