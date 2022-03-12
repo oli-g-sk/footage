@@ -1,7 +1,6 @@
 ﻿namespace Footage.Model
 {
-    public class Project : Entity
+    public class Project : NamedEntity
     {
-        public string Name { get; set; }
     }
 }

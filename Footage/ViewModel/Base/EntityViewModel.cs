@@ -5,7 +5,7 @@
     using Footage.Model;
     using GalaSoft.MvvmLight;
 
-    public class EntityViewModel<T> : ViewModelBase where T : Entity
+    public class EntityViewModel<T> : ViewModelBase where T : IEntity
     {
         public T Item { get; private set; }
         
