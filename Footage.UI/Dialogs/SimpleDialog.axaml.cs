@@ -23,6 +23,7 @@ namespace Footage.UI.Dialogs
             this.AttachDevTools();
 #endif
             txtMessage = this.Find<TextBlock>("TxtMessage");
+            txtInput = this.Find<TextBox>("TxtInput");
             btnPositive = this.Find<Button>("BtnPositive");
             btnNegative = this.Find<Button>("BtnNegative");
         }
