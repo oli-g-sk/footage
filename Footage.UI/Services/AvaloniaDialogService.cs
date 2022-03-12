@@ -23,13 +23,7 @@
                 dialog.Title = title;
             }
 
-            // TODO await
-            var task = dialog.ShowAsync(MainWindow.Instance);
-            task.Wait();
-            await Task.CompletedTask;
-            
-            string? path = task.Result;
-            return path;
+            return await dialog.ShowAsync(MainWindow.Instance);
         }
 
         public async Task<bool> ShowYesNo(string title, string message)
