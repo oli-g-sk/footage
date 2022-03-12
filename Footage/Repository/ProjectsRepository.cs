@@ -5,11 +5,15 @@
     using System.Threading.Tasks;
     using Footage.Model;
     using Microsoft.EntityFrameworkCore;
+    using NLog;
 
     public class ProjectsRepository : RepositoryBase
     {
+        private static ILogger Log => LogManager.GetCurrentClassLogger();
+        
         public async Task<Project> CreateNewProject(string name)
         {
+            Log.Info($"Saving new project named '{name}'.");
             var project = new Project();
             project.Name = name;
             
@@ -42,7 +46,9 @@
         public async Task<IEnumerable<Project>> GetAllProjects()
         {
             using var dao = GetDao();
-            return await dao.Query<Project>().ToListAsync();
+            var projects = await dao.Query<Project>().ToListAsync();
+            Log.Debug($"Retrieved list of all projects; count: {projects}.");
+            return projects;
         }
     }
 }
