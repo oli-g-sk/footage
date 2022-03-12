@@ -14,7 +14,7 @@
         public DbSet<Video>? Videos { get; set; }
         public DbSet<Bookmark>? Bookmarks { get; set; }
         public DbSet<MediaSource>? MediaSources { get; set; }
-        public DbSet<Project> Projects { get; set; }
+        public DbSet<Project>? Projects { get; set; }
         
         // ReSharper restore UnusedAutoPropertyAccessor.Global
 

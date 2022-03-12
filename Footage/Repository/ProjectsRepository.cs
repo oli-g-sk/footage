@@ -49,7 +49,7 @@
         {
             using var dao = GetDao();
             var projects = await dao.Query<Project>().ToListAsync();
-            Log.Debug($"Retrieved list of all projects; count: {projects}.");
+            Log.Debug($"Retrieved list of all projects; count: {projects.Count}.");
             return projects;
         }
     }
