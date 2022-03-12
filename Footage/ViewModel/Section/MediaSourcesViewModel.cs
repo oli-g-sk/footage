@@ -1,5 +1,6 @@
 ﻿namespace Footage.ViewModel.Section
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Footage.Messages;
@@ -49,8 +50,6 @@
 
         public MediaSourcesViewModel()
         {
-            Task.Run(LoadAllSources);
-
             MessengerInstance.Register<IsBusyChangedMessage>(this, m => SelectedSourceLoading = m.IsBusy);
         }
 
@@ -99,16 +98,13 @@
             await SourceRepo.RemoveSource(item.Id);
         }
 
-        private async Task LoadAllSources()
+        protected override async Task<IEnumerable<MediaSource>> LoadAllItems()
         {
-            var sources = (await SourceRepo.GetAllSources()).Select(s => new MediaSourceViewModel(s));
-            
-            // TODO create an extension method for this
-            foreach (var source in sources)
-            {
-                Items.Add(source);
-            }
-            
+            return await SourceRepo.GetAllSources();
+        }
+
+        protected override async Task OnItemsLoaded()
+        {
             await UpdateAllSources();
         }
 

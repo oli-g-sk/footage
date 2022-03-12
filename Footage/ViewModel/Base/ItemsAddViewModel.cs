@@ -1,6 +1,7 @@
 ﻿namespace Footage.ViewModel.Base
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Footage.Model;
     using GalaSoft.MvvmLight.Command;
@@ -14,16 +15,32 @@
         protected ItemsAddViewModel()
         {
             AddItemCommand = new RelayCommand(AddItem, CanAddItem);
+
+            Task.Run(async () => 
+            { 
+                var items = await LoadAllItems();
+                
+                foreach (var item in items)
+                {
+                    await Dispatcher.InvokeAsync(() => Items.Add(CreateViewModel(item)));
+                }
+
+                await OnItemsLoaded();
+            });
+        }
+
+        protected abstract Task<IEnumerable<TModel>> LoadAllItems();
+
+        protected virtual Task OnItemsLoaded()
+        {
+            return Task.CompletedTask;
         }
         
         protected abstract Task<TModel?> CreateAndStoreModel();
         
-        private void AddItem()
+        private async void AddItem()
         {
-            // TODO await
-            var task = CreateAndStoreModel();
-            task.Wait();
-            var model = task.Result;
+            var model = await CreateAndStoreModel();
 
             if (model == null)
             {
@@ -32,7 +49,7 @@
 
             var viewModel = CreateViewModel(model); 
             Items.Add(viewModel);
-            OnItemAdded(viewModel);
+            await OnItemAdded(viewModel);
         }
 
         protected virtual Task OnItemAdded(TViewModel viewModel)
