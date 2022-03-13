@@ -10,6 +10,9 @@
     <StackPanel Orientation="Vertical">
         <DockPanel>
             <Button DockPanel.Dock="Right"
+                    Command="{Binding ClearSelectionCommand}"
+                    Content="X" />
+            <Button DockPanel.Dock="Right"
                     Command="{Binding AddItemCommand}"
                     Content="Add" />
             <Button DockPanel.Dock="Right"

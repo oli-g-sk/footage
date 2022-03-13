@@ -22,11 +22,14 @@
                 BeforeSelectionChanged();
                 Set(ref selectedItem, value);
                 RemoveSelectedItemCommand.RaiseCanExecuteChanged();
+                ClearSelectionCommand.RaiseCanExecuteChanged();
                 AfterSelectionChanged();
                 MessengerInstance.Send(new SelectionChangedMessage<TViewModel>(oldItem, selectedItem));
             }
         }
-
+        
+        public RelayCommand ClearSelectionCommand { get; }
+        
         public RelayCommand RemoveSelectedItemCommand { get; } 
         
         protected ItemsViewModel()
@@ -35,6 +38,7 @@
 
             // TODO use async command
             RemoveSelectedItemCommand = new RelayCommand(() => RemoveSelectedItem(), CanRemoveSelectedItem);
+            ClearSelectionCommand = new RelayCommand(ClearSelection, CanClearSelection);
         }
 
         private async Task RemoveSelectedItem()
@@ -60,6 +64,16 @@
         protected virtual Task<bool> IsItemRemoveConfirmed(TModel item)
         {
             return Task.FromResult(true);
+        }
+
+        private void ClearSelection()
+        {
+            SelectedItem = null;
+        }
+
+        private bool CanClearSelection()
+        {
+            return SelectedItem != null;
         }
 
         protected abstract Task DeleteModel(TModel item);
