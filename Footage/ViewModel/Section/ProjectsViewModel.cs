@@ -37,9 +37,10 @@
             if (previouslySelected.HasValue)
             {
                 var selectedItem = Items.FirstOrDefault(p => p.Id == previouslySelected);
+                
                 if (selectedItem != null)
                 {
-                    SelectedItem = selectedItem;
+                    Dispatcher.InvokeAsync(() => SelectedItem = selectedItem);
                 }
             }
             
@@ -79,10 +80,7 @@
         {
             base.AfterSelectionChanged();
 
-            Dispatcher.InvokeAsync(() =>
-            {
-                RenameSelectedProjectCommand.RaiseCanExecuteChanged();
-            });
+            RenameSelectedProjectCommand.RaiseCanExecuteChanged();
 
             Settings.ApplicationData.SelectedProjectId = SelectedItem?.Id;
             Settings.UpdateApplicationData();
