@@ -18,6 +18,9 @@
             <Button DockPanel.Dock="Right"
                     Command="{Binding RenameSelectedProjectCommand}"
                     Content="Edit" />
+            <Button DockPanel.Dock="Right"
+                    Command="{Binding ArchiveSelectedProjectCommand}"
+                    Content="Archive" />
             <Label>Projects</Label>
         </DockPanel>
         <ComboBox Items="{Binding Items}"

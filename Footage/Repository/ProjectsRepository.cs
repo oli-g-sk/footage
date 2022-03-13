@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Footage.Model;
     using Microsoft.EntityFrameworkCore;
@@ -45,12 +46,35 @@
             await dao.Commit();
         }
         
-        public async Task<IEnumerable<Project>> GetAllProjects()
+        public async Task ArchiveProject(int projectId)
         {
             using var dao = GetDao();
-            var projects = await dao.Query<Project>().ToListAsync();
-            Log.Debug($"Retrieved list of all projects; count: {projects.Count}.");
-            return projects;
+            var project = await dao.Get<Project>(projectId);
+
+            if (project == null)
+            {
+                // TODO use NotFoundException
+                throw new ArgumentException(nameof(projectId));
+            }
+
+            project.IsArchived = true;
+            await dao.Update(project);
+            await dao.Commit();
+        }
+        
+        public async Task<IEnumerable<Project>> GetAllProjects(bool includeArchived)
+        {
+            using var dao = GetDao();
+            var projects = dao.Query<Project>();
+            
+            if (!includeArchived)
+            {
+                projects = projects.Where(p => !p.IsArchived);
+            }
+
+            var result = await projects.ToListAsync();
+            Log.Debug($"Retrieved list of projects; includeArchived? {includeArchived}, count: {result.Count}.");
+            return result;
         }
     }
 }

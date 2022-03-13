@@ -80,8 +80,10 @@
 
         protected virtual bool CanRemoveSelectedItem()
         {
-            return SelectedItem != null;
+            return AnyItemSelected();
         }
+
+        protected bool AnyItemSelected() => SelectedItem != null;
 
         protected virtual void BeforeSelectionChanged()
         {

@@ -19,15 +19,18 @@
         private ProjectsRepository Repo => Locator.Get<ProjectsRepository>();
         
         public RelayCommand RenameSelectedProjectCommand { get; }
+        
+        public RelayCommand ArchiveSelectedProjectCommand { get; }
 
         public ProjectsViewModel()
         {
-            RenameSelectedProjectCommand = new RelayCommand(RenameSelectedProject, CanRenameSelectedProject);
+            RenameSelectedProjectCommand = new RelayCommand(RenameSelectedProject, AnyItemSelected);
+            ArchiveSelectedProjectCommand = new RelayCommand(ArchiveSelectedProject, AnyItemSelected);
         }
 
         protected override async Task<IEnumerable<Project>> LoadAllItems()
         {
-            return await Repo.GetAllProjects();
+            return await Repo.GetAllProjects(false);
         }
 
         protected override Task OnItemsLoaded()
@@ -81,6 +84,7 @@
             base.AfterSelectionChanged();
 
             RenameSelectedProjectCommand.RaiseCanExecuteChanged();
+            ArchiveSelectedProjectCommand.RaiseCanExecuteChanged();
 
             Settings.ApplicationData.SelectedProjectId = SelectedItem?.Id;
             Settings.UpdateApplicationData();
@@ -102,9 +106,28 @@
             }
         }
 
-        private bool CanRenameSelectedProject()
+        private void ArchiveSelectedProject()
         {
-            return SelectedItem != null;
+            if (SelectedItem == null)
+            {
+                return;
+            }
+
+            string projectName = SelectedItem.Name;
+            int id = SelectedItem.Id;
+            
+            Dispatcher.InvokeAsync(async () =>
+            {
+                bool result = await DialogService.ShowYesNo("Archive project",
+                    $"Are you sure you want to archive project '{projectName}'?");
+
+                if (result)
+                {
+                    Items.Remove(SelectedItem);
+                    SelectedItem = null;
+                    await Repo.ArchiveProject(id);
+                }
+            });
         }
     }
 }
