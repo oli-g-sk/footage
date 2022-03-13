@@ -2,5 +2,6 @@
 {
     public class Project : NamedEntity
     {
+        public bool IsArchived { get; set; }
     }
 }
