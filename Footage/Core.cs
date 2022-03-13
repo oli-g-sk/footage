@@ -19,6 +19,8 @@ namespace Footage
             RegisterDefaultServices();
 
             Locator.Initialize(implProvider);
+            
+            Locator.Get<IPersistenceService>().Initialize();
         }
 
         internal static void RegisterDefaultDatabase()
@@ -38,6 +40,7 @@ namespace Footage
         internal static void RegisterDefaultServices()
         {
             SimpleIoc.Default.Register<ISourceScopedServiceFactory, SourceScopedServiceFactory>();
+            SimpleIoc.Default.Register<IPersistenceService, PersistenceService>();
         }
     }
 }

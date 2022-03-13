@@ -6,6 +6,8 @@
     public interface IPersistenceService
     {
         string SettingsFolderPath { get; }
+
+        void Initialize();
         
         ApplicationData ApplicationData { get; }
         
