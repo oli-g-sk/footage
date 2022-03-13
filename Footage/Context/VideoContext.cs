@@ -20,6 +20,7 @@
 
         public VideoContext()
         {
+            // TODO get path from IPersistenceService
             string? path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             dbPath = System.IO.Path.Join(path, "footage.db");
         }

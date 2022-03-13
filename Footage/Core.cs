@@ -39,6 +39,7 @@ namespace Footage
         internal static void RegisterDefaultServices()
         {
             SimpleIoc.Default.Register<ISourceScopedServiceFactory, SourceScopedServiceFactory>();
+            SimpleIoc.Default.Register<IPersistenceService, PersistenceService>();
         }
     }
 }
