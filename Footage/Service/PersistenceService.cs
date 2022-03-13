@@ -11,9 +11,9 @@
     {
         private static ILogger Log => LogManager.GetCurrentClassLogger();
         
-        private const string ApplicationDataFilename = "ApplicationData.json";
+        private const string ApplicationDataFilename = "ApplicationData";
 
-        private const string UserPreferencesFilename = "UserPreferences.json";
+        private const string UserPreferencesFilename = "UserPreferences";
         
         public string SettingsFolderPath =>
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Footage");
@@ -22,16 +22,37 @@
         
         public UserPreferences UserPreferences { get; private set; }
 
-        public void Initialize()
+        public PersistenceService()
         {
+            ApplicationData? loadedApplicationData;
+            UserPreferences? loadedUserPreferences;
+            
             if (!Directory.Exists(SettingsFolderPath))
             {
-                Log.Info($"Default application folder doesn't exist and will be created: {SettingsFolderPath}");
+                Log.Info($"Default application persistence folder doesn't exist and will be created: {SettingsFolderPath}");
                 Directory.CreateDirectory(SettingsFolderPath);
             }
-            
-            ApplicationData = Deserialize<ApplicationData>(ApplicationDataFilename);
-            UserPreferences = Deserialize<UserPreferences>(UserPreferencesFilename);
+            else
+            {
+                Log.Info("Loading application settings.");
+                
+                ApplicationData = Deserialize<ApplicationData>(ApplicationDataFilename)!;
+                UserPreferences = Deserialize<UserPreferences>(UserPreferencesFilename)!;
+            }
+
+            if (ApplicationData == null)
+            {
+                ApplicationData = new ApplicationData();
+                Log.Info("Default application data created.");
+                UpdateApplicationData();
+            }
+
+            if (UserPreferences == null)
+            {
+                UserPreferences = new UserPreferences();
+                Log.Info("Default user preferences created.");
+                UpdateUserPreferences();
+            }
         }
         
         public Task UpdateApplicationData()
@@ -48,20 +69,48 @@
         
         private void Serialize(object instance, string filename)
         {
-            string? filePath = Path.Combine(SettingsFolderPath, filename);
+            string? filePath = Path.Combine(SettingsFolderPath, filename, ".json");
             var serializer = JsonSerializer.CreateDefault();
             using var streamWriter = new StreamWriter(filePath);
             using var jsonWriter = new JsonTextWriter(streamWriter);
-            serializer.Serialize(jsonWriter, instance);
+            
+            try
+            {
+                serializer.Serialize(jsonWriter, instance);
+                Log.Debug($"Settings saved to disk in '{filename}'.");
+            }
+            catch (Exception ex)
+            {
+                Log.Warn($"Failed to save settings in '{filename}'. Reason: {ex.Message}");
+            }
         }
 
         private T? Deserialize<T>(string filename)
         {
-            string filePath = Path.Combine(SettingsFolderPath, filename);
-            var serializer = JsonSerializer.CreateDefault();
-            using var streamReader = new StreamReader(filePath);
-            using var jsonReader = new JsonTextReader(streamReader);
-            return serializer.Deserialize<T>(jsonReader);
+            string filePath = Path.Combine(SettingsFolderPath, $"{filename}.json");
+
+            if (!File.Exists(filePath))
+            {
+                Log.Warn($"Settings file '{filename}' is missing; will revert to default.");
+                return default;
+            }
+            else
+            {
+                var serializer = JsonSerializer.CreateDefault();
+                using var streamReader = new StreamReader(filePath);
+                using var jsonReader = new JsonTextReader(streamReader);
+
+                try
+                {
+                    return serializer.Deserialize<T>(jsonReader);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Failed to load settings file {filename}. Reason: {ex.Message}.");
+                }
+            }
+
+            return default;
         }
     }
 }

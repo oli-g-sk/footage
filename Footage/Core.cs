@@ -19,8 +19,6 @@ namespace Footage
             RegisterDefaultServices();
 
             Locator.Initialize(implProvider);
-            
-            Locator.Get<IPersistenceService>().Initialize();
         }
 
         internal static void RegisterDefaultDatabase()
