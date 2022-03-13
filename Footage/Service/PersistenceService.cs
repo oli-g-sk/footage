@@ -69,7 +69,7 @@
         
         private void Serialize(object instance, string filename)
         {
-            string? filePath = Path.Combine(SettingsFolderPath, filename, ".json");
+            string? filePath = Path.Combine(SettingsFolderPath, $"{filename}.json");
             var serializer = JsonSerializer.CreateDefault();
             using var streamWriter = new StreamWriter(filePath);
             using var jsonWriter = new JsonTextWriter(streamWriter);

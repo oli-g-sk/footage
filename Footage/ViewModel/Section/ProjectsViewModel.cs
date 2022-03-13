@@ -1,6 +1,7 @@
 ﻿namespace Footage.ViewModel.Section
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Footage.Model;
     using Footage.Repository;
@@ -12,6 +13,8 @@
     public class ProjectsViewModel : ItemsAddViewModel<ProjectViewModel, Project>
     {
         private IDialogService DialogService => Locator.Get<IDialogService>();
+
+        private IPersistenceService Settings => Locator.Get<IPersistenceService>();
         
         private ProjectsRepository Repo => Locator.Get<ProjectsRepository>();
         
@@ -25,6 +28,22 @@
         protected override async Task<IEnumerable<Project>> LoadAllItems()
         {
             return await Repo.GetAllProjects();
+        }
+
+        protected override Task OnItemsLoaded()
+        {
+            int? previouslySelected = Settings.ApplicationData.SelectedProjectId;
+            
+            if (previouslySelected.HasValue)
+            {
+                var selectedItem = Items.FirstOrDefault(p => p.Id == previouslySelected);
+                if (selectedItem != null)
+                {
+                    SelectedItem = selectedItem;
+                }
+            }
+            
+            return Task.CompletedTask;
         }
 
         protected override async Task<Project?> CreateAndStoreModel()
@@ -59,7 +78,14 @@
         protected override void AfterSelectionChanged()
         {
             base.AfterSelectionChanged();
-            RenameSelectedProjectCommand.RaiseCanExecuteChanged();
+
+            Dispatcher.InvokeAsync(() =>
+            {
+                RenameSelectedProjectCommand.RaiseCanExecuteChanged();
+            });
+
+            Settings.ApplicationData.SelectedProjectId = SelectedItem?.Id;
+            Settings.UpdateApplicationData();
         }
 
         // TODO use task
