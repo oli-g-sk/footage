@@ -38,20 +38,14 @@
 
         private void OnVideoMetadataUpdated(VideoMetadataUpdatedMessage message)
         {
-            if (message.Id == Id)
-            {
-                IsMissing = message.IsMissing;
-                duration = message.Duration;
-                RaisePropertyChanged(nameof(Duration));
-            }
+            IsMissing = message.IsMissing;
+            duration = message.Duration;
+            RaisePropertyChanged(nameof(Duration));
         }
         
         private void OnBookmarksCountChanged(BookmarksCountChangedMessage message)
         {
-            if (message.Id == Id)
-            {
-                BookmarksCount = message.BookmarkCount;
-            }
+            BookmarksCount = message.BookmarkCount;
         }
     }
 }
