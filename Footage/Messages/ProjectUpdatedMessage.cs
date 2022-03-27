@@ -3,7 +3,7 @@
     using System;
     using Footage.Model;
 
-    public class ProjectUpdatedMessage : EntityMessageBase<Project>
+    public class ProjectUpdatedMessage : EntityMessageBase
     {
         public bool IsArchived { get; }
         

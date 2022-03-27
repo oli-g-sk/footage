@@ -22,15 +22,12 @@ namespace Footage.ViewModel.Base
         public NamedEntityViewModel(T item) : base(item)
         {
             Name = item.Name;
-            MessengerInstance.Register<EntityRenamedMessage<T>>(this, OnEntityRenamed);
+            RegisterToEntityMessage<EntityRenamedMessage<T>>(OnEntityRenamed);
         }
         
         private void OnEntityRenamed(EntityRenamedMessage<T> message)
         {
-            if (message.Id == Id)
-            {
-                Name = message.Name;
-            }
+            Name = message.Name;
         }
         
         public override string ToString() => Name;

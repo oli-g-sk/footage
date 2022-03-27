@@ -2,7 +2,7 @@
 {
     using Footage.Model;
 
-    public class BookmarksCountChangedMessage : EntityMessageBase<Video>
+    public class BookmarksCountChangedMessage : EntityMessageBase
     {
         public int BookmarkCount { get; }
         

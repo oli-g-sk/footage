@@ -15,5 +15,16 @@
         {
             Item = item;
         }
+
+        protected void RegisterToEntityMessage<TMessage>(Action<TMessage> action) where TMessage : EntityMessageBase
+        {
+            MessengerInstance.Register<TMessage>(this, message =>
+            {
+                if (message.Id == Id)
+                {
+                    action.Invoke(message);
+                }
+            });
+        }
     }
 }

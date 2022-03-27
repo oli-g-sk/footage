@@ -18,15 +18,12 @@
         {
             IsArchived = project.IsArchived;
             
-            MessengerInstance.Register<ProjectUpdatedMessage>(this, OnProjectUpdated);
+            RegisterToEntityMessage<ProjectUpdatedMessage>(OnProjectUpdated);
         }
 
         private void OnProjectUpdated(ProjectUpdatedMessage message)
         {
-            if (message.Id == Id)
-            {
-                IsArchived = message.IsArchived;
-            }
+            IsArchived = message.IsArchived;
         }
     }
 }

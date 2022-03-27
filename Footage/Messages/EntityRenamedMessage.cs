@@ -2,7 +2,7 @@
 {
     using Footage.Model;
 
-    public class EntityRenamedMessage<T> : EntityMessageBase<T> where T : INamedEntity
+    public class EntityRenamedMessage<T> : EntityMessageBase where T : INamedEntity
     {
         public string? Name { get; }
         

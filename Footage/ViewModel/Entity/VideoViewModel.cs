@@ -17,8 +17,8 @@
             duration = item.Duration;
             BookmarksCount = item.Bookmarks.Count;
             
-            MessengerInstance.Register<VideoMetadataUpdatedMessage>(this, OnVideoMetadataUpdated);
-            MessengerInstance.Register<BookmarksCountChangedMessage>(this, OnBookmarksCountUpdated);
+            RegisterToEntityMessage<VideoMetadataUpdatedMessage>(OnVideoMetadataUpdated);
+            RegisterToEntityMessage<BookmarksCountChangedMessage>(OnBookmarksCountChanged);
         }
 
         private int bookmarksCount;
@@ -46,7 +46,7 @@
             }
         }
         
-        private void OnBookmarksCountUpdated(BookmarksCountChangedMessage message)
+        private void OnBookmarksCountChanged(BookmarksCountChangedMessage message)
         {
             if (message.Id == Id)
             {

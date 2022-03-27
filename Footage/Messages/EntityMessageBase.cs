@@ -2,7 +2,7 @@
 {
     using Footage.Model;
 
-    public abstract class EntityMessageBase<T> where T : IEntity
+    public abstract class EntityMessageBase
     {
         public int Id { get; }
         

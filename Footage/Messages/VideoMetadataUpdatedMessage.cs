@@ -2,7 +2,7 @@
 {
     using Footage.Model;
 
-    public class VideoMetadataUpdatedMessage : EntityMessageBase<Video>
+    public class VideoMetadataUpdatedMessage : EntityMessageBase
     {
         public bool IsMissing { get; }
         
