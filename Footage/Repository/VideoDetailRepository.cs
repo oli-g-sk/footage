@@ -57,7 +57,7 @@ namespace Footage.Repository
             await dao.Update(video);
             await dao.Commit();
             
-            Messenger.Default.Send(new EntityUpdatedMessage<Video>(video));
+            Messenger.Default.Send(new VideoMetadataUpdatedMessage(video));
         }
     }
 }

@@ -47,7 +47,7 @@
             await dao.Update(project);
             await dao.Commit();
             
-            Messenger.Default.Send(new EntityUpdatedMessage<Project>(project));
+            Messenger.Default.Send(new EntityRenamedMessage<Project>(project));
         }
         
         public async Task ArchiveProject(int projectId)
@@ -65,7 +65,7 @@
             await dao.Update(project);
             await dao.Commit();
             
-            Messenger.Default.Send(new EntityUpdatedMessage<Project>(project));
+            Messenger.Default.Send(new ProjectUpdatedMessage(project));
         }
         
         public async Task<IEnumerable<Project>> GetAllProjects(bool includeArchived)

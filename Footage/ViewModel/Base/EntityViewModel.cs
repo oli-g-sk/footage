@@ -9,23 +9,11 @@
     {
         public int Id => Item.Id;
         
-        public T Item { get; private set; }
+        public T Item { get; }
         
         public EntityViewModel(T item)
         {
             Item = item;
-            MessengerInstance.Register<EntityUpdatedMessage<T>>(this, OnEntityUpdated);
-        }
-
-        private void OnEntityUpdated(EntityUpdatedMessage<T> message)
-        {
-            if (message.UpdatedEntity.Id == Item.Id)
-            {
-                Item = message.UpdatedEntity;
-                
-                // update all ViewModel properties
-                RaisePropertyChanged(string.Empty);
-            }
         }
     }
 }

@@ -27,7 +27,7 @@ namespace Footage.Repository
             await dao.Update(video);
             await dao.Commit();
             
-            Messenger.Default.Send(new EntityUpdatedMessage<Video>(video));
+            Messenger.Default.Send(new BookmarksCountChangedMessage(video));
 
             return bookmark;
         }
@@ -46,7 +46,7 @@ namespace Footage.Repository
             await dao.Update(video);
             await dao.Commit();
             
-            Messenger.Default.Send(new EntityUpdatedMessage<Video>(video));
+            Messenger.Default.Send(new BookmarksCountChangedMessage(video));
         }
 
         public async Task UpdateBookmarkTimes(IEnumerable<Bookmark> bookmarks)
@@ -54,12 +54,6 @@ namespace Footage.Repository
             using var dao = GetDao();
             await dao.UpdateRange(bookmarks);
             await dao.Commit();
-
-            // TODO use EntitiesUpdatedMessage
-            foreach (var bookmark in bookmarks)
-            {
-                Messenger.Default.Send(new EntityUpdatedMessage<Bookmark>(bookmark));
-            }
         }
     }
 }

@@ -7,14 +7,32 @@ using System.Threading.Tasks;
 
 namespace Footage.ViewModel.Base
 {
+    using Footage.Messages;
+
     public class NamedEntityViewModel<T> : EntityViewModel<T> where T : INamedEntity
     {
-        public string Name => Item.Name;
+        private string? name;
+
+        public string? Name
+        {
+            get => name;
+            protected set => Set(ref name, value);
+        }
 
         public NamedEntityViewModel(T item) : base(item)
         {
+            Name = item.Name;
+            MessengerInstance.Register<EntityRenamedMessage<T>>(this, OnEntityRenamed);
         }
-
+        
+        private void OnEntityRenamed(EntityRenamedMessage<T> message)
+        {
+            if (message.Id == Id)
+            {
+                Name = message.Name;
+            }
+        }
+        
         public override string ToString() => Name;
     }
 }
