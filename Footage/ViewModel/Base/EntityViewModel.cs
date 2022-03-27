@@ -3,7 +3,6 @@
     using System;
     using Footage.Messages;
     using Footage.Model;
-    using GalaSoft.MvvmLight;
 
     public class EntityViewModel<T> : ViewModelBase where T : IEntity
     {
@@ -18,13 +17,7 @@
 
         protected void RegisterToEntityMessage<TMessage>(Action<TMessage> action) where TMessage : EntityMessageBase
         {
-            MessengerInstance.Register<TMessage>(this, message =>
-            {
-                if (message.Id == Id)
-                {
-                    action.Invoke(message);
-                }
-            });
+            MessengerInstance.Register(this, Id, action);
         }
     }
 }

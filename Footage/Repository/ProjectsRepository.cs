@@ -47,7 +47,7 @@
             await dao.Update(project);
             await dao.Commit();
             
-            Messenger.Default.Send(new EntityRenamedMessage<Project>(project));
+            MessengerHelper.Send(new EntityRenamedMessage<Project>(project));
         }
         
         public async Task ArchiveProject(int projectId)

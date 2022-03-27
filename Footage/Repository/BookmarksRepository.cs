@@ -27,7 +27,7 @@ namespace Footage.Repository
             await dao.Update(video);
             await dao.Commit();
             
-            Messenger.Default.Send(new BookmarksCountChangedMessage(video));
+            MessengerHelper.Send(new BookmarksCountChangedMessage(video));
 
             return bookmark;
         }
@@ -46,7 +46,7 @@ namespace Footage.Repository
             await dao.Update(video);
             await dao.Commit();
             
-            Messenger.Default.Send(new BookmarksCountChangedMessage(video));
+            MessengerHelper.Send(new BookmarksCountChangedMessage(video));
         }
 
         public async Task UpdateBookmarkTimes(IEnumerable<Bookmark> bookmarks)
