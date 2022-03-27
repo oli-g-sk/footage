@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Footage.Messages;
     using Footage.Model;
+    using GalaSoft.MvvmLight.Messaging;
     using Microsoft.EntityFrameworkCore;
     using NLog;
 
@@ -44,6 +46,8 @@
             project.Name = newName;
             await dao.Update(project);
             await dao.Commit();
+            
+            Messenger.Default.Send(new EntityUpdatedMessage<Project>(project));
         }
         
         public async Task ArchiveProject(int projectId)
@@ -60,6 +64,8 @@
             project.IsArchived = true;
             await dao.Update(project);
             await dao.Commit();
+            
+            Messenger.Default.Send(new EntityUpdatedMessage<Project>(project));
         }
         
         public async Task<IEnumerable<Project>> GetAllProjects(bool includeArchived)

@@ -2,9 +2,12 @@
 namespace Footage.Repository
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Footage.Dao;
+    using Footage.Messages;
     using Footage.Model;
+    using GalaSoft.MvvmLight.Messaging;
 
     public class BookmarksRepository : RepositoryBase
     {
@@ -23,6 +26,8 @@ namespace Footage.Repository
             
             await dao.Update(video);
             await dao.Commit();
+            
+            Messenger.Default.Send(new EntityUpdatedMessage<Video>(video));
 
             return bookmark;
         }
@@ -40,6 +45,8 @@ namespace Footage.Repository
 
             await dao.Update(video);
             await dao.Commit();
+            
+            Messenger.Default.Send(new EntityUpdatedMessage<Video>(video));
         }
 
         public async Task UpdateBookmarkTimes(IEnumerable<Bookmark> bookmarks)
@@ -47,6 +54,12 @@ namespace Footage.Repository
             using var dao = GetDao();
             await dao.UpdateRange(bookmarks);
             await dao.Commit();
+
+            // TODO use EntitiesUpdatedMessage
+            foreach (var bookmark in bookmarks)
+            {
+                Messenger.Default.Send(new EntityUpdatedMessage<Bookmark>(bookmark));
+            }
         }
     }
 }

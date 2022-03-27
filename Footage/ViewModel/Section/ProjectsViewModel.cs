@@ -3,12 +3,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Footage.Messages;
     using Footage.Model;
     using Footage.Repository;
     using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using GalaSoft.MvvmLight.Command;
+    using GalaSoft.MvvmLight.Messaging;
 
     public class ProjectsViewModel : ItemsAddViewModel<ProjectViewModel, Project>
     {

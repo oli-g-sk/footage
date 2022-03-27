@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace Footage.Repository
 {
+    using Footage.Messages;
+    using GalaSoft.MvvmLight.Messaging;
+
     public class VideoDetailRepository : RepositoryBase
     {
         // TODO replace by future MediaInfoService, playback is not needed here
@@ -53,6 +56,8 @@ namespace Footage.Repository
             
             await dao.Update(video);
             await dao.Commit();
+            
+            Messenger.Default.Send(new EntityUpdatedMessage<Video>(video));
         }
     }
 }

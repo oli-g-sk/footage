@@ -5,13 +5,10 @@
     using System.Diagnostics;
     using System.Linq;
     using System.Linq.Expressions;
-    using System.Runtime.CompilerServices;
-    using System.Threading;
     using System.Threading.Tasks;
     using Footage.Context;
     using Footage.Messages;
     using Footage.Model;
-    using GalaSoft.MvvmLight.Messaging;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.ChangeTracking;
     using NLog;
@@ -131,9 +128,6 @@
             {
                 Log.Debug($"CRUD update: {item}");
                 dbContext.Update(item);
-                
-                // TODO REFACTOR take out this dependency on MvvmLight, abstract via an interface and inject
-                Messenger.Default.Send(new EntityUpdatedMessage<T>(item));
             }
             catch (Exception ex)
             {
@@ -154,12 +148,6 @@
             {
                 Log.Debug($"CRUD updateRange: {typeof(T)}[], count: {items.Count()}");
                 dbContext.UpdateRange(items);
-                
-                foreach (var item in items)
-                {
-                    // TODO send a bulk EntitiesUpdatedMessage
-                    Messenger.Default.Send(new EntityUpdatedMessage<T>(item));
-                }
             }
             catch (Exception ex)
             {
