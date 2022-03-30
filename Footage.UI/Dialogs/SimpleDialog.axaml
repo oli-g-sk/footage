@@ -33,8 +33,8 @@
 						<Setter Property="Margin" Value="5,0,0,0" />
 					</Style>
 				</DockPanel.Styles>
-				<Button Name="BtnNegative" DockPanel.Dock="Right" Click="BtnNegative_OnClick" />
-				<Button Name="BtnPositive" DockPanel.Dock="Right" Click="BtnPositive_OnClick" />
+				<Button Name="BtnNegative" IsCancel="True" DockPanel.Dock="Right" Click="BtnNegative_OnClick" />
+				<Button Name="BtnPositive" IsDefault="True" DockPanel.Dock="Right" Click="BtnPositive_OnClick" />
 			</DockPanel>
 		</Border>
 	</Grid>

@@ -12,10 +12,10 @@ namespace Footage.UI.Dialogs
     {
         private bool inTextInputMode;
         
-        private TextBlock txtMessage;
-        private Button btnPositive;
-        private Button btnNegative;
-        private TextBox txtInput;
+        private readonly TextBlock txtMessage;
+        private readonly Button btnPositive;
+        private readonly Button btnNegative;
+        private readonly TextBox txtInput;
         
         public SimpleDialog()
         {
