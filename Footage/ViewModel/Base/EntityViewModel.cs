@@ -4,7 +4,7 @@
     using Footage.Messages;
     using Footage.Model;
 
-    public class EntityViewModel<T> : ViewModelBase where T : IEntity
+    public class EntityViewModel<T> : ViewModelBase, IEntityViewModel where T : IEntity
     {
         public int Id => Item.Id;
         
@@ -13,11 +13,6 @@
         public EntityViewModel(T item)
         {
             Item = item;
-        }
-
-        protected void RegisterToEntityMessage<TMessage>(Action<TMessage> action) where TMessage : EntityMessageBase
-        {
-            MessengerInstance.Register(this, Id, action);
         }
     }
 }

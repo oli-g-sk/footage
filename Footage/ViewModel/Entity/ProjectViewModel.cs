@@ -18,7 +18,7 @@
         {
             IsArchived = project.IsArchived;
             
-            RegisterToEntityMessage<ProjectUpdatedMessage>(OnProjectUpdated);
+            MessengerHelper.Register<ProjectUpdatedMessage>(this, OnProjectUpdated);
         }
 
         private void OnProjectUpdated(ProjectUpdatedMessage message)

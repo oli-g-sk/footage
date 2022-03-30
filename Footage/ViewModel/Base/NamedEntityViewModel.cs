@@ -22,7 +22,7 @@ namespace Footage.ViewModel.Base
         public NamedEntityViewModel(T item) : base(item)
         {
             Name = item.Name;
-            RegisterToEntityMessage<EntityRenamedMessage<T>>(OnEntityRenamed);
+            MessengerHelper.Register<EntityRenamedMessage<T>>(this, OnEntityRenamed);
         }
         
         private void OnEntityRenamed(EntityRenamedMessage<T> message)

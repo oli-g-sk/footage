@@ -4,11 +4,11 @@
 
     public abstract class EntityMessageBase
     {
-        public int Id { get; }
+        public int EntityId { get; }
         
         protected EntityMessageBase(IEntity entity)
         {
-            Id = entity.Id;
+            EntityId = entity.Id;
         }
     }
 }
