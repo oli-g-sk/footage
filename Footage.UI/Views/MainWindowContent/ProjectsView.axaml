@@ -28,7 +28,11 @@
 				  HorizontalAlignment="Stretch">
             <ComboBox.ItemTemplate>
                 <DataTemplate DataType="entity:ProjectViewModel">
-                    <TextBlock Text="{Binding Name}" />
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Right" Text="💀" IsVisible="{Binding IsArchived}" />
+                        <TextBlock Text="{Binding Name}"
+                                   TextTrimming="CharacterEllipsis" />
+                    </DockPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>

@@ -42,8 +42,10 @@
                         <StackPanel Orientation="Vertical"
                                     IsEnabled="{Binding !IsBusy}">
                             <TextBlock Text="{Binding Name}"
-                                       FontWeight="Bold" />
-                            <TextBlock Text="{Binding Description}" />
+                                       FontWeight="Bold"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Text="{Binding Description}"
+                                       TextTrimming="CharacterEllipsis"/>
                         </StackPanel>
                     </DockPanel>
                 </DataTemplate>
