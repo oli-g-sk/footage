@@ -14,18 +14,33 @@
         <viewModel:MainWindowViewModel/>
     </Window.DataContext>
     
-    <Grid ColumnDefinitions="Auto, *, Auto">
+    <Grid>
+	    <Grid.ColumnDefinitions>
+		    <ColumnDefinition Width="1*" MinWidth="140" />
+		    <ColumnDefinition Width="4"></ColumnDefinition>
+		    <ColumnDefinition Width="4*" MinWidth="320" />
+		    <ColumnDefinition Width="Auto" />
+	    </Grid.ColumnDefinitions>
         
-	    <DockPanel Grid.Column="0">
+	    <DockPanel Grid.Column="0"
+	               MinWidth="120">
 		    <mainWindowContent:ProjectsView DockPanel.Dock="Bottom"
 		                                    DataContext="{Binding Projects}"/>
 		    
 		    <mainWindowContent:SourcesView DataContext="{Binding MediaSources}" />
 	    </DockPanel>
+	    
+	    <GridSplitter Grid.Column="1" ResizeDirection="Columns"
+	                  Background="#226699"/>
         
-	    <mainWindowContent:VideoBrowserView Grid.Column="1"
+	    <mainWindowContent:VideoBrowserView Grid.Column="2"
 	                                        DataContext="{Binding VideoBrowser}" />
-        <Grid Grid.Column="2"
+	    
+	    <!-- TODO FOO-121
+	    <GridSplitter Grid.Column="3" ResizeDirection="Columns" />
+	    -->
+	    
+        <Grid Grid.Column="3"
               RowDefinitions="Auto, *">
             
             <!-- player window -->
@@ -44,7 +59,11 @@
 						   VerticalAlignment="Center"
 						   IsVisible="{Binding SelectedVideoMissing}" />
 			</Grid>
-            
+	        
+	        <!-- TODO FOO-121
+	        <GridSplitter ResizeDirection="Rows" Grid.Row="1" />
+	        -->
+	        
             <!-- rest of column -->
             <mainWindowContent:VideoDetailView Grid.Row="1"/>
             <!-- TODO split playback control and bookmarks into separate subviews -->
