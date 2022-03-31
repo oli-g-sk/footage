@@ -100,7 +100,7 @@
                 return;
             }
             
-            var result = await DialogService.ShowInput("New project", "Enter a name for your project", SelectedItem.Name);
+            var result = await DialogService.ShowInput("Rename project", "Enter a name for your project", SelectedItem.Name);
 
             if (result.Confirmed && !string.IsNullOrEmpty(result.InputValue))
             {
