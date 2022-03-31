@@ -11,6 +11,8 @@
         <DockPanel DockPanel.Dock="Top">
             <Button DockPanel.Dock="Right" Content="Add"
                     Command="{Binding AddItemCommand}"/>
+            <Button DockPanel.Dock="Right" Content="Edit"
+                    Command="{Binding RenameSelectedItemCommand}" />
             <Button DockPanel.Dock="Right" Content="Remove"
                     Command="{Binding RemoveSelectedItemCommand}" />
             <TextBlock Text="Media sources" />

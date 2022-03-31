@@ -9,11 +9,14 @@
     using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
+    using GalaSoft.MvvmLight.Command;
 
     // TODO support different source types
     // maybe by TInput type being tuple (MediaSourceType, string)
     public class MediaSourcesViewModel : ItemsAddViewModel<MediaSourceViewModel, MediaSource>
     {
+        private static IDialogService DialogService => Locator.Get<IDialogService>();
+        
         private static SourcesRepository SourceRepo => Locator.Get<SourcesRepository>();
         private static LibraryRepository LibraryRepo => Locator.Get<LibraryRepository>();
 
@@ -47,9 +50,12 @@
                 RemoveSelectedItemCommand.RaiseCanExecuteChanged();
             }
         }
+        
+        public RelayCommand RenameSelectedItemCommand { get; private set; }
 
         public MediaSourcesViewModel()
         {
+            RenameSelectedItemCommand = new RelayCommand(RenameSelectedItem, CanRenameSelectedItem);
             MessengerInstance.Register<IsBusyChangedMessage>(this, m => SelectedSourceLoading = m.IsBusy);
         }
 
@@ -107,6 +113,31 @@
         {
             await UpdateAllSources();
         }
+
+        protected override void AfterSelectionChanged()
+        {
+            base.AfterSelectionChanged();
+            RenameSelectedItemCommand.RaiseCanExecuteChanged();
+        }
+
+        // TODO use task
+        // TODO REFACTOR duplicity with ProjectsViewModel
+        private async void RenameSelectedItem()
+        {
+            if (SelectedItem == null)
+            {
+                return;
+            }
+            
+            var result = await DialogService.ShowInput("Rename media source", "Enter a new name for this media source", SelectedItem.Name);
+
+            if (result.Confirmed && !string.IsNullOrEmpty(result.InputValue))
+            {
+                await SourceRepo.RenameSource(SelectedItem.Id, result.InputValue);
+            }
+        }
+
+        private bool CanRenameSelectedItem() => SelectedItem != null;
 
         private async Task UpdateAllSources()
         {
