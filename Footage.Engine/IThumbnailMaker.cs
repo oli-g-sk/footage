@@ -5,6 +5,7 @@
 
     public interface IThumbnailMaker
     {
-        Task<Bitmap> CreateThumbnail(string mediaPath, int width, int time);
+        // TODO add support for specifying time
+        Task CreateThumbnail(string mediaPath, string outputPath, int width);
     }
 }

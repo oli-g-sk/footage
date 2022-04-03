@@ -1,13 +1,15 @@
 ﻿namespace Footage.Engine.ThumbnailMaker.FFmpeg
 {
-    using System.Drawing;
     using System.Threading.Tasks;
+    using Okisioli.FFtool;
+    using FFThumbnailMaker = Okisioli.FFtool.ThumbnailMaker;
 
     public class ThumbnailMaker : IThumbnailMaker
     {
-        public Task<Bitmap> CreateThumbnail(string mediaPath, int width, int time)
+        public async Task CreateThumbnail(string mediaPath, string outputPath, int width)
         {
-            throw new System.NotImplementedException();
+            var thumbnailMaker = new FFThumbnailMaker(outputPath, ThumbnailFormat.Jpeg);
+            await thumbnailMaker.OfWidth(width, mediaPath);
         }
     }
 }
