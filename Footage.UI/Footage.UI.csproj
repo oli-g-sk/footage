@@ -15,7 +15,7 @@
     <PackageReference Include="LibVLCSharp.Avalonia" Version="3.6.5" />
    </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Footage.Engine.LibVlc\Footage.Engine.LibVlc.csproj" />
+    <ProjectReference Include="..\Footage.Engine.MediaPlayer.LibVlc\Footage.Engine.MediaPlayer.LibVlc.csproj" />
     <ProjectReference Include="..\Footage\Footage.csproj" />
   </ItemGroup>
   <ItemGroup>

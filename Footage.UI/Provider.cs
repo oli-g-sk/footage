@@ -1,8 +1,8 @@
 ﻿using Footage.Engine;
-using Footage.Engine.LibVlc;
 
 namespace Footage.UI
 {
+    using Footage.Engine.MediaPlayer.LibVlc;
     using Footage.Service;
     using Footage.UI.Services;
 

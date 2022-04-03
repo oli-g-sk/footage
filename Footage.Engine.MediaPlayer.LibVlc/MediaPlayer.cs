@@ -1,12 +1,12 @@
-﻿namespace Footage.Engine.LibVlc
+﻿namespace Footage.Engine.MediaPlayer.LibVlc
 {
     using System;
     using System.Threading.Tasks;
+    using Footage.Engine;
     using LibVLCSharp.Shared;
+    using NLog;
     using LogLevel = LibVLCSharp.Shared.LogLevel;
     using NLogLevel = NLog.LogLevel;
-    using NLog;
-    using Footage.Engine;
 
     public sealed class MediaPlayer : IMediaPlayer, IDisposable
     {
