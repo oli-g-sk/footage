@@ -16,6 +16,7 @@
    </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Footage.Engine.MediaPlayer.LibVlc\Footage.Engine.MediaPlayer.LibVlc.csproj" />
+    <ProjectReference Include="..\Footage.Engine.ThumbnailMaker.FFmpeg\Footage.Engine.ThumbnailMaker.FFmpeg.csproj" />
     <ProjectReference Include="..\Footage\Footage.csproj" />
   </ItemGroup>
   <ItemGroup>

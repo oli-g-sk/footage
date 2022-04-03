@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footage.UI", "Footage.UI\Fo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footage.Engine", "Footage.Engine\Footage.Engine.csproj", "{4BC9D4C8-8A0D-4182-8938-1D30A1E36762}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footage.Engine.MediaPlayer.LibVlc", "Footage.Engine.MediaPlayer.LibVlc\Footage.Engine.MediaPlayer.LibVlc.csproj", "{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Footage.Engine.MediaPlayer.LibVlc", "Footage.Engine.MediaPlayer.LibVlc\Footage.Engine.MediaPlayer.LibVlc.csproj", "{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Footage.Engine.ThumbnailMaker.FFmpeg", "Footage.Engine.ThumbnailMaker.FFmpeg\Footage.Engine.ThumbnailMaker.FFmpeg.csproj", "{C8591DFE-B4A8-442D-B750-8E5C95D431D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95A96D0A-63E3-466B-A8AA-B2746BF2CDEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8591DFE-B4A8-442D-B750-8E5C95D431D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8591DFE-B4A8-442D-B750-8E5C95D431D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8591DFE-B4A8-442D-B750-8E5C95D431D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8591DFE-B4A8-442D-B750-8E5C95D431D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
