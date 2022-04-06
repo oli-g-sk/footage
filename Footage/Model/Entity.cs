@@ -34,5 +34,7 @@
         {
             return Id == other.Id;
         }
+
+        public override string ToString() => $"{GetType().Name} [Id: {Id}]";
     }
 }
