@@ -8,8 +8,17 @@
     {
         public async Task CreateThumbnail(string mediaPath, string outputPath, int width)
         {
-            var thumbnailMaker = new FFThumbnailMaker(outputPath, ThumbnailFormat.Jpeg);
-            await thumbnailMaker.OfWidth(width, mediaPath);
+            try
+            {
+                var thumbnailMaker = new FFThumbnailMaker(outputPath, ThumbnailFormat.Jpeg);
+                
+                // TODO make sure FFtool library throws descriptive FFmpeg errors
+                await thumbnailMaker.OfWidth(width, outputPath);
+            }
+            catch (Exception ex)
+            {
+                throw new ThumbnailCreationException(ex);
+            }
         }
     }
 }
