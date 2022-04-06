@@ -6,9 +6,12 @@
     using System.Threading.Tasks;
     using Footage.Engine;
     using Footage.Model;
+    using NLog;
 
     public class LocalThumbnailProvider : SourceScopedServiceBase, IThumbnailProvider
     {
+        private static ILogger Log => LogManager.GetCurrentClassLogger();
+        
         private static IThumbnailMaker ThumbnailMaker => Locator.Get<IThumbnailMaker>();
 
         private readonly LocalMediaProviderService localMediaProviderService;
@@ -19,17 +22,23 @@
                 throw new ArgumentNullException(nameof(localMediaProviderService));
         }
 
-        public async Task<Image> GetDefaultThumbnail(Video video)
+        public async Task<Image?> GetDefaultThumbnail(Video video)
         {
             string tempName = new Guid().ToString();
             string videoPath = localMediaProviderService.GetFullPath(video);
             string outputPath = Path.Combine(Directory.GetCurrentDirectory(), $"{tempName}.jpg");
-            
-            // TODO handle FFmpeg errors
-            await ThumbnailMaker.CreateThumbnail(videoPath, outputPath, 320);
-            
-            // TODO add exception handling
-            return Image.FromFile(outputPath);
+
+            try
+            {
+                await ThumbnailMaker.CreateThumbnail(videoPath, outputPath, 320);
+                // TODO add exception handling
+                return Image.FromFile(outputPath);
+            }
+            catch (ThumbnailCreationException ex)
+            {
+                Log.Error(ex, $"Failed to create thumbnail for {video}. Reason: {ex.InnerException.Message}");
+                return null;
+            }
         }
     }
 }
