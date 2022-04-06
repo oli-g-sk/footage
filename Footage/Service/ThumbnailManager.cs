@@ -9,9 +9,16 @@
 
     public class ThumbnailManager : IThumbnailManager
     {
-        private static string ThumbnailFolder => throw new NotImplementedException();
+        private static string ThumbnailFolder => Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Footage", "thumbs");
 
         private readonly ISourceScopedServiceFactory sourceScopedServiceFactory;
+
+        static ThumbnailManager()
+        {
+            if (!Directory.Exists(ThumbnailFolder))
+                Directory.CreateDirectory(ThumbnailFolder);
+        }
 
         public ThumbnailManager(ISourceScopedServiceFactory sourceScopedServiceFactory)
         {
