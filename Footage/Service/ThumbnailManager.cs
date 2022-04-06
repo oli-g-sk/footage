@@ -1,0 +1,56 @@
+﻿namespace Footage.Service
+{
+    using System;
+    using System.Drawing;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Footage.Model;
+    using Footage.Service.SourceScoped;
+
+    public class ThumbnailManager : IThumbnailManager
+    {
+        private static string ThumbnailFolder => throw new NotImplementedException();
+
+        private readonly ISourceScopedServiceFactory sourceScopedServiceFactory;
+
+        public ThumbnailManager(ISourceScopedServiceFactory sourceScopedServiceFactory)
+        {
+            this.sourceScopedServiceFactory = sourceScopedServiceFactory ??
+                throw new ArgumentNullException(nameof(sourceScopedServiceFactory));
+        }
+
+        public async Task<Image?> GetThumbnail(Video video)
+        {
+            if (!HasCachedThumbnail(video))
+            {
+                var image = await CreateDefaultThumbnail(video);
+                SaveThumbnail(video, image);
+            }
+
+            // TODO add exception handling
+            return Image.FromFile(GetThumbPath(video)); 
+        }
+        
+        private static bool HasCachedThumbnail(Video video)
+        {
+            return File.Exists(GetThumbPath(video));
+        }
+        
+        private async Task<Image> CreateDefaultThumbnail(Video video)
+        {
+            var thumbProvider = GetThumbnailProvider(video);
+            return await thumbProvider.GetDefaultThumbnail(video);
+        }
+
+        private static void SaveThumbnail(Video video, Image thumbnail)
+        {
+            // TODO add exception handling
+            thumbnail.Save(GetThumbPath(video));
+        }
+
+        private static string GetThumbPath(Video video) => Path.Combine(ThumbnailFolder, $"video_{video.Id}.jpg");
+
+        private IThumbnailProvider GetThumbnailProvider(Video video)
+            => sourceScopedServiceFactory.GetThumbnailProviderService(video.MediaSource);
+    }
+}

@@ -14,5 +14,7 @@ namespace Footage.Service
         IMediaProviderService GetMediaProviderService(MediaSource mediaSource);
         
         IMediaInfoService GetMediaInfoService(MediaSource mediaSource);
+
+        IThumbnailProvider GetThumbnailProviderService(MediaSource mediaSource);
     }
 }
