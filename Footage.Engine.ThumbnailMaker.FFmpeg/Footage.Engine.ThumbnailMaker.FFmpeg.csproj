@@ -14,4 +14,10 @@
     <PackageReference Include="Okisioli.FFtool" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ffmpeg.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
