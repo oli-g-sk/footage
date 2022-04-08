@@ -4,6 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>Footage.Engine.MediaPlayer.LibVlc</AssemblyName>
+    <RootNamespace>Footage.Engine.MediaPlayer.LibVlc</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

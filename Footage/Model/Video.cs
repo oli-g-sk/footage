@@ -23,7 +23,5 @@
         public long Duration { get; set; }
 
         public List<Bookmark> Bookmarks { get; } = new();
-        
-        public VideoThumbnail? Thumbnail { get; set; }
     }
 }

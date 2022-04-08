@@ -36,6 +36,9 @@ namespace Footage
             if (typeof(T) == typeof(IDialogService))
                 return (T) Provider.DialogService;
 
+            if (typeof(T) == typeof(IThumbnailMaker))
+                return (T) Provider.ThumbnailMaker;
+            
             return SimpleIoc.Default.GetInstance<T>();
         }
 

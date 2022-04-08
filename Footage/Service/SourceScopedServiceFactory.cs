@@ -40,5 +40,21 @@ namespace Footage.Service
 
             throw new NotImplementedException($"Unsupported media source: {mediaSource}");
         }
+
+        public IThumbnailProvider GetThumbnailProviderService(MediaSource mediaSource)
+        {
+            if (mediaSource == null)
+            {
+                throw new ArgumentNullException(nameof(mediaSource));
+            }
+
+            if (mediaSource is LocalMediaSource localMediaSource)
+            {
+                var mediaProvider = new LocalMediaProviderService(localMediaSource);
+                return new LocalThumbnailProvider(mediaProvider, localMediaSource);
+            }
+
+            throw new NotImplementedException($"Unsupported media source: {mediaSource}");
+        }
     }
 }

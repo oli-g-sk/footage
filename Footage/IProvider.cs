@@ -16,6 +16,8 @@ namespace Footage
         IDispatcher Dispatcher { get; }
         
         IDialogService DialogService { get; }
+        
+        IThumbnailMaker ThumbnailMaker { get; }
 
         IMediaPlayer CreateMediaPlayer();
     }

@@ -3,7 +3,7 @@ namespace Footage.UI.Views
     using Avalonia;
     using Avalonia.Controls;
     using Avalonia.Markup.Xaml;
-    using Footage.Engine.LibVlc;
+    using Footage.Engine.MediaPlayer.LibVlc;
     using Footage.UI.EngineBindings;
     using Footage.ViewModel;
     using LibVLCSharp.Avalonia;

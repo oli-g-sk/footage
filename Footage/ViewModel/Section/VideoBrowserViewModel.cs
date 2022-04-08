@@ -8,6 +8,7 @@
     using Footage.Model;
     using Footage.ModelHelper;
     using Footage.Repository;
+    using Footage.Service;
     using Footage.ViewModel.Base;
     using Footage.ViewModel.Entity;
     using Footage.ViewModel.Helper;
@@ -15,6 +16,8 @@
 
     public class VideoBrowserViewModel : ItemsViewModel<VideoViewModel, Video>
     {
+        private static IThumbnailManager ThumbnailManager => Locator.Get<IThumbnailManager>();
+        
         private static VideoBrowserRepository Repo => Locator.Get<VideoBrowserRepository>();
 
         private MediaSource? selectedSource;
@@ -103,9 +106,13 @@
 
             foreach (var video in videos)
             {
-                await Dispatcher.InvokeAsync(async () =>
+                Dispatcher.InvokeAsync(async () =>
                 {
-                    Items.Add(new VideoViewModel(video));
+                    var viewModel = new VideoViewModel(video);
+                    Items.Add(viewModel);
+
+                    string? thumbnail = await ThumbnailManager.GetThumbnail(video);
+                    viewModel.ThumbnailPath = thumbnail;
                 });
 
 #if DEBUG

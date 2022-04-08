@@ -40,6 +40,7 @@ namespace Footage
         {
             SimpleIoc.Default.Register<ISourceScopedServiceFactory, SourceScopedServiceFactory>();
             SimpleIoc.Default.Register<IPersistenceService, PersistenceService>();
+            SimpleIoc.Default.Register<IThumbnailManager, ThumbnailManager>();
         }
     }
 }
