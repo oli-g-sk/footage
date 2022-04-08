@@ -5,6 +5,7 @@
     using System.IO;
     using System.Threading.Tasks;
     using Footage.Engine;
+    using Footage.Helper;
     using Footage.Model;
     using NLog;
 
@@ -28,15 +29,32 @@
             string videoPath = localMediaProviderService.GetFullPath(video);
             string outputPath = Path.Combine(Directory.GetCurrentDirectory(), $"{tempName}.jpg");
 
+            if (!File.Exists(videoPath))
+            {
+                Log.Warn($"Cannot generate thumbnail for {video}: Source video file not found.");
+                return null;
+            }
+
             try
             {
-                await ThumbnailMaker.CreateThumbnail(videoPath, outputPath, 320);
                 // TODO add exception handling
-                return Image.FromFile(outputPath);
+                await ThumbnailMaker.CreateThumbnail(videoPath, outputPath, 320);
+                
+                var result = BitmapHelper.FromFileWithoutLock(outputPath);
+
+                File.Delete(outputPath);
+                // TODO delete temp files on app shutdown (so it doesn't slow down this?)
+                
+                return result;
             }
             catch (ThumbnailCreationException ex)
             {
                 Log.Error(ex, $"Failed to create thumbnail for {video}. Reason: {ex.InnerException.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error when creating thumbnail for {video}: {ex}");
                 return null;
             }
         }
