@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Footage.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Footage.Persistence.EFCore\Footage.Persistence.EFCore.csproj" />
+    <ProjectReference Include="..\Footage.Persistence\Footage.Persistence.csproj" />
+    <ProjectReference Include="..\Footage\Footage.Persistence.EFCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Drawing.Common" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MvvmLight" Version="5.4.1.1" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Footage.Model\Footage.Model.csproj" />
+  </ItemGroup>
+
 </Project>

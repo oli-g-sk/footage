@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <StartupObject></StartupObject>
+        <AssemblyName>Footage.Windows</AssemblyName>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Remove=".gitignore" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="NLog.Config" Version="4.7.13" />
+        <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
+        <PackageReference Include="SimpleInjector" Version="5.3.2" />
+        <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.16" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Footage.Application.UI\Footage.Application.UI.csproj" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,41 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="160"
+        Width="320" SizeToContent="Height"
+		MinHeight="140"
+        x:Class="Footage.Application.UI.Dialogs.SimpleDialog"
+		WindowStartupLocation="CenterOwner"
+		CanResize="False"
+        Title="SimpleDialog">
+	<Grid RowDefinitions="*, Auto">
+		<Border Grid.Row="0"
+				Padding="16">
+			<StackPanel Orientation="Vertical">
+				<TextBlock Text=""
+				           Name="TxtMessage"
+				           TextWrapping="Wrap"/>
+				<TextBox Margin="0,16,0,0"
+				         Name="TxtInput"
+				         IsVisible="False" />
+			</StackPanel>
+		</Border>
+		<Border Grid.Row="1"
+				Background="#11000000"
+				Padding="8">
+			<DockPanel Grid.Row="1"
+				LastChildFill="False">
+				<DockPanel.Styles>
+					<Style Selector="Button">
+						<Setter Property="MinWidth" Value="64" />
+						<Setter Property="HorizontalContentAlignment" Value="Center" />
+						<Setter Property="Margin" Value="5,0,0,0" />
+					</Style>
+				</DockPanel.Styles>
+				<Button Name="BtnNegative" IsCancel="True" DockPanel.Dock="Right" Click="BtnNegative_OnClick" />
+				<Button Name="BtnPositive" IsDefault="True" DockPanel.Dock="Right" Click="BtnPositive_OnClick" />
+			</DockPanel>
+		</Border>
+	</Grid>
+</Window>

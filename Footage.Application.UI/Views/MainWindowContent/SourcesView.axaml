@@ -1,0 +1,57 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:section="clr-namespace:Footage.Application.ViewModel.Section;assembly=Footage.Application"
+             xmlns:entity="clr-namespace:Footage.Application.ViewModel.Entity;assembly=Footage.Application"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Footage.Application.UI.Views.MainWindowContent.SourcesView"
+             d:DataContext="{d:DesignInstance section:MediaSourcesViewModel}">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <Button DockPanel.Dock="Right" Content="Add"
+                    Command="{Binding AddItemCommand}"/>
+            <Button DockPanel.Dock="Right" Content="Edit"
+                    Command="{Binding RenameSelectedItemCommand}" />
+            <Button DockPanel.Dock="Right" Content="Remove"
+                    Command="{Binding RemoveSelectedItemCommand}" />
+            <TextBlock Text="Media sources" />
+        </DockPanel>
+        <ProgressBar DockPanel.Dock="Top"
+                     IsVisible="{Binding AnySourceUpdating}"
+                     HorizontalAlignment="Stretch"
+                     IsIndeterminate="True"
+                     Height="4" />
+        <ListBox Items="{Binding Items}"
+                 SelectedItem="{Binding SelectedItem}"
+                 IsEnabled="{Binding InteractionEnabled}">
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListBox.Styles>
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="entity:MediaSourceViewModel">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Right"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{Binding IsBusy}"
+                                   Text="⌛" />
+                        <TextBlock DockPanel.Dock="Right"
+                                   VerticalAlignment="Center"
+                                   IsVisible="{Binding !IsBusy}"
+                                   Text="{Binding VideoCount}" />
+                        <StackPanel Orientation="Vertical"
+                                    IsEnabled="{Binding !IsBusy}">
+                            <TextBlock Text="{Binding Name}"
+                                       FontWeight="Bold"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Text="{Binding Description}"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</UserControl>
