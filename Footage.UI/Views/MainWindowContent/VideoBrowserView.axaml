@@ -46,20 +46,28 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="entity:VideoViewModel">
                     <Border BorderThickness="1"
+                            Background="Black"
                             BorderBrush="#226600"
-                            Width="192"
+                            Width="213"
                             Height="120">
                         <Grid>
                             <Image Source="{Binding ThumbnailPath, Converter={StaticResource ThumbnailConverter}}"
                                    HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"
                                    Stretch="Uniform" />
-                            <DockPanel>
-                                <DockPanel DockPanel.Dock="Bottom">
-                                    <TextBlock DockPanel.Dock="Right"
-                                               Text="{Binding Duration, Converter={StaticResource VideoDurationConverter}}" />
-                                    <TextBlock Text="{Binding BookmarksCount}" />
-                                </DockPanel>
+                            <DockPanel LastChildFill="False">
+                                <Border DockPanel.Dock="Bottom"
+                                        Background="#66000000">
+                                    <DockPanel LastChildFill="False">
+                                        <TextBlock DockPanel.Dock="Right"
+                                                   Foreground="White"
+                                                   FontWeight="Medium"
+                                                   Text="{Binding Duration, Converter={StaticResource VideoDurationConverter}}" />
+                                        <TextBlock Text="{Binding BookmarksCount}"
+                                                   Foreground="White"
+                                                   FontWeight="Medium"/>
+                                    </DockPanel>
+                                </Border>
                             </DockPanel>
                             <TextBlock Text="!"
                                        FontSize="48"
