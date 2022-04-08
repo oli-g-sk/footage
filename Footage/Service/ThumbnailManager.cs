@@ -35,7 +35,8 @@
             }
 
             // TODO add exception handling
-            return Image.FromFile(GetThumbPath(video)); 
+            string thumbPath = GetThumbPath(video);
+            return Image.FromFile(thumbPath); 
         }
         
         private static bool HasCachedThumbnail(Video video)

@@ -1,6 +1,7 @@
 ﻿namespace Footage.ViewModel.Entity
 {
     using System;
+    using System.Drawing;
     using Footage.Messages;
     using Footage.Model;
     using Footage.ViewModel.Base;
@@ -8,8 +9,15 @@
     public class VideoViewModel : EntityViewModel<Video>
     {
         private long duration;
+        private Image? thumbnail;
         
         public TimeSpan Duration => TimeSpan.FromMilliseconds(duration);
+
+        public Image? Thumbnail
+        {
+            get => thumbnail;
+            set => Set(ref thumbnail, value);
+        }
         
         public VideoViewModel(Video item) : base(item)
         {
