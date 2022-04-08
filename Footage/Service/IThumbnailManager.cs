@@ -9,6 +9,6 @@
     /// </summary>
     public interface IThumbnailManager
     {
-        Task<Image?> GetThumbnail(Video video);
+        Task<string?> GetThumbnail(Video video);
     }
 }

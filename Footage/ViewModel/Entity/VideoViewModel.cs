@@ -9,14 +9,14 @@
     public class VideoViewModel : EntityViewModel<Video>
     {
         private long duration;
-        private Image? thumbnail;
+        private string? thumbnailPath;
         
         public TimeSpan Duration => TimeSpan.FromMilliseconds(duration);
 
-        public Image? Thumbnail
+        public string? ThumbnailPath
         {
-            get => thumbnail;
-            set => Set(ref thumbnail, value);
+            get => thumbnailPath;
+            set => Set(ref thumbnailPath, value);
         }
         
         public VideoViewModel(Video item) : base(item)

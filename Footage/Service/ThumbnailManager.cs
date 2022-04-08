@@ -26,7 +26,7 @@
                 throw new ArgumentNullException(nameof(sourceScopedServiceFactory));
         }
 
-        public async Task<Image?> GetThumbnail(Video video)
+        public async Task<string?> GetThumbnail(Video video)
         {
             if (!HasCachedThumbnail(video))
             {
@@ -34,9 +34,9 @@
                 SaveThumbnail(video, image);
             }
 
-            // TODO add exception handling
+            // TODO add exception handling, check read access
             string thumbPath = GetThumbPath(video);
-            return Image.FromFile(thumbPath); 
+            return thumbPath;
         }
         
         private static bool HasCachedThumbnail(Video video)

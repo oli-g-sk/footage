@@ -13,6 +13,8 @@
             x:Key="VideoDurationConverter"
             ShowMilliseconds="False"
             HoursDisplayMode="Never" />
+        <converters:PathToBitmapConverter
+            x:Key="ThumbnailConverter" />
     </UserControl.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Top" HorizontalAlignment="Stretch"
@@ -22,10 +24,10 @@
                 <CheckBox DockPanel.Dock="Top"
                           Content="Bookmarked only"
                           HorizontalAlignment="Left"
-                          IsChecked="{Binding Enabled}"/>
-                <ToggleButton Content="L" IsChecked="{Binding IncludeLow}"/>
-                <ToggleButton Content="M" IsChecked="{Binding IncludeMedium}"/>
-                <ToggleButton Content="H" IsChecked="{Binding IncludeHigh}"/>
+                          IsChecked="{Binding Enabled}" />
+                <ToggleButton Content="L" IsChecked="{Binding IncludeLow}" />
+                <ToggleButton Content="M" IsChecked="{Binding IncludeMedium}" />
+                <ToggleButton Content="H" IsChecked="{Binding IncludeHigh}" />
             </StackPanel>
         </DockPanel>
         <ProgressBar DockPanel.Dock="Top"
@@ -43,26 +45,31 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate DataType="entity:VideoViewModel">
-                    <Grid>
-                        <DockPanel HorizontalAlignment="Stretch"
+                    <Border BorderThickness="1"
+                            BorderBrush="#226600"
+                            Width="192"
+                            Height="120">
+                        <Grid>
+                            <Image Source="{Binding ThumbnailPath, Converter={StaticResource ThumbnailConverter}}"
+                                   HorizontalAlignment="Stretch"
                                    VerticalAlignment="Stretch"
-                                   Width="192" Height="108"
-                                   Margin="5"
-                                   Background="#CCCCDD">
-                            <DockPanel DockPanel.Dock="Bottom">
-                                <TextBlock DockPanel.Dock="Right"
-                                           Text="{Binding Duration, Converter={StaticResource VideoDurationConverter}}" />
-                                <TextBlock Text="{Binding BookmarksCount}" />
+                                   Stretch="Uniform" />
+                            <DockPanel>
+                                <DockPanel DockPanel.Dock="Bottom">
+                                    <TextBlock DockPanel.Dock="Right"
+                                               Text="{Binding Duration, Converter={StaticResource VideoDurationConverter}}" />
+                                    <TextBlock Text="{Binding BookmarksCount}" />
+                                </DockPanel>
                             </DockPanel>
-                        </DockPanel>
-                        <TextBlock Text="!"
-                                   FontSize="48"
-                                   FontWeight="Bold"
-                                   Foreground="#EE2200"
-								   HorizontalAlignment="Center"
-								   VerticalAlignment="Center"
-                                   IsVisible="{Binding IsMissing}"/>
-                    </Grid>
+                            <TextBlock Text="!"
+                                       FontSize="48"
+                                       FontWeight="Bold"
+                                       Foreground="#EE2200"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       IsVisible="{Binding IsMissing}" />
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ListBox>

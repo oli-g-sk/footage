@@ -111,8 +111,8 @@
                     var viewModel = new VideoViewModel(video);
                     Items.Add(viewModel);
 
-                    var thumbnail = await ThumbnailManager.GetThumbnail(video);
-                    viewModel.Thumbnail = thumbnail;
+                    string? thumbnail = await ThumbnailManager.GetThumbnail(video);
+                    viewModel.ThumbnailPath = thumbnail;
                 });
 
 #if DEBUG
