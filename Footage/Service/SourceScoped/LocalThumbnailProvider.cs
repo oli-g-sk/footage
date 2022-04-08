@@ -24,7 +24,7 @@
 
         public async Task<Image?> GetDefaultThumbnail(Video video)
         {
-            string tempName = new Guid().ToString();
+            string tempName = Guid.NewGuid().ToString();
             string videoPath = localMediaProviderService.GetFullPath(video);
             string outputPath = Path.Combine(Directory.GetCurrentDirectory(), $"{tempName}.jpg");
 

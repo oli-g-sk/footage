@@ -47,7 +47,8 @@
         private async Task<Image> CreateDefaultThumbnail(Video video)
         {
             var thumbProvider = GetThumbnailProvider(video);
-            return await thumbProvider.GetDefaultThumbnail(video);
+            var thumbnail = await thumbProvider.GetDefaultThumbnail(video);
+            return thumbnail;
         }
 
         private static void SaveThumbnail(Video video, Image thumbnail)
